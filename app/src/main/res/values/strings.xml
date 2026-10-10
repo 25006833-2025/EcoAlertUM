@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">EcoAlert UM</string>
+    <string name="welcome_message">Welcome to EcoAlert UM</string>
+    <string name="report_eco_issue">Report Eco Issue</string>
+</resources>
