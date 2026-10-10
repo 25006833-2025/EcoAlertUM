@@ -1,0 +1,43 @@
+# Built application files
+*.apk
+*.apks
+*.aab
+
+# Files for the JVM target
+*.class
+
+# Generated files
+bin/
+gen/
+out/
+
+# Gradle files
+.gradle/
+build/
+
+# Local configuration file (sdk.path, etc.)
+local.properties
+
+# Log file
+*.log
+
+# Android Studio generated files
+.idea/caches/
+.idea/libraries/
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/usage.statistics.xml
+.idea/dictionaries/
+.idea/shelf/
+.idea/dataSources.xml
+.idea/dataSources.local.xml
+.idea/sql-dialects.xml
+.idea/h2console.xml
+
+# Compilation output
+/out/
+
+# Native libraries
+*.dll
+*.so
+*.dylib
