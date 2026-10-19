@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "397391916676",
+    "project_id": "ecoalertum",
+    "storage_bucket": "ecoalertum.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:397391916676:android:4956960f8d94cf2a141cd1",
+        "android_client_info": {
+          "package_name": "com.ecoalertum.android"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB8XgnYBBd7RrnhIuUZvX5Oh8pxIc5kMIk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
