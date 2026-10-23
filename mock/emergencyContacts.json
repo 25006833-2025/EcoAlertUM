@@ -1,0 +1,98 @@
+[
+  {
+    "id": "national_emergency",
+    "name": {
+      "en": "Emergency (Police / Ambulance)",
+      "ms": "Kecemasan (Polis / Ambulans)"
+    },
+    "category": "police",
+    "phone": "999",
+    "altPhone": "112",
+    "available24h": true,
+    "hours": null,
+    "location": null,
+    "sortOrder": 1,
+    "sourceUrl": null,
+    "sourceCheckedAt": null
+  },
+  {
+    "id": "bomba",
+    "name": {
+      "en": "Fire and Rescue (Bomba)",
+      "ms": "Bomba dan Penyelamat"
+    },
+    "category": "fire_rescue",
+    "phone": "994",
+    "altPhone": null,
+    "available24h": true,
+    "hours": null,
+    "location": null,
+    "sortOrder": 2,
+    "sourceUrl": null,
+    "sourceCheckedAt": null
+  },
+  {
+    "id": "civil_defence",
+    "name": {
+      "en": "Civil Defence (APM)",
+      "ms": "Angkatan Pertahanan Awam (APM)"
+    },
+    "category": "civil_defence",
+    "phone": "991",
+    "altPhone": null,
+    "available24h": true,
+    "hours": null,
+    "location": null,
+    "sortOrder": 3,
+    "sourceUrl": null,
+    "sourceCheckedAt": null
+  },
+  {
+    "id": "um_security",
+    "name": {
+      "en": "UM Security Office (PLACEHOLDER NUMBER)",
+      "ms": "Bahagian Keselamatan UM (NOMBOR CONTOH)"
+    },
+    "category": "campus_security",
+    "phone": "+60300000001",
+    "altPhone": null,
+    "available24h": true,
+    "hours": null,
+    "location": "Bahagian Keselamatan, Universiti Malaya",
+    "sortOrder": 4,
+    "sourceUrl": null,
+    "sourceCheckedAt": null
+  },
+  {
+    "id": "um_health_centre",
+    "name": {
+      "en": "UM Student Health Clinic (PLACEHOLDER NUMBER)",
+      "ms": "Klinik Kesihatan Pelajar UM (NOMBOR CONTOH)"
+    },
+    "category": "medical",
+    "phone": "+60300000002",
+    "altPhone": null,
+    "available24h": false,
+    "hours": "Mon–Fri 08:00–17:00",
+    "location": "Universiti Malaya",
+    "sortOrder": 5,
+    "sourceUrl": null,
+    "sourceCheckedAt": null
+  },
+  {
+    "id": "um_facilities",
+    "name": {
+      "en": "UM Facilities / Maintenance (PLACEHOLDER NUMBER)",
+      "ms": "Fasiliti / Penyelenggaraan UM (NOMBOR CONTOH)"
+    },
+    "category": "facilities",
+    "phone": "+60300000003",
+    "altPhone": null,
+    "available24h": false,
+    "hours": "Mon–Fri 08:00–17:00",
+    "location": "Universiti Malaya",
+    "sortOrder": 6,
+    "sourceUrl": null,
+    "sourceCheckedAt": null
+  }
+]
