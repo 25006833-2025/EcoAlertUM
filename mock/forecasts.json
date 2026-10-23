@@ -1,0 +1,184 @@
+[
+  {
+    "id": "Tn079",
+    "locationName": "Kuala Lumpur",
+    "days": [
+      {
+        "date": "2026-10-23",
+        "morning": {
+          "en": "Rain",
+          "ms": "Hujan"
+        },
+        "afternoon": {
+          "en": "Thunderstorms",
+          "ms": "Ribut petir"
+        },
+        "night": {
+          "en": "Rain",
+          "ms": "Hujan"
+        },
+        "summary": {
+          "en": "Thunderstorms",
+          "ms": "Ribut petir"
+        },
+        "summaryWhen": {
+          "en": "All day",
+          "ms": "Sepanjang Hari"
+        },
+        "minTemp": 24,
+        "maxTemp": 33
+      },
+      {
+        "date": "2026-10-24",
+        "morning": {
+          "en": "Thunderstorms",
+          "ms": "Ribut petir"
+        },
+        "afternoon": {
+          "en": "Thunderstorms",
+          "ms": "Ribut petir"
+        },
+        "night": {
+          "en": "Rain",
+          "ms": "Hujan"
+        },
+        "summary": {
+          "en": "Thunderstorms",
+          "ms": "Ribut petir"
+        },
+        "summaryWhen": {
+          "en": "All day",
+          "ms": "Sepanjang Hari"
+        },
+        "minTemp": 24,
+        "maxTemp": 33
+      },
+      {
+        "date": "2026-10-25",
+        "morning": {
+          "en": "Thunderstorms",
+          "ms": "Ribut petir"
+        },
+        "afternoon": {
+          "en": "Thunderstorms",
+          "ms": "Ribut petir"
+        },
+        "night": {
+          "en": "Rain",
+          "ms": "Hujan"
+        },
+        "summary": {
+          "en": "Thunderstorms",
+          "ms": "Ribut petir"
+        },
+        "summaryWhen": {
+          "en": "All day",
+          "ms": "Sepanjang Hari"
+        },
+        "minTemp": 24,
+        "maxTemp": 33
+      },
+      {
+        "date": "2026-10-26",
+        "morning": {
+          "en": "Rain",
+          "ms": "Hujan"
+        },
+        "afternoon": {
+          "en": "Thunderstorms",
+          "ms": "Ribut petir"
+        },
+        "night": {
+          "en": "Thunderstorms",
+          "ms": "Ribut petir"
+        },
+        "summary": {
+          "en": "Thunderstorms",
+          "ms": "Ribut petir"
+        },
+        "summaryWhen": {
+          "en": "All day",
+          "ms": "Sepanjang Hari"
+        },
+        "minTemp": 24,
+        "maxTemp": 33
+      },
+      {
+        "date": "2026-10-27",
+        "morning": {
+          "en": "No rain",
+          "ms": "Tiada Hujan"
+        },
+        "afternoon": {
+          "en": "Thunderstorms",
+          "ms": "Ribut petir"
+        },
+        "night": {
+          "en": "Rain",
+          "ms": "Hujan"
+        },
+        "summary": {
+          "en": "Thunderstorms",
+          "ms": "Ribut petir"
+        },
+        "summaryWhen": {
+          "en": "Afternoon and night",
+          "ms": "Petang dan Malam"
+        },
+        "minTemp": 24,
+        "maxTemp": 33
+      },
+      {
+        "date": "2026-10-28",
+        "morning": {
+          "en": "No rain",
+          "ms": "Tiada Hujan"
+        },
+        "afternoon": {
+          "en": "Thunderstorms",
+          "ms": "Ribut petir"
+        },
+        "night": {
+          "en": "Thunderstorms",
+          "ms": "Ribut petir"
+        },
+        "summary": {
+          "en": "Thunderstorms",
+          "ms": "Ribut petir"
+        },
+        "summaryWhen": {
+          "en": "Afternoon and night",
+          "ms": "Petang dan Malam"
+        },
+        "minTemp": 24,
+        "maxTemp": 33
+      },
+      {
+        "date": "2026-10-29",
+        "morning": {
+          "en": "No rain",
+          "ms": "Tiada Hujan"
+        },
+        "afternoon": {
+          "en": "Thunderstorms",
+          "ms": "Ribut petir"
+        },
+        "night": {
+          "en": "No rain",
+          "ms": "Tiada Hujan"
+        },
+        "summary": {
+          "en": "Thunderstorms",
+          "ms": "Ribut petir"
+        },
+        "summaryWhen": {
+          "en": "Afternoon",
+          "ms": "Petang"
+        },
+        "minTemp": 24,
+        "maxTemp": 33
+      }
+    ],
+    "fetchedAt": "2026-10-23T12:00:04+08:00"
+  }
+]
