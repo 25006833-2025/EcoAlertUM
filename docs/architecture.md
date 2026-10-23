@@ -8,12 +8,12 @@ Status: **draft v0.1**. Data shapes are defined in [data-models.md](data-models.
 |---|---|---|---|
 | A | **Mobile app** | Android, Kotlin + Jetpack Compose | UI for all 6 modules. Reads Firestore (with offline cache), submits reports, uploads photos, receives pushes. Holds **no secrets**. |
 | B | **Auth** | Firebase Authentication (email/password + email verification) | Login for `@siswa.um.edu.my` only. Issues the ID token used by Firestore rules and backend functions. No Google or Microsoft sign-in in v1, because that may need UM approval we won't get in time. |
-| C | **Database** | Cloud Firestore | Stores `hazardReadings`, `sourceStatus`, `alerts`, `reports`, `users`, `quizResults`, `emergencyContacts`. |
+| C | **Database** | Cloud Firestore | Stores `hazardReadings`, `sourceStatus`, `forecasts`, `alerts`, `reports`, `users`, `quizResults`, `emergencyContacts`. |
 | D | **File storage** | Cloud Storage for Firebase | Report photos at `reports/{reportId}/photo.jpg`. |
 | E | **Backend** | Cloud Functions for Firebase (Node.js/TypeScript) | Four functions, listed below. The only component that talks to official APIs or the AI API. |
-| F | **Scheduler** | Cloud Scheduler (via `onSchedule`) | Triggers ingestion every 5 minutes. |
+| F | **Scheduler** | Cloud Scheduler (via `onSchedule`) | Triggers ingestion every 5 minutes. Each source is fetched only when its own interval is due (see `ingestOfficialData`). |
 | G | **Secrets** | Google Secret Manager (via `defineSecret`) | Holds the AI API key and any official-API tokens. |
-| H | **Official data sources** | MET Malaysia (weather warnings, rainfall), DOE (Air Pollutant Index), JPS InfoBanjir (river levels) | External. Read-only. Owned by the government. |
+| H | **Official data sources** | MET Malaysia via data.gov.my (weather warnings, 7-day forecast), DOE MyEQMS (Air Pollutant Index), JPS InfoBanjir (river levels, rainfall) | External. Read-only. Owned by the government. Endpoints and limits are verified in [data-sources.md](data-sources.md). |
 | I | **AI API** | Cloud LLM API. **Provider is C's decision.** Fixed constraint: it is called only from Cloud Functions, and the key lives in Secret Manager | Explains hazards, answers questions, categorises reports. |
 | J | **Push service** | Firebase Cloud Messaging (FCM) | Delivers alerts to devices. |
 
@@ -21,7 +21,7 @@ Status: **draft v0.1**. Data shapes are defined in [data-models.md](data-models.
 
 | Function | Trigger | What it does |
 |---|---|---|
-| `ingestOfficialData` | Every 5 min (F) | 1. Fetches all sources in parallel, each with a timeout. 2. Normalises them to `HazardReading` with the shared `Level` scale. 3. Upserts `hazardReadings/{id}` **only if the value changed**. 4. Updates `sourceStatus/{source}`. 5. Runs the alert rules. 6. Creates or updates `alerts` (with dedup). 7. Sends FCM pushes for new or escalated alerts. |
+| `ingestOfficialData` | Every 5 min (F) | 1. Fetches each source that is **due** on its own schedule, in parallel, each with a timeout: MET warnings every 5 min, MET forecast every 6 h, InfoBanjir every 15 min (2 requests: water level + rainfall), DOE every 15 min (1 query narrowed to the nearest stations). That totals about 580 requests a day. 2. Normalises them to `HazardReading` with the shared `Level` scale. 3. Upserts `hazardReadings/{id}` **only if the value changed**. 4. Updates `sourceStatus/{source}`. 5. Runs the alert rules. 6. Creates or updates `alerts` (with dedup). 7. Sends FCM pushes for new or escalated alerts. |
 | `expireAlerts` | Every 15 min | Sets `status = expired` on alerts past `expiresAt`. |
 | `askAssistant` | HTTPS callable (requires auth) | Receives the user's question. Adds the current readings and active alerts as context. Calls the AI API with the key from G. Returns the answer. Rate-limited per UID. |
 | `onReportCreated` | Firestore `onDocumentCreated(reports/{id})` | Sends the photo and description to the AI API. Writes `aiCategory` and `aiConfidence`. Can also flag spam or inappropriate photos for moderators. |
@@ -71,7 +71,7 @@ Visual tip: draw the **official sources and the AI API reachable only from Cloud
 
 **Flow 1: Official data becomes a push alert**
 1. Scheduler fires `ingestOfficialData`.
-2. The function fetches InfoBanjir and finds Sg. Klang at 31.2 m. It maps that to `level = alert` and upserts the reading.
+2. The function fetches InfoBanjir and finds Sg. Klang di Bukit Putra (F2), `0232121WL`, at 25.12 m. That is at or above the station's Waspada threshold of 24.70 m, so it maps to `level = alert` and upserts the reading.
 3. Rule `flood_level_alert` matches. No active alert has the same `ruleId` and `area`, so the function creates one.
 4. FCM sends to topics `alerts_en` and `alerts_ms`, each with text in its own language. The phone shows a notification.
 5. The app's Firestore listener updates the dashboard and alert list.
@@ -116,11 +116,11 @@ The app also checks the domain at sign-up, so users get a clear error message. T
 
 **1. A backend job fetches official data. The app reads our stored copy.**
 - *Resilience:* Government sites go down or slow down during floods, exactly when people need them. The last good reading stays in Firestore, and the app labels its age honestly.
-- *Load and fair use:* About 3 API calls every 5 minutes, whatever the number of users, instead of 3 calls × every user × every app open. We avoid hitting rate limits or getting blocked.
+- *Load and fair use:* About 580 requests a day across all sources, whatever the number of users, instead of several calls × every user × every app open. MET's open API allows only 4 requests per minute, and InfoBanjir and DOE have no public API at all. We avoid hitting rate limits or getting blocked.
 - *Normalisation in one place:* Three sources with three formats and three severity scales become one `Level` scale. If a source changes its format, we fix one function, with no app update needed.
 - *Enables alerts:* Rules need a server watching the data even when no one has the app open. The job that ingests the data is the natural place to evaluate the rules.
 
-**2. Why every 5 minutes?** MET warnings and InfoBanjir levels update roughly every 15 minutes to 1 hour, and DOE's API is hourly. Five minutes catches changes quickly at almost no cost: 8,640 runs a month, inside the free tier. We write only when a value changes, which keeps Firestore writes and listener traffic low.
+**2. Why a different interval per source?** Each source updates at its own verified rate. MET warnings are issued "when required", so we check every 5 minutes, using 1 of the 4 requests per minute allowed. The MET forecast updates daily, so every 6 hours is enough. InfoBanjir updates every 15 minutes, and DOE hourly, so we poll both every 15 minutes. Polling faster than a source updates adds load on government sites and gives us nothing new. The scheduler still wakes every 5 minutes (8,640 runs a month, inside the free tier) and fetches only the sources that are due. We write only when a value changes, which keeps Firestore writes and listener traffic low.
 
 **3. The AI key stays on the backend.** Anything shipped in an APK can be extracted by decompiling it. A leaked key means someone else's usage on our bill. Keeping the key server-side also lets us add rate limiting per student, a fixed safety prompt, and live hazard context. If we switch AI provider later, only the backend changes.
 
@@ -147,8 +147,20 @@ The app also checks the domain at sign-up, so users get a clear error message. T
 ## 6. Risks and open items
 
 - **Firebase Blaze plan required.** Scheduled functions and outbound HTTP calls from Functions do not work on the free Spark plan. Blaze still includes the free quota. Set a budget alert of around RM 20 or less.
-- **Source availability must be verified.** MET warnings and flood data appear to be available as open APIs via data.gov.my (`api.data.gov.my`). DOE's APIMS has no documented public API, so we may need to parse the public APIMS page. Confirm each source in week 1, and build `ingestOfficialData` with one adapter per source so a fallback can be swapped in.
-- **Station choice.** Pick the nearest real MET, DOE and InfoBanjir stations to UM. The mock station IDs are invented.
+- **Source availability (verified 23 Oct 2026, see [data-sources.md](data-sources.md)).**
+  - MET warnings and forecast are open APIs via data.gov.my (`api.data.gov.my/weather/...`).
+  - data.gov.my's `/flood-warning` endpoint is **not live**: it has been frozen since Feb 2024. Use it only as a station/coordinate list.
+  - River levels and rainfall come from InfoBanjir's public pages, which have no API.
+  - Air quality comes from DOE MyEQMS's undocumented map service.
+  - Both of those can break without notice, so build `ingestOfficialData` with one adapter per source so a fallback can be swapped in.
+  - Reuse terms for InfoBanjir and DOE are **to confirm** with JPS and DOE.
+- **Station choice.** Nearest stations to UM, from data-sources.md:
+  - Rainfall: Universiti Malaya (F2) `0232231RF`
+  - River level: Sg. Klang di Bukit Putra (F2) `0232121WL` and Sg. Klang di Jalan Ang Seng (F2) `0232131WL`
+  - Air quality: DOE `CA19B` Petaling Jaya, with `CA15W` Batu Muda as fallback
+  - Forecast: MET `Tn079` Kuala Lumpur
+
+  Hand-check each station's coordinates before release (**to confirm**).
 - **AI safety.** The assistant must never contradict an official warning. It should always point to 999/994 for emergencies. Answers should be labelled as AI-generated.
 
 ## 7. Decision log and action items
