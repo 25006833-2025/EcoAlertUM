@@ -1,0 +1,87 @@
+[
+  {
+    "id": "met_WP-KL_weather_warning",
+    "type": "weather_warning",
+    "source": "met",
+    "stationId": "WP-KL",
+    "stationName": "Wilayah Persekutuan Kuala Lumpur",
+    "location": { "lat": 3.1390, "lng": 101.6869 },
+    "value": null,
+    "unit": null,
+    "level": "alert",
+    "summary": {
+      "en": "Thunderstorm warning (Alert) for Kuala Lumpur until 19:00",
+      "ms": "Amaran ribut petir (Waspada) bagi Kuala Lumpur sehingga 19:00"
+    },
+    "observedAt": "2026-10-23T15:30:00+08:00",
+    "fetchedAt": "2026-10-23T16:05:12+08:00"
+  },
+  {
+    "id": "met_48647_rainfall",
+    "type": "rainfall",
+    "source": "met",
+    "stationId": "48647",
+    "stationName": "Petaling Jaya",
+    "location": { "lat": 3.1033, "lng": 101.6447 },
+    "value": 38.5,
+    "unit": "mm/h",
+    "level": "warning",
+    "summary": {
+      "en": "Heavy rain: 38.5 mm in the last hour",
+      "ms": "Hujan lebat: 38.5 mm dalam sejam lalu"
+    },
+    "observedAt": "2026-10-23T16:00:00+08:00",
+    "fetchedAt": "2026-10-23T16:05:12+08:00"
+  },
+  {
+    "id": "infobanjir_3116430_flood_level",
+    "type": "flood_level",
+    "source": "infobanjir",
+    "stationId": "3116430",
+    "stationName": "Sg. Klang di Jambatan Sulaiman",
+    "location": { "lat": 3.1402, "lng": 101.6950 },
+    "value": 31.2,
+    "unit": "m",
+    "level": "alert",
+    "summary": {
+      "en": "Water level 31.2 m — Alert (normal 29.0 m, danger 33.0 m)",
+      "ms": "Paras air 31.2 m — Waspada (normal 29.0 m, bahaya 33.0 m)"
+    },
+    "observedAt": "2026-10-23T16:00:00+08:00",
+    "fetchedAt": "2026-10-23T16:05:13+08:00"
+  },
+  {
+    "id": "infobanjir_3116434_flood_level",
+    "type": "flood_level",
+    "source": "infobanjir",
+    "stationId": "3116434",
+    "stationName": "Sg. Pantai di Pantai Dalam",
+    "location": { "lat": 3.1135, "lng": 101.6655 },
+    "value": 12.4,
+    "unit": "m",
+    "level": "normal",
+    "summary": {
+      "en": "Water level 12.4 m — Normal",
+      "ms": "Paras air 12.4 m — Normal"
+    },
+    "observedAt": "2026-10-23T16:00:00+08:00",
+    "fetchedAt": "2026-10-23T16:05:13+08:00"
+  },
+  {
+    "id": "doe_CA0016_air_quality",
+    "type": "air_quality",
+    "source": "doe",
+    "stationId": "CA0016",
+    "stationName": "Petaling Jaya",
+    "location": { "lat": 3.1336, "lng": 101.6083 },
+    "value": 64,
+    "unit": "API",
+    "level": "normal",
+    "summary": {
+      "en": "Air Pollutant Index 64 — Moderate",
+      "ms": "Indeks Pencemaran Udara 64 — Sederhana"
+    },
+    "observedAt": "2026-10-23T16:00:00+08:00",
+    "fetchedAt": "2026-10-23T16:05:14+08:00"
+  }
+]

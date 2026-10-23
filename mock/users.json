@@ -1,0 +1,61 @@
+[
+  {
+    "id": "uid_aisyah_01",
+    "email": "aisyah.rahman@siswa.um.edu.my",
+    "displayName": "Aisyah Rahman",
+    "faculty": "Faculty of Engineering",
+    "role": "student",
+    "language": "ms",
+    "notificationsEnabled": true,
+    "fcmTokens": [
+      "fcm_token_mock_aisyah_pixel7"
+    ],
+    "badges": [
+      "first_report",
+      "flood_ready"
+    ],
+    "createdAt": "2026-09-02T10:14:00+08:00"
+  },
+  {
+    "id": "uid_wei_ling_02",
+    "email": "tan.weiling@siswa.um.edu.my",
+    "displayName": "Tan Wei Ling",
+    "faculty": "Faculty of Science",
+    "role": "student",
+    "language": "en",
+    "notificationsEnabled": true,
+    "fcmTokens": [
+      "fcm_token_mock_weiling_a54"
+    ],
+    "badges": [
+      "first_report"
+    ],
+    "createdAt": "2026-09-05T21:40:00+08:00"
+  },
+  {
+    "id": "uid_arvind_03",
+    "email": "arvind.kumar@siswa.um.edu.my",
+    "displayName": "Arvind Kumar",
+    "faculty": null,
+    "role": "student",
+    "language": "en",
+    "notificationsEnabled": false,
+    "fcmTokens": [],
+    "badges": [],
+    "createdAt": "2026-10-19T14:02:00+08:00"
+  },
+  {
+    "id": "uid_mod_hafiz",
+    "email": "hafiz.ismail@siswa.um.edu.my",
+    "displayName": "Hafiz Ismail (EcoAlert team)",
+    "faculty": "Faculty of Computer Science and Information Technology",
+    "role": "moderator",
+    "language": "ms",
+    "notificationsEnabled": true,
+    "fcmTokens": [
+      "fcm_token_mock_hafiz_s23"
+    ],
+    "badges": [],
+    "createdAt": "2026-08-25T09:00:00+08:00"
+  }
+]
