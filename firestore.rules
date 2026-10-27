@@ -1,0 +1,39 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function isUM() {
+      return signedIn() && request.auth.token.email.matches('.*@(siswa\\.)?um\\.edu\\.my');
+    }
+    function isModerator() {
+      return signedIn() &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'moderator';
+    }
+
+    match /users/{uid} {
+      allow read: if signedIn() && request.auth.uid == uid;
+      allow create: if isUM() && request.auth.uid == uid && request.resource.data.role == 'student';
+      allow update: if signedIn() && request.auth.uid == uid
+                    && request.resource.data.role == resource.data.role;
+    }
+
+    match /reports/{reportId} {
+      allow read: if isUM();
+      allow create: if isUM()
+                    && request.resource.data.reporterUid == request.auth.uid
+                    && request.resource.data.status == 'unverified'
+                    && request.resource.data.verifiedBy == null;
+      allow update, delete: if isModerator();
+    }
+
+    match /quizAttempts/{id} {
+      allow read, create: if isUM() && request.resource.data.uid == request.auth.uid;
+    }
+
+    match /{coll}/{id} {
+      allow read: if isUM() && coll in ['hazardSnapshots', 'alerts', 'guidance'];
+      allow write: if false;
+    }
+  }
+}
