@@ -41,3 +41,5 @@ local.properties
 *.dll
 *.so
 *.dylib
+
+.env
