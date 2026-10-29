@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">EcoAlert UM</string>
-    <string name="welcome_message">Welcome to EcoAlert UM</string>
-    <string name="report_eco_issue">Report Eco Issue</string>
+
+    <!-- Bottom navigation tabs -->
+    <string name="tab_dashboard">Dashboard</string>
+    <string name="tab_alerts">Alerts</string>
+    <string name="tab_reports">Reports</string>
+    <string name="tab_assistant">Assistant</string>
+    <string name="tab_learn">Learn</string>
 </resources>
