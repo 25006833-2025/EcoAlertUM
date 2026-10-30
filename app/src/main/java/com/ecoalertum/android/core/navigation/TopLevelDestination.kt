@@ -16,9 +16,9 @@ enum class TopLevelDestination(
     @param:StringRes val labelRes: Int,
     val icon: ImageVector,
 ) {
-    DASHBOARD(Routes.DASHBOARD, R.string.tab_dashboard, Icons.Filled.Home),
+    HOME(Routes.HOME, R.string.tab_home, Icons.Filled.Home),
     ALERTS(Routes.ALERTS, R.string.tab_alerts, Icons.Filled.Notifications),
-    REPORTS(Routes.REPORTS, R.string.tab_reports, Icons.Filled.Place),
+    MAP(Routes.MAP, R.string.tab_map, Icons.Filled.Place),
     ASSISTANT(Routes.ASSISTANT, R.string.tab_assistant, Icons.Filled.Face),
     LEARN(Routes.LEARN, R.string.tab_learn, Icons.Filled.Info),
 }

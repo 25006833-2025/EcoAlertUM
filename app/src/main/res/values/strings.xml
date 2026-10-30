@@ -2,9 +2,28 @@
     <string name="app_name">EcoAlert UM</string>
 
     <!-- Bottom navigation tabs -->
-    <string name="tab_dashboard">Dashboard</string>
+    <string name="tab_home">Home</string>
     <string name="tab_alerts">Alerts</string>
-    <string name="tab_reports">Reports</string>
+    <string name="tab_map">Map</string>
     <string name="tab_assistant">Assistant</string>
     <string name="tab_learn">Learn</string>
+
+    <!-- Side menu -->
+    <string name="menu_open">Open menu</string>
+    <string name="menu_close">Close menu</string>
+    <string name="menu_placeholder_name">Student name</string>
+    <string name="menu_placeholder_email" translatable="false">matric@siswa.um.edu.my</string>
+    <string name="menu_section_my_stuff">MY STUFF</string>
+    <string name="menu_section_settings">SETTINGS</string>
+    <string name="menu_section_help">HELP</string>
+    <string name="menu_progress">My progress &amp; badges</string>
+    <string name="menu_my_reports">My hazard reports</string>
+    <string name="menu_alert_history">Alert history</string>
+    <string name="menu_alert_preferences">Alert preferences</string>
+    <string name="menu_language">Language</string>
+    <string name="menu_language_options" translatable="false">EN | BM</string>
+    <string name="menu_emergency_contacts">Emergency contacts</string>
+    <string name="menu_about">About &amp; data sources</string>
+    <string name="menu_moderator_queue">Moderator queue</string>
+    <string name="menu_log_out">Log out</string>
 </resources>

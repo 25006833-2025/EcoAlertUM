@@ -1,4 +1,4 @@
-package com.ecoalertum.android.dashboard
+package com.ecoalertum.android.home
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -7,6 +7,6 @@ import com.ecoalertum.android.R
 import com.ecoalertum.android.core.ui.PlaceholderScreen
 
 @Composable
-fun DashboardScreen(modifier: Modifier = Modifier) {
-    PlaceholderScreen(title = stringResource(R.string.tab_dashboard), modifier = modifier)
+fun HomeScreen(modifier: Modifier = Modifier) {
+    PlaceholderScreen(title = stringResource(R.string.tab_home), modifier = modifier)
 }

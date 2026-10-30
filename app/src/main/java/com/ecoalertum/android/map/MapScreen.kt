@@ -1,4 +1,4 @@
-package com.ecoalertum.android.reports
+package com.ecoalertum.android.map
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -7,6 +7,6 @@ import com.ecoalertum.android.R
 import com.ecoalertum.android.core.ui.PlaceholderScreen
 
 @Composable
-fun ReportsScreen(modifier: Modifier = Modifier) {
-    PlaceholderScreen(title = stringResource(R.string.tab_reports), modifier = modifier)
+fun MapScreen(modifier: Modifier = Modifier) {
+    PlaceholderScreen(title = stringResource(R.string.tab_map), modifier = modifier)
 }
