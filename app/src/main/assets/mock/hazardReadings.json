@@ -1,0 +1,112 @@
+[
+  {
+    "id": "met_20261023T1530_thunderstorms-warning_weather_warning",
+    "type": "weather_warning",
+    "source": "met",
+    "stationId": "20261023T1530_thunderstorms-warning",
+    "stationName": "Thunderstorms Warning",
+    "location": { "lat": 3.127447, "lng": 101.650307 },
+    "stationDistanceKm": null,
+    "value": null,
+    "unit": null,
+    "previousValue": null,
+    "thresholds": null,
+    "level": "alert",
+    "summary": {
+      "en": "Thunderstorms warning for W.P. Kuala Lumpur until 19:00",
+      "ms": "Amaran ribut petir bagi W.P. Kuala Lumpur sehingga 19:00"
+    },
+    "validFrom": "2026-10-23T15:30:00+08:00",
+    "validTo": "2026-10-23T19:00:00+08:00",
+    "observedAt": "2026-10-23T15:30:00+08:00",
+    "fetchedAt": "2026-10-23T16:05:12+08:00"
+  },
+  {
+    "id": "infobanjir_0232231RF_rainfall",
+    "type": "rainfall",
+    "source": "infobanjir",
+    "stationId": "0232231RF",
+    "stationName": "Universiti Malaya (F2)",
+    "location": { "lat": 3.127447, "lng": 101.650307 },
+    "stationDistanceKm": 0.0,
+    "value": 38.5,
+    "unit": "mm/h",
+    "previousValue": 12.0,
+    "thresholds": null,
+    "level": "alert",
+    "summary": {
+      "en": "Heavy rain: 38.5 mm in the last hour",
+      "ms": "Hujan lebat: 38.5 mm dalam sejam lalu"
+    },
+    "validFrom": null,
+    "validTo": null,
+    "observedAt": "2026-10-23T16:00:00+08:00",
+    "fetchedAt": "2026-10-23T16:05:12+08:00"
+  },
+  {
+    "id": "infobanjir_0232121WL_flood_level",
+    "type": "flood_level",
+    "source": "infobanjir",
+    "stationId": "0232121WL",
+    "stationName": "Sg. Klang di Bukit Putra (F2)",
+    "location": { "lat": 3.113333, "lng": 101.67586 },
+    "stationDistanceKm": 3.2,
+    "value": 25.12,
+    "unit": "m",
+    "previousValue": 24.86,
+    "thresholds": { "alert": 24.70, "warning": 26.20, "danger": 26.70 },
+    "level": "alert",
+    "summary": {
+      "en": "Water level 25.12 m — Alert (Warning at 26.20 m)",
+      "ms": "Paras air 25.12 m — Waspada (Amaran pada 26.20 m)"
+    },
+    "validFrom": null,
+    "validTo": null,
+    "observedAt": "2026-10-23T16:00:00+08:00",
+    "fetchedAt": "2026-10-23T16:05:13+08:00"
+  },
+  {
+    "id": "infobanjir_0232131WL_flood_level",
+    "type": "flood_level",
+    "source": "infobanjir",
+    "stationId": "0232131WL",
+    "stationName": "Sg. Klang di Jalan Ang Seng (F2)",
+    "location": { "lat": 3.121864, "lng": 101.678657 },
+    "stationDistanceKm": 3.2,
+    "value": 21.40,
+    "unit": "m",
+    "previousValue": 21.05,
+    "thresholds": { "alert": 23.50, "warning": 24.50, "danger": 25.60 },
+    "level": "normal",
+    "summary": {
+      "en": "Water level 21.40 m — Normal (Alert at 23.50 m)",
+      "ms": "Paras air 21.40 m — Normal (Waspada pada 23.50 m)"
+    },
+    "validFrom": null,
+    "validTo": null,
+    "observedAt": "2026-10-23T16:00:00+08:00",
+    "fetchedAt": "2026-10-23T16:05:13+08:00"
+  },
+  {
+    "id": "doe_CA19B_air_quality",
+    "type": "air_quality",
+    "source": "doe",
+    "stationId": "CA19B",
+    "stationName": "Petaling Jaya, SELANGOR",
+    "location": { "lat": 3.130875, "lng": 101.60868 },
+    "stationDistanceKm": 4.6,
+    "value": 64,
+    "unit": "API",
+    "previousValue": 61,
+    "thresholds": null,
+    "level": "normal",
+    "summary": {
+      "en": "Air Pollutant Index 64 — Moderate",
+      "ms": "Indeks Pencemaran Udara 64 — Sederhana"
+    },
+    "validFrom": null,
+    "validTo": null,
+    "observedAt": "2026-10-23T16:00:00+08:00",
+    "fetchedAt": "2026-10-23T16:05:14+08:00"
+  }
+]
