@@ -1,4 +1,4 @@
-package com.ecoalertum.android
+package com.ecoalertum.android.map
 
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
