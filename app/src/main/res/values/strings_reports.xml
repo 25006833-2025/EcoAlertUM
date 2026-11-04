@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reports_evidence">Evidence</string>
+    <string name="reports_add_photo">Add a photo of the hazard</string>
+    <string name="reports_category">Category</string>
+    <string name="reports_category_hint">Select Hazard Type</string>
+    <string name="reports_category_flooded_walkway">Flooded walkway</string>
+    <string name="reports_category_fallen_tree">Fallen tree</string>
+    <string name="reports_category_blocked_drain">Blocked drain</string>
+    <string name="reports_location">Location</string>
+    <string name="reports_location_pending">Your current location will be added here</string>
+    <string name="reports_description">Description</string>
+    <string name="reports_submit">Submit report</string>
+    <string name="reports_add_report">Add a report</string>
+    <string name="reports_submit_title">Submit a Report</string>
+    <string name="reports_map_title">Interactive Map</string>
+    <string name="reports_my_reports_title">My Reports</string>
+</resources>

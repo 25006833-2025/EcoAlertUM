@@ -39,6 +39,14 @@ fun EcoAlertApp() {
     // Top bar, side menu and bottom bar only appear on the main screens (not on login, later).
     val inMainGraph = currentDestination?.hierarchy?.any { it.route == Routes.MAIN_GRAPH } == true
 
+    // Screen title in the top bar. Screens not listed here keep the app name.
+    val titleRes = when (currentDestination?.route) {
+        Routes.SUBMIT_REPORT -> R.string.reports_submit_title
+        Routes.MAP -> R.string.reports_map_title
+        Routes.MY_REPORTS -> R.string.reports_my_reports_title
+        else -> R.string.app_name
+    }
+
     // TODO: read the role from users/{uid} once login exists. Hides the moderator queue until then.
     val isModerator = false
 
@@ -68,7 +76,7 @@ fun EcoAlertApp() {
             topBar = {
                 if (inMainGraph) {
                     TopAppBar(
-                        title = { Text(stringResource(R.string.app_name)) },
+                        title = { Text(stringResource(titleRes)) },
                         navigationIcon = {
                             IconButton(onClick = { scope.launch { drawerState.open() } }) {
                                 Icon(Icons.Filled.Menu, contentDescription = stringResource(R.string.menu_open))
