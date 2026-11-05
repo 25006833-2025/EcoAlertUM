@@ -34,7 +34,6 @@ export const askAssistant = onCall(
 
     const validated = validateAssistantRequest(request.data);
     const db = getFirestore();
-    console.log("AssistantTest: Starting Firestore lookup");
 
     let hazardContext = "";
 
@@ -54,7 +53,6 @@ export const askAssistant = onCall(
         "No specific alert was selected. Only answer using information provided in the conversation.";
     }
 
-    console.log("AssistantTest: Firestore lookup completed");
     const prompt = buildAssistantPrompt(
       validated.mode,
       validated.language,
@@ -64,11 +62,8 @@ export const askAssistant = onCall(
     );
 
     try {
-      console.log("AssistantTest: Starting Gemini request");
 
       const explanation = await generateGeminiText(prompt);
-
-      console.log("AssistantTest: Gemini response received");
 
       return {
         status: "ok",
