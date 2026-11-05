@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reports_evidence">Evidence</string>
+    <string name="reports_add_photo">Add a photo of the hazard</string>
+    <string name="reports_category">Category</string>
+    <string name="reports_category_hint">Select Hazard Type</string>
+    <string name="reports_category_flooded_walkway">Flooded walkway</string>
+    <string name="reports_category_fallen_tree">Fallen tree</string>
+    <string name="reports_category_blocked_drain">Blocked drain</string>
+    <string name="reports_location">Location</string>
+    <string name="reports_location_pending">Your current location will be added here</string>
+    <string name="reports_description">Description</string>
+    <string name="reports_submit">Submit report</string>
+    <string name="reports_add_report">Add a report</string>
+    <string name="reports_submit_title">Submit a Report</string>
+    <string name="reports_map_title">Interactive Map</string>
+    <string name="reports_my_reports_title">My Reports</string>
+    <string name="reports_saved">Report submitted</string>
+    <string name="reports_save_failed">Could not save the report. Check your connection and try again.</string>
+    <string name="reports_status_line">Status: %1$s</string>
+    <string name="reports_time_line">Time: %1$s</string>
+    <string name="reports_status_unverified">Pending verification</string>
+    <string name="reports_status_verified">Verified &amp; live</string>
+    <string name="reports_status_resolved">Resolved</string>
+    <string name="reports_status_rejected">Rejected</string>
+    <string name="reports_time_now">Just now</string>
+    <string name="reports_empty">You have not submitted any reports yet. Tap + to report a hazard.</string>
+    <string name="reports_load_failed">Could not load your reports. Check your connection.</string>
+    <string name="reports_photo_change">Tap the photo to change it</string>
+    <string name="reports_photo_preview">Photo of the hazard</string>
+    <string name="reports_location_loading">Finding your location…</string>
+    <string name="reports_location_found">Location found: %1$.5f, %2$.5f</string>
+    <string name="reports_location_unavailable">Could not get your location. Check that Location is turned on, then try again.</string>
+    <string name="reports_location_denied">Location permission is off. Allow it in Settings, Apps, EcoAlert UM, Permissions, then try again.</string>
+    <string name="reports_location_retry">Try again</string>
+    <string name="reports_place_name">Place name (optional)</string>
+    <string name="reports_place_name_hint">For example: Faculty of Engineering</string>
+</resources>
