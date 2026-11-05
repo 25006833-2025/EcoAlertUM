@@ -26,4 +26,6 @@
     <string name="reports_time_now">Just now</string>
     <string name="reports_empty">You have not submitted any reports yet. Tap + to report a hazard.</string>
     <string name="reports_load_failed">Could not load your reports. Check your connection.</string>
+    <string name="reports_photo_change">Tap the photo to change it</string>
+    <string name="reports_photo_preview">Photo of the hazard</string>
 </resources>

@@ -1,8 +1,13 @@
 package com.ecoalertum.android.map
 
+import android.net.Uri
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,6 +35,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,6 +44,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -45,9 +54,12 @@ import androidx.compose.ui.unit.dp
 import com.ecoalertum.android.R
 import com.ecoalertum.android.ui.theme.EcoAlertUMTheme
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 private const val MAX_DESCRIPTION = 500
+private const val PREVIEW_MAX_SIDE = 800
 
 /** Design system: corner radius 14, spacing on an 8 dp grid, touch targets at least 48 dp. */
 private val CornerRadius = 14.dp
@@ -64,12 +76,32 @@ fun SubmitReportScreen(
 ) {
     var category by rememberSaveable { mutableStateOf<ReportCategory?>(null) }
     var description by rememberSaveable { mutableStateOf("") }
+    var photoUri by rememberSaveable { mutableStateOf<Uri?>(null) }
     var menuOpen by remember { mutableStateOf(false) }
     var isSaving by remember { mutableStateOf(false) }
     var saveFailed by remember { mutableStateOf(false) }
+    var preview by remember { mutableStateOf<ImageBitmap?>(null) }
 
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+
+    val pickPhoto = rememberLauncherForActivityResult(
+        ActivityResultContracts.PickVisualMedia(),
+    ) { uri ->
+        if (uri != null) photoUri = uri
+    }
+
+    // Load a small preview whenever a photo is chosen.
+    LaunchedEffect(photoUri) {
+        val uri = photoUri
+        preview = if (uri == null) {
+            null
+        } else {
+            withContext(Dispatchers.IO) {
+                decodeScaledBitmap(context, uri, PREVIEW_MAX_SIDE)?.asImageBitmap()
+            }
+        }
+    }
 
     val canSubmit = category != null && description.isNotBlank() && !isSaving
 
@@ -79,9 +111,15 @@ fun SubmitReportScreen(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        // Evidence (the photo is added in a later step)
+        // Evidence: tap to choose a photo from the gallery
         SectionLabel(R.string.reports_evidence)
         Surface(
+            onClick = {
+                pickPhoto.launch(
+                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly),
+                )
+            },
+            enabled = !isSaving,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(160.dp),
@@ -89,23 +127,40 @@ fun SubmitReportScreen(
             color = MaterialTheme.colorScheme.surfaceVariant,
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
         ) {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.AddCircle,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(48.dp),
+            val shown = preview
+            if (shown != null) {
+                Image(
+                    bitmap = shown,
+                    contentDescription = stringResource(R.string.reports_photo_preview),
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize(),
                 )
-                Text(
-                    text = stringResource(R.string.reports_add_photo),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
+            } else {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.AddCircle,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(48.dp),
+                    )
+                    Text(
+                        text = stringResource(R.string.reports_add_photo),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
             }
+        }
+        if (photoUri != null) {
+            Text(
+                text = stringResource(R.string.reports_photo_change),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
         }
 
         // Category
@@ -141,7 +196,7 @@ fun SubmitReportScreen(
             }
         }
 
-        // Location (GPS is added in a later step)
+        // Location (GPS is added in the next step)
         SectionLabel(R.string.reports_location)
         Surface(
             modifier = Modifier.fillMaxWidth(),
@@ -180,17 +235,32 @@ fun SubmitReportScreen(
             modifier = Modifier.fillMaxWidth(),
         )
 
-        // Submit: saves to Firestore, then goes back
+        // Submit: uploads the photo (if any), saves the report, then goes back
         Button(
             onClick = {
                 category?.let { selected ->
                     scope.launch {
                         isSaving = true
                         saveFailed = false
+                        val uid = currentUid()
+
+                        var photoPath: String? = null
+                        val uri = photoUri
+                        if (uri != null) {
+                            val upload = uploadReportPhoto(context, uri, uid)
+                            if (upload.isFailure) {
+                                saveFailed = true
+                                isSaving = false
+                                return@launch
+                            }
+                            photoPath = upload.getOrNull()
+                        }
+
                         val report = HazardReport(
-                            reporterUid = currentUid(),
+                            reporterUid = uid,
                             category = selected.key,
                             description = description.trim(),
+                            photoPath = photoPath,
                             status = "unverified",
                         )
                         HazardReportRepository().submitReport(report)
