@@ -1,5 +1,8 @@
 package com.ecoalertum.android.map
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -34,6 +37,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -51,9 +55,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import com.ecoalertum.android.R
 import com.ecoalertum.android.ui.theme.EcoAlertUMTheme
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.GeoPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -63,6 +69,19 @@ private const val PREVIEW_MAX_SIDE = 800
 
 /** Design system: corner radius 14, spacing on an 8 dp grid, touch targets at least 48 dp. */
 private val CornerRadius = 14.dp
+
+private val LOCATION_PERMISSIONS = arrayOf(
+    Manifest.permission.ACCESS_FINE_LOCATION,
+    Manifest.permission.ACCESS_COARSE_LOCATION,
+)
+
+private enum class LocationStatus { Loading, Found, Unavailable, Denied }
+
+private fun hasLocationPermission(context: Context): Boolean =
+    ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) ==
+            PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) ==
+            PackageManager.PERMISSION_GRANTED
 
 /** Signed-in user's id. Falls back to a test id until login (FR6.1) is merged. */
 fun currentUid(): String =
@@ -77,18 +96,52 @@ fun SubmitReportScreen(
     var category by rememberSaveable { mutableStateOf<ReportCategory?>(null) }
     var description by rememberSaveable { mutableStateOf("") }
     var photoUri by rememberSaveable { mutableStateOf<Uri?>(null) }
+    var placeName by rememberSaveable { mutableStateOf("") }
     var menuOpen by remember { mutableStateOf(false) }
     var isSaving by remember { mutableStateOf(false) }
     var saveFailed by remember { mutableStateOf(false) }
     var preview by remember { mutableStateOf<ImageBitmap?>(null) }
+    var geoPoint by remember { mutableStateOf<GeoPoint?>(null) }
+    var locationStatus by remember { mutableStateOf(LocationStatus.Loading) }
 
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+
+    fun findLocation() {
+        scope.launch {
+            locationStatus = LocationStatus.Loading
+            val found = readCurrentLocation(context)
+            if (found == null) {
+                locationStatus = LocationStatus.Unavailable
+            } else {
+                geoPoint = GeoPoint(found.latitude, found.longitude)
+                locationStatus = LocationStatus.Found
+                if (placeName.isBlank()) {
+                    placeName = lookUpPlaceName(context, found.latitude, found.longitude)
+                }
+            }
+        }
+    }
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions(),
+    ) { results ->
+        if (results.values.any { it }) findLocation() else locationStatus = LocationStatus.Denied
+    }
 
     val pickPhoto = rememberLauncherForActivityResult(
         ActivityResultContracts.PickVisualMedia(),
     ) { uri ->
         if (uri != null) photoUri = uri
+    }
+
+    // Ask for location permission (or use it if already granted) when the screen opens.
+    LaunchedEffect(Unit) {
+        if (hasLocationPermission(context)) {
+            findLocation()
+        } else {
+            permissionLauncher.launch(LOCATION_PERMISSIONS)
+        }
     }
 
     // Load a small preview whenever a photo is chosen.
@@ -103,7 +156,10 @@ fun SubmitReportScreen(
         }
     }
 
-    val canSubmit = category != null && description.isNotBlank() && !isSaving
+    val canSubmit = category != null &&
+            description.isNotBlank() &&
+            geoPoint != null &&
+            !isSaving
 
     Column(
         modifier = modifier
@@ -196,7 +252,7 @@ fun SubmitReportScreen(
             }
         }
 
-        // Location (GPS is added in the next step)
+        // Location: GPS position, plus an optional place name
         SectionLabel(R.string.reports_location)
         Surface(
             modifier = Modifier.fillMaxWidth(),
@@ -204,24 +260,78 @@ fun SubmitReportScreen(
             color = MaterialTheme.colorScheme.surfaceVariant,
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
         ) {
-            Row(
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                Icon(
-                    imageVector = Icons.Filled.LocationOn,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                )
-                Text(
-                    text = stringResource(R.string.reports_location_pending),
-                    style = MaterialTheme.typography.bodyLarge,
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    if (locationStatus == LocationStatus.Loading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(24.dp),
+                            strokeWidth = 2.dp,
+                        )
+                    } else {
+                        Icon(
+                            imageVector = Icons.Filled.LocationOn,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                        )
+                    }
+                    val point = geoPoint
+                    Text(
+                        text = when (locationStatus) {
+                            LocationStatus.Loading ->
+                                stringResource(R.string.reports_location_loading)
+                            LocationStatus.Found ->
+                                if (point != null) {
+                                    stringResource(
+                                        R.string.reports_location_found,
+                                        point.latitude,
+                                        point.longitude,
+                                    )
+                                } else {
+                                    ""
+                                }
+                            LocationStatus.Unavailable ->
+                                stringResource(R.string.reports_location_unavailable)
+                            LocationStatus.Denied ->
+                                stringResource(R.string.reports_location_denied)
+                        },
+                        style = MaterialTheme.typography.bodyLarge,
+                    )
+                }
+                if (locationStatus == LocationStatus.Unavailable ||
+                    locationStatus == LocationStatus.Denied
+                ) {
+                    TextButton(
+                        onClick = {
+                            if (hasLocationPermission(context)) {
+                                findLocation()
+                            } else {
+                                permissionLauncher.launch(LOCATION_PERMISSIONS)
+                            }
+                        },
+                        modifier = Modifier.heightIn(min = 48.dp),
+                    ) {
+                        Text(stringResource(R.string.reports_location_retry))
+                    }
+                }
             }
         }
+        OutlinedTextField(
+            value = placeName,
+            onValueChange = { placeName = it },
+            label = { Text(stringResource(R.string.reports_place_name)) },
+            placeholder = { Text(stringResource(R.string.reports_place_name_hint)) },
+            singleLine = true,
+            shape = RoundedCornerShape(CornerRadius),
+            modifier = Modifier.fillMaxWidth(),
+        )
 
         // Description
         SectionLabel(R.string.reports_description)
@@ -261,6 +371,8 @@ fun SubmitReportScreen(
                             category = selected.key,
                             description = description.trim(),
                             photoPath = photoPath,
+                            location = geoPoint,
+                            locationLabel = placeName.trim(),
                             status = "unverified",
                         )
                         HazardReportRepository().submitReport(report)

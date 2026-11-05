@@ -28,4 +28,11 @@
     <string name="reports_load_failed">Could not load your reports. Check your connection.</string>
     <string name="reports_photo_change">Tap the photo to change it</string>
     <string name="reports_photo_preview">Photo of the hazard</string>
+    <string name="reports_location_loading">Finding your location…</string>
+    <string name="reports_location_found">Location found: %1$.5f, %2$.5f</string>
+    <string name="reports_location_unavailable">Could not get your location. Check that Location is turned on, then try again.</string>
+    <string name="reports_location_denied">Location permission is off. Allow it in Settings, Apps, EcoAlert UM, Permissions, then try again.</string>
+    <string name="reports_location_retry">Try again</string>
+    <string name="reports_place_name">Place name (optional)</string>
+    <string name="reports_place_name_hint">For example: Faculty of Engineering</string>
 </resources>
