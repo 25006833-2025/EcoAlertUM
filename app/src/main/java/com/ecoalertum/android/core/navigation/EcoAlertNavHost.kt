@@ -17,6 +17,7 @@ import com.ecoalertum.android.learn.ProgressScreen
 import com.ecoalertum.android.map.MapScreen
 import com.ecoalertum.android.map.ModeratorQueueScreen
 import com.ecoalertum.android.map.MyReportsScreen
+import com.ecoalertum.android.map.SubmitReportScreen
 import com.ecoalertum.android.settings.AboutScreen
 import com.ecoalertum.android.settings.EmergencyContactsScreen
 
@@ -39,12 +40,12 @@ fun EcoAlertNavHost(
         startDestination = Routes.MAIN_GRAPH,
         modifier = modifier,
     ) {
-        mainGraph()
+        mainGraph(navController)
     }
 }
 
 /** Everything behind login: the bottom-bar tabs and the side-menu screens. */
-private fun NavGraphBuilder.mainGraph() {
+private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
     navigation(startDestination = Routes.HOME, route = Routes.MAIN_GRAPH) {
         // Bottom-bar tabs
         composable(Routes.HOME) { HomeScreen() }
@@ -55,11 +56,18 @@ private fun NavGraphBuilder.mainGraph() {
 
         // Side-menu screens
         composable(Routes.PROGRESS) { ProgressScreen() }
-        composable(Routes.MY_REPORTS) { MyReportsScreen() }
+        composable(Routes.MY_REPORTS) {
+            MyReportsScreen(onAddReport = { navController.navigate(Routes.SUBMIT_REPORT) })
+        }
         composable(Routes.ALERT_HISTORY) { AlertHistoryScreen() }
         composable(Routes.ALERT_PREFERENCES) { AlertPreferencesScreen() }
         composable(Routes.EMERGENCY_CONTACTS) { EmergencyContactsScreen() }
         composable(Routes.ABOUT) { AboutScreen() }
         composable(Routes.MODERATOR_QUEUE) { ModeratorQueueScreen() }
+
+        // Reached from the + button on My Reports
+        composable(Routes.SUBMIT_REPORT) {
+            SubmitReportScreen(onSubmitted = { navController.popBackStack() })
+        }
     }
 }

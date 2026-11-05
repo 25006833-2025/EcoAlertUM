@@ -24,5 +24,7 @@ object Routes {
     const val ABOUT = "about"
     const val MODERATOR_QUEUE = "moderator_queue"
 
+    const val SUBMIT_REPORT = "submit_report"
+
     // Add LOGIN = "login" here when the login screen is built.
 }
