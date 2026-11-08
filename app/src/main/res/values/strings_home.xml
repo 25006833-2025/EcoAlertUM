@@ -1,0 +1,55 @@
+<resources>
+    <!-- Home dashboard (Module 1) -->
+
+    <!-- Level words: always shown next to a level colour -->
+    <string name="home_level_normal">Normal</string>
+    <string name="home_level_advisory">Advisory</string>
+    <string name="home_level_warning">Warning</string>
+    <string name="home_level_danger">Danger</string>
+
+    <!-- Top bar -->
+    <string name="home_chip_updated">Updated %1$s</string>
+    <string name="home_chip_offline">Offline</string>
+
+    <!-- Hero card -->
+    <string name="home_hero_label">RIGHT NOW · %1$s</string>
+    <string name="home_hero_area">KL incl. UM campus</string>
+    <string name="home_hero_area_until">KL incl. UM campus · until %1$s</string>
+    <string name="home_hero_none">No active alerts or weather warnings</string>
+    <string name="home_what_to_do">What to do</string>
+
+    <!-- Hazard cards -->
+    <string name="home_card_weather">Weather</string>
+    <string name="home_card_flood">Flood level</string>
+    <string name="home_card_air">Air quality</string>
+    <string name="home_source_met" translatable="false">MET Malaysia</string>
+    <string name="home_source_infobanjir" translatable="false">Public InfoBanjir</string>
+    <string name="home_source_doe" translatable="false">DOE APIMS</string>
+    <string name="home_card_updated">%1$s · Updated %2$s</string>
+    <string name="home_card_saved">%1$s · Saved %2$s</string>
+    <string name="home_card_source_only">%1$s</string>
+    <string name="home_card_loading">Loading…</string>
+    <string name="home_card_unavailable">No data available</string>
+    <string name="home_outdated_badge">OUTDATED</string>
+    <string name="home_weather_no_warning">No MET warning in effect</string>
+    <string name="home_flood_value">%1$s m</string>
+    <string name="home_air_value">API %1$d</string>
+    <string name="home_air_good">Good</string>
+    <string name="home_air_moderate">Moderate</string>
+    <string name="home_air_unhealthy">Unhealthy</string>
+    <string name="home_air_very_unhealthy">Very unhealthy</string>
+    <string name="home_air_hazardous">Hazardous</string>
+
+    <string name="home_explain">Explain with assistant</string>
+
+    <!-- Outdated banner (NFR1) -->
+    <string name="home_banner_title">Showing last saved data</string>
+    <string name="home_banner_body">Can\'t reach official sources · saved %1$s</string>
+    <string name="home_banner_body_no_time">Can\'t reach official sources</string>
+    <string name="home_retry">Retry</string>
+
+    <!-- Whole-screen states -->
+    <string name="home_loading">Loading latest readings…</string>
+    <string name="home_error_title">Can\'t load hazard data</string>
+    <string name="home_error_body">Check your connection and try again.</string>
+</resources>
