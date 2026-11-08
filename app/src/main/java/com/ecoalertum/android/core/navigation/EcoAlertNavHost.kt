@@ -48,7 +48,12 @@ fun EcoAlertNavHost(
 private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
     navigation(startDestination = Routes.HOME, route = Routes.MAIN_GRAPH) {
         // Bottom-bar tabs
-        composable(Routes.HOME) { HomeScreen() }
+        composable(Routes.HOME) {
+            HomeScreen(
+                onWhatToDo = { navController.navigateToTab(Routes.ALERTS) },
+                onExplain = { navController.navigateToTab(Routes.ASSISTANT) },
+            )
+        }
         composable(Routes.ALERTS) { AlertsScreen() }
         composable(Routes.MAP) { MapScreen() }
         composable(Routes.ASSISTANT) { AssistantScreen() }
@@ -69,5 +74,14 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
         composable(Routes.SUBMIT_REPORT) {
             SubmitReportScreen(onSubmitted = { navController.popBackStack() })
         }
+    }
+}
+
+/** Opens a bottom-bar tab the same way the bottom bar does (see EcoAlertApp). */
+private fun NavHostController.navigateToTab(route: String) {
+    navigate(route) {
+        popUpTo(Routes.HOME) { saveState = true }
+        launchSingleTop = true
+        restoreState = true
     }
 }

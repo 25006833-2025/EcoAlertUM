@@ -26,6 +26,7 @@ import androidx.navigation.compose.rememberNavController
 import com.ecoalertum.android.R
 import com.ecoalertum.android.core.navigation.EcoAlertNavHost
 import com.ecoalertum.android.core.navigation.Routes
+import com.ecoalertum.android.home.HomeTopBarStatus
 import com.ecoalertum.android.ui.theme.EcoAlertUMTheme
 import kotlinx.coroutines.launch
 
@@ -80,6 +81,12 @@ fun EcoAlertApp() {
                         navigationIcon = {
                             IconButton(onClick = { scope.launch { drawerState.open() } }) {
                                 Icon(Icons.Filled.Menu, contentDescription = stringResource(R.string.menu_open))
+                            }
+                        },
+                        actions = {
+                            // Home shows its "Updated" / "Offline" chip here.
+                            backStackEntry?.let { entry ->
+                                if (entry.destination.route == Routes.HOME) HomeTopBarStatus(entry)
                             }
                         },
                     )
