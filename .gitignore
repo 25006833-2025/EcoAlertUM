@@ -48,3 +48,6 @@ local.properties
 !.env.example
 
 .secret.local
+
+# IDE module files
+*.iml

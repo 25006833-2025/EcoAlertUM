@@ -142,9 +142,9 @@ Students can only create reports with `status = unverified`. Only `moderator`/`a
 | `badges` | string[] | Badge IDs, e.g. `flood_ready`. Badge definitions are bundled in the app |
 | `createdAt` | Timestamp | |
 
-## 5. QuizResult — collection `quizResults`
+## 5. QuizResult — collection `quizAttempts`
 
-One document per attempt. The collection is top-level (not under `users/`) so we can run queries across all students, e.g. average pre vs post score per quiz for the SDG 13.1 impact evaluation.
+One document per attempt. The collection is top-level (not under `users/`) so we can run queries across all students, e.g. average pre vs post score per quiz for the SDG 13.3 impact evaluation.
 
 | Field | Type | Notes |
 |---|---|---|
