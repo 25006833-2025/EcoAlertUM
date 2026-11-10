@@ -1,0 +1,80 @@
+<resources>
+    <!-- Learn and quiz (Module 5) -->
+
+    <!-- Learn tab (homepage) -->
+    <string name="learn_subtitle">Climate learning</string>
+    <string name="learn_badges">%1$d badges</string>
+    <string name="learn_right_now">RIGHT NOW · %1$s</string>
+    <string name="learn_lesson_meta">4 short pages · 3 min · then a %1$d-question quiz</string>
+    <string name="learn_start_lesson">Start lesson</string>
+    <string name="learn_lessons_soon">Lessons are coming soon. Try the quiz for now!</string>
+    <string name="learn_pager_position">Lesson %1$d of %2$d. Swipe for more.</string>
+    <string name="learn_pre_quiz_title">Take the pre-quiz first</string>
+    <string name="learn_pre_quiz_body">So we can measure what you learn</string>
+    <string name="learn_start">Start</string>
+    <string name="learn_my_progress">My progress</string>
+    <string name="learn_view">View</string>
+    <string name="learn_topics">Topics</string>
+    <string name="learn_question_count">%1$d-question quiz</string>
+    <string name="learn_no_quizzes">No quizzes available yet.</string>
+
+    <!-- Featured lesson titles, one per topic -->
+    <string name="learn_lesson_floods">Moving around campus in heavy rain &amp; flood</string>
+    <string name="learn_lesson_haze">Breathing safely during haze</string>
+    <string name="learn_lesson_storms">Staying safe in thunderstorms</string>
+    <string name="learn_lesson_heat">Keeping cool in hot weather</string>
+
+    <!-- Topic sheet -->
+    <string name="learn_topic_intro">Take the pre-quiz before the lessons and the post-quiz after, so you can see how much you learned.</string>
+    <string name="learn_take_pre_quiz">Pre-quiz</string>
+    <string name="learn_take_post_quiz">Post-quiz</string>
+    <string name="learn_practice">Practice</string>
+
+    <!-- Quiz screen (FR5.1) -->
+    <string name="quiz_title">Quiz</string>
+    <string name="quiz_phase_pre">PRE-QUIZ</string>
+    <string name="quiz_phase_post">POST-QUIZ</string>
+    <string name="quiz_phase_practice">PRACTICE</string>
+    <string name="quiz_question_of">Question %1$d of %2$d</string>
+    <string name="quiz_close">Quit quiz</string>
+    <string name="quiz_correct_count">%1$d correct</string>
+    <string name="quiz_wrong_count">%1$d wrong</string>
+    <string name="quiz_check">Check answer</string>
+    <string name="quiz_next">Next question</string>
+    <string name="quiz_see_results">See results</string>
+    <string name="quiz_feedback_correct">Correct!</string>
+    <string name="quiz_feedback_wrong">Not quite: the answer is %1$s</string>
+    <string name="quiz_not_found">This quiz could not be found.</string>
+    <string name="quiz_back_to_learn">Back to Learn</string>
+
+    <!-- Result -->
+    <string name="quiz_result_score">%1$d/%2$d</string>
+    <string name="quiz_result_correct">correct</string>
+    <string name="quiz_result_great">Great job!</string>
+    <string name="quiz_result_good">Good effort!</string>
+    <string name="quiz_result_keep_going">Keep learning, you\'ll get there</string>
+    <string name="quiz_result_review">Review answers</string>
+    <string name="quiz_result_your_answer">Your answer: %1$s</string>
+    <string name="quiz_result_right_answer">Correct answer: %1$s</string>
+    <string name="quiz_retry">Retry</string>
+    <string name="quiz_saving">Saving your score…</string>
+    <string name="quiz_saved">Score saved</string>
+    <string name="quiz_not_signed_in">Score not saved: sign in to keep your progress</string>
+    <string name="quiz_save_failed">Couldn\'t save your score</string>
+    <string name="quiz_save_retry">Try again</string>
+
+    <!-- Before vs after -->
+    <string name="quiz_before_after">Before vs after the lessons</string>
+    <string name="quiz_pre_label">Pre-quiz</string>
+    <string name="quiz_post_label">Post-quiz</string>
+    <string name="quiz_gain_up">+%1$d more correct after the lessons. Well done!</string>
+    <string name="quiz_gain_same">Same score as before the lessons.</string>
+    <string name="quiz_gain_down">A bit lower than before. Review the lesson and try again.</string>
+    <string name="quiz_need_pre">Take the pre-quiz too, so you can compare.</string>
+    <string name="quiz_need_post">Do the lessons, then take the post-quiz to see how much you learned.</string>
+    <string name="quiz_practice_note">Practice scores don\'t change these numbers.</string>
+
+    <!-- Share -->
+    <string name="quiz_share">Share result</string>
+    <string name="quiz_share_text">I scored %1$d/%2$d on the EcoAlert UM \"%3$s\" quiz! Learn how to stay safe on campus during floods, haze and storms.</string>
+</resources>

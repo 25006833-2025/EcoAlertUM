@@ -1,0 +1,642 @@
+[
+  {
+    "id": "flood_safety_01",
+    "topic": "floods",
+    "title": {
+      "en": "Floods on campus",
+      "ms": "Banjir di kampus"
+    },
+    "questions": [
+      {
+        "id": "q1",
+        "prompt": {
+          "en": "A walkway on your route is covered by fast-moving water. What should you do?",
+          "ms": "Laluan pejalan kaki anda dinaiki air yang mengalir deras. Apakah yang patut anda lakukan?"
+        },
+        "options": [
+          {
+            "en": "Walk through quickly while it is still shallow",
+            "ms": "Redah dengan cepat semasa air masih cetek"
+          },
+          {
+            "en": "Wait indoors or take a higher, covered route",
+            "ms": "Tunggu di dalam bangunan atau guna laluan lain yang lebih tinggi dan berbumbung"
+          },
+          {
+            "en": "Hold an umbrella and cross carefully",
+            "ms": "Pegang payung dan lintas dengan berhati-hati"
+          },
+          {
+            "en": "Follow other students who are crossing",
+            "ms": "Ikut pelajar lain yang sedang melintas"
+          }
+        ],
+        "answer": 1,
+        "explanation": {
+          "en": "Moving water can knock you over even when it looks shallow, and it can hide open drains.",
+          "ms": "Air yang mengalir boleh menjatuhkan anda walaupun nampak cetek, dan ia boleh menyembunyikan longkang terbuka."
+        }
+      },
+      {
+        "id": "q2",
+        "prompt": {
+          "en": "Why is flood water on a path dangerous even when you can see the ground?",
+          "ms": "Mengapa air banjir di laluan berbahaya walaupun anda nampak permukaan tanah?"
+        },
+        "options": [
+          {
+            "en": "It is always too cold to walk in",
+            "ms": "Air itu sentiasa terlalu sejuk"
+          },
+          {
+            "en": "It can hide open drains, holes and broken paving",
+            "ms": "Ia boleh menyembunyikan longkang terbuka, lubang dan laluan yang rosak"
+          },
+          {
+            "en": "It makes your phone stop working",
+            "ms": "Ia menyebabkan telefon anda rosak"
+          },
+          {
+            "en": "It is not dangerous if you can see the ground",
+            "ms": "Ia tidak berbahaya jika anda nampak tanah"
+          }
+        ],
+        "answer": 1,
+        "explanation": {
+          "en": "Covers can be washed off drains during heavy rain, so a step in murky water can drop into a deep hole.",
+          "ms": "Penutup longkang boleh dihanyutkan semasa hujan lebat, jadi satu langkah dalam air keruh boleh jatuh ke dalam lubang yang dalam."
+        }
+      },
+      {
+        "id": "q3",
+        "prompt": {
+          "en": "Water is rising near a building and you see sparking cables. What should you do?",
+          "ms": "Air semakin naik berhampiran bangunan dan anda nampak kabel berpercikan api. Apakah yang patut anda lakukan?"
+        },
+        "options": [
+          {
+            "en": "Move away and report it to campus security",
+            "ms": "Jauhkan diri dan laporkan kepada keselamatan kampus"
+          },
+          {
+            "en": "Push the cable away with a dry stick",
+            "ms": "Tolak kabel itu dengan kayu kering"
+          },
+          {
+            "en": "Take a photo up close for the report",
+            "ms": "Ambil gambar dari dekat untuk laporan"
+          },
+          {
+            "en": "Wait next to it until help comes",
+            "ms": "Tunggu di sebelahnya sehingga bantuan tiba"
+          }
+        ],
+        "answer": 0,
+        "explanation": {
+          "en": "Water carries electricity. Keep well away and let trained staff deal with it.",
+          "ms": "Air boleh mengalirkan elektrik. Jauhkan diri dan biarkan kakitangan terlatih menguruskannya."
+        }
+      },
+      {
+        "id": "q4",
+        "prompt": {
+          "en": "Where should you check first before walking across campus in heavy rain?",
+          "ms": "Di manakah anda patut semak dahulu sebelum berjalan di kampus semasa hujan lebat?"
+        },
+        "options": [
+          {
+            "en": "Social media rumours",
+            "ms": "Khabar angin di media sosial"
+          },
+          {
+            "en": "Official warnings and verified reports in the app",
+            "ms": "Amaran rasmi dan laporan yang disahkan dalam aplikasi"
+          },
+          {
+            "en": "Nowhere, just go",
+            "ms": "Tidak perlu semak, terus pergi"
+          },
+          {
+            "en": "The weather from last week",
+            "ms": "Cuaca minggu lepas"
+          }
+        ],
+        "answer": 1,
+        "explanation": {
+          "en": "Official warnings and moderator-verified reports are the most reliable picture of what is happening now.",
+          "ms": "Amaran rasmi dan laporan yang disahkan oleh moderator memberi gambaran paling tepat tentang keadaan semasa."
+        }
+      },
+      {
+        "id": "q5",
+        "prompt": {
+          "en": "Someone is in danger in flood water. Which number do you call in Malaysia?",
+          "ms": "Seseorang dalam bahaya di dalam air banjir. Nombor manakah yang anda hubungi di Malaysia?"
+        },
+        "options": [
+          {
+            "en": "911",
+            "ms": "911"
+          },
+          {
+            "en": "999",
+            "ms": "999"
+          },
+          {
+            "en": "112 is the only option",
+            "ms": "Hanya 112"
+          },
+          {
+            "en": "Your lecturer",
+            "ms": "Pensyarah anda"
+          }
+        ],
+        "answer": 1,
+        "explanation": {
+          "en": "999 is Malaysia's emergency number. Don't go into the water yourself to help.",
+          "ms": "999 ialah nombor kecemasan Malaysia. Jangan masuk ke dalam air sendiri untuk membantu."
+        }
+      }
+    ]
+  },
+  {
+    "id": "haze_safety_01",
+    "topic": "haze",
+    "title": {
+      "en": "Haze and air quality",
+      "ms": "Jerebu dan kualiti udara"
+    },
+    "questions": [
+      {
+        "id": "q1",
+        "prompt": {
+          "en": "What does API stand for in Malaysian air-quality readings?",
+          "ms": "Apakah maksud IPU dalam bacaan kualiti udara Malaysia?"
+        },
+        "options": [
+          {
+            "en": "Air Pollutant Index",
+            "ms": "Indeks Pencemar Udara"
+          },
+          {
+            "en": "Average Pressure Indicator",
+            "ms": "Penunjuk Tekanan Purata"
+          },
+          {
+            "en": "Air Purity Index",
+            "ms": "Indeks Ketulenan Udara"
+          },
+          {
+            "en": "Atmospheric Particle Instrument",
+            "ms": "Alat Zarah Atmosfera"
+          }
+        ],
+        "answer": 0,
+        "explanation": {
+          "en": "The Department of Environment publishes the Air Pollutant Index (API). Higher numbers mean worse air.",
+          "ms": "Jabatan Alam Sekitar menerbitkan Indeks Pencemar Udara (IPU). Nombor lebih tinggi bermaksud udara lebih tercemar."
+        }
+      },
+      {
+        "id": "q2",
+        "prompt": {
+          "en": "An API reading of 160 falls in which category?",
+          "ms": "Bacaan IPU 160 berada dalam kategori apa?"
+        },
+        "options": [
+          {
+            "en": "Good",
+            "ms": "Baik"
+          },
+          {
+            "en": "Moderate",
+            "ms": "Sederhana"
+          },
+          {
+            "en": "Unhealthy",
+            "ms": "Tidak sihat"
+          },
+          {
+            "en": "Hazardous",
+            "ms": "Berbahaya"
+          }
+        ],
+        "answer": 2,
+        "explanation": {
+          "en": "101–200 is Unhealthy. 0–50 is Good, 51–100 Moderate, 201–300 Very unhealthy and above 300 Hazardous.",
+          "ms": "101–200 ialah Tidak sihat. 0–50 Baik, 51–100 Sederhana, 201–300 Sangat tidak sihat dan melebihi 300 Berbahaya."
+        }
+      },
+      {
+        "id": "q3",
+        "prompt": {
+          "en": "The API is Unhealthy. What is the best way to protect yourself?",
+          "ms": "IPU berada pada tahap Tidak sihat. Apakah cara terbaik untuk melindungi diri?"
+        },
+        "options": [
+          {
+            "en": "Go for a long outdoor run to stay fit",
+            "ms": "Berlari jauh di luar untuk kekal cergas"
+          },
+          {
+            "en": "Stay indoors where you can and limit outdoor activity",
+            "ms": "Kekal di dalam bangunan jika boleh dan kurangkan aktiviti luar"
+          },
+          {
+            "en": "Open all the windows for fresh air",
+            "ms": "Buka semua tingkap untuk udara segar"
+          },
+          {
+            "en": "Nothing, haze only affects the elderly",
+            "ms": "Tiada apa-apa, jerebu hanya menjejaskan warga emas"
+          }
+        ],
+        "answer": 1,
+        "explanation": {
+          "en": "Cutting time outdoors, especially hard exercise, lowers how much smoke you breathe in.",
+          "ms": "Mengurangkan masa di luar, terutamanya senaman berat, mengurangkan jumlah asap yang anda sedut."
+        }
+      },
+      {
+        "id": "q4",
+        "prompt": {
+          "en": "Which mask gives the best protection from haze particles?",
+          "ms": "Pelitup muka manakah yang memberi perlindungan terbaik daripada zarah jerebu?"
+        },
+        "options": [
+          {
+            "en": "A cloth mask",
+            "ms": "Pelitup kain"
+          },
+          {
+            "en": "A well-fitted N95 mask",
+            "ms": "Pelitup N95 yang dipakai dengan ketat"
+          },
+          {
+            "en": "A scarf over your nose",
+            "ms": "Skarf di atas hidung"
+          },
+          {
+            "en": "Any mask works the same",
+            "ms": "Semua pelitup sama sahaja"
+          }
+        ],
+        "answer": 1,
+        "explanation": {
+          "en": "N95 masks filter the fine particles in haze, but only if they fit closely around your nose and mouth.",
+          "ms": "Pelitup N95 menapis zarah halus dalam jerebu, tetapi hanya jika ia rapat di sekeliling hidung dan mulut."
+        }
+      },
+      {
+        "id": "q5",
+        "prompt": {
+          "en": "During haze, a friend with asthma feels breathless. What should they do?",
+          "ms": "Semasa jerebu, rakan yang menghidap asma berasa sesak nafas. Apakah yang patut dilakukan?"
+        },
+        "options": [
+          {
+            "en": "Ignore it until the haze clears",
+            "ms": "Abaikan sehingga jerebu hilang"
+          },
+          {
+            "en": "Use their prescribed inhaler and get medical help if it doesn't ease",
+            "ms": "Guna inhaler yang dipreskripsi dan dapatkan bantuan perubatan jika tidak reda"
+          },
+          {
+            "en": "Go outside for fresh air",
+            "ms": "Keluar untuk mendapatkan udara segar"
+          },
+          {
+            "en": "Drink a cold drink",
+            "ms": "Minum air sejuk"
+          }
+        ],
+        "answer": 1,
+        "explanation": {
+          "en": "People with asthma or heart conditions are more at risk. Follow their care plan and seek help early.",
+          "ms": "Penghidap asma atau penyakit jantung lebih berisiko. Ikut pelan rawatan mereka dan dapatkan bantuan awal."
+        }
+      }
+    ]
+  },
+  {
+    "id": "storm_safety_01",
+    "topic": "storms",
+    "title": {
+      "en": "Storms and fallen trees",
+      "ms": "Ribut dan pokok tumbang"
+    },
+    "questions": [
+      {
+        "id": "q1",
+        "prompt": {
+          "en": "You hear thunder while walking between faculties. What should you do?",
+          "ms": "Anda terdengar guruh semasa berjalan antara fakulti. Apakah yang patut anda lakukan?"
+        },
+        "options": [
+          {
+            "en": "Shelter under the nearest big tree",
+            "ms": "Berlindung di bawah pokok besar terdekat"
+          },
+          {
+            "en": "Go inside the nearest building",
+            "ms": "Masuk ke bangunan terdekat"
+          },
+          {
+            "en": "Keep walking, it is still far away",
+            "ms": "Teruskan berjalan, ia masih jauh"
+          },
+          {
+            "en": "Stand in an open field",
+            "ms": "Berdiri di padang terbuka"
+          }
+        ],
+        "answer": 1,
+        "explanation": {
+          "en": "If you can hear thunder, lightning is close enough to strike. A proper building is the safest place.",
+          "ms": "Jika anda boleh dengar guruh, kilat cukup dekat untuk menyambar. Bangunan ialah tempat paling selamat."
+        }
+      },
+      {
+        "id": "q2",
+        "prompt": {
+          "en": "Why should you avoid standing under trees during a storm?",
+          "ms": "Mengapa anda patut elak berdiri di bawah pokok semasa ribut?"
+        },
+        "options": [
+          {
+            "en": "Branches can fall and lightning can strike trees",
+            "ms": "Dahan boleh patah dan kilat boleh menyambar pokok"
+          },
+          {
+            "en": "Trees make you wetter",
+            "ms": "Pokok menyebabkan anda lebih basah"
+          },
+          {
+            "en": "It is not allowed on campus",
+            "ms": "Ia tidak dibenarkan di kampus"
+          },
+          {
+            "en": "Trees attract insects",
+            "ms": "Pokok menarik serangga"
+          }
+        ],
+        "answer": 0,
+        "explanation": {
+          "en": "Strong wind breaks branches and tall trees are common lightning targets.",
+          "ms": "Angin kuat boleh mematahkan dahan dan pokok tinggi selalu disambar kilat."
+        }
+      },
+      {
+        "id": "q3",
+        "prompt": {
+          "en": "You find a fallen tree blocking a footpath. What is the most helpful action?",
+          "ms": "Anda jumpa pokok tumbang menghalang laluan pejalan kaki. Apakah tindakan paling membantu?"
+        },
+        "options": [
+          {
+            "en": "Climb over it",
+            "ms": "Panjat melepasinya"
+          },
+          {
+            "en": "Try to move it with friends",
+            "ms": "Cuba alihkan bersama rakan"
+          },
+          {
+            "en": "Keep clear and report it in the app with a photo",
+            "ms": "Jauhkan diri dan laporkan dalam aplikasi dengan gambar"
+          },
+          {
+            "en": "Ignore it",
+            "ms": "Abaikan"
+          }
+        ],
+        "answer": 2,
+        "explanation": {
+          "en": "Fallen trees can bring down cables and more branches. A report helps others avoid the route.",
+          "ms": "Pokok tumbang boleh menjatuhkan kabel dan dahan lain. Laporan membantu orang lain mengelak laluan itu."
+        }
+      },
+      {
+        "id": "q4",
+        "prompt": {
+          "en": "After the last thunder, how long should you wait before going back outside?",
+          "ms": "Selepas guruh terakhir, berapa lama anda patut tunggu sebelum keluar semula?"
+        },
+        "options": [
+          {
+            "en": "No need to wait",
+            "ms": "Tidak perlu tunggu"
+          },
+          {
+            "en": "About 30 minutes",
+            "ms": "Kira-kira 30 minit"
+          },
+          {
+            "en": "Until it stops raining only",
+            "ms": "Hanya sehingga hujan berhenti"
+          },
+          {
+            "en": "5 seconds",
+            "ms": "5 saat"
+          }
+        ],
+        "answer": 1,
+        "explanation": {
+          "en": "Lightning can still strike after the rain eases, so wait around 30 minutes after the last thunder.",
+          "ms": "Kilat masih boleh menyambar selepas hujan reda, jadi tunggu kira-kira 30 minit selepas guruh terakhir."
+        }
+      },
+      {
+        "id": "q5",
+        "prompt": {
+          "en": "Which of these is safest to do indoors during a thunderstorm?",
+          "ms": "Antara berikut, yang manakah paling selamat dilakukan di dalam bangunan semasa ribut petir?"
+        },
+        "options": [
+          {
+            "en": "Shower or bath",
+            "ms": "Mandi"
+          },
+          {
+            "en": "Stand by an open window",
+            "ms": "Berdiri di tepi tingkap terbuka"
+          },
+          {
+            "en": "Use your phone on battery",
+            "ms": "Guna telefon dengan bateri"
+          },
+          {
+            "en": "Use a corded appliance plugged into the wall",
+            "ms": "Guna peralatan berwayar yang dipasang ke soket"
+          }
+        ],
+        "answer": 2,
+        "explanation": {
+          "en": "A phone on battery is fine. Plumbing and wired appliances can carry lightning current.",
+          "ms": "Telefon yang menggunakan bateri selamat. Paip dan peralatan berwayar boleh mengalirkan arus kilat."
+        }
+      }
+    ]
+  },
+  {
+    "id": "heat_safety_01",
+    "topic": "heat",
+    "title": {
+      "en": "Hot weather and heat",
+      "ms": "Cuaca panas dan haba"
+    },
+    "questions": [
+      {
+        "id": "q1",
+        "prompt": {
+          "en": "It is very hot and you have back-to-back classes outdoors. What helps most?",
+          "ms": "Cuaca sangat panas dan anda ada kelas berturut-turut di luar. Apakah yang paling membantu?"
+        },
+        "options": [
+          {
+            "en": "Drink water regularly, even before you feel thirsty",
+            "ms": "Minum air dengan kerap, walaupun sebelum berasa dahaga"
+          },
+          {
+            "en": "Only drink when you feel very thirsty",
+            "ms": "Hanya minum apabila sangat dahaga"
+          },
+          {
+            "en": "Drink lots of fizzy or sugary drinks",
+            "ms": "Minum banyak minuman bergas atau bergula"
+          },
+          {
+            "en": "Skip lunch to stay light",
+            "ms": "Langkau makan tengah hari supaya badan ringan"
+          }
+        ],
+        "answer": 0,
+        "explanation": {
+          "en": "Thirst comes late. Small sips through the day keep your body cool.",
+          "ms": "Rasa dahaga datang lewat. Minum sedikit demi sedikit sepanjang hari membantu badan kekal sejuk."
+        }
+      },
+      {
+        "id": "q2",
+        "prompt": {
+          "en": "When is it best to avoid long outdoor activity on a hot day?",
+          "ms": "Bilakah waktu terbaik untuk mengelak aktiviti luar yang lama pada hari panas?"
+        },
+        "options": [
+          {
+            "en": "Early morning",
+            "ms": "Awal pagi"
+          },
+          {
+            "en": "Midday to mid-afternoon",
+            "ms": "Tengah hari hingga petang"
+          },
+          {
+            "en": "After sunset",
+            "ms": "Selepas matahari terbenam"
+          },
+          {
+            "en": "It doesn't matter",
+            "ms": "Tidak penting"
+          }
+        ],
+        "answer": 1,
+        "explanation": {
+          "en": "The sun is strongest around midday, so plan walks and sport for cooler times.",
+          "ms": "Matahari paling terik sekitar tengah hari, jadi rancang berjalan dan sukan pada waktu yang lebih sejuk."
+        }
+      },
+      {
+        "id": "q3",
+        "prompt": {
+          "en": "A friend feels dizzy, sweaty and sick after walking in the heat. What should you do first?",
+          "ms": "Rakan anda berasa pening, berpeluh dan loya selepas berjalan dalam panas. Apakah yang patut dilakukan dahulu?"
+        },
+        "options": [
+          {
+            "en": "Tell them to keep walking",
+            "ms": "Suruh dia terus berjalan"
+          },
+          {
+            "en": "Move them to a cool, shaded place and give sips of water",
+            "ms": "Bawa dia ke tempat yang sejuk dan teduh, dan beri minum air sedikit demi sedikit"
+          },
+          {
+            "en": "Give them a hot drink",
+            "ms": "Beri minuman panas"
+          },
+          {
+            "en": "Leave them to rest in the sun",
+            "ms": "Biarkan dia berehat di bawah matahari"
+          }
+        ],
+        "answer": 1,
+        "explanation": {
+          "en": "These are signs of heat exhaustion. Cool them down, loosen tight clothing and let them rest.",
+          "ms": "Ini tanda keletihan haba. Sejukkan badannya, longgarkan pakaian yang ketat dan biarkan dia berehat."
+        }
+      },
+      {
+        "id": "q4",
+        "prompt": {
+          "en": "Which sign means heat stroke, a medical emergency?",
+          "ms": "Tanda manakah menunjukkan strok haba, satu kecemasan perubatan?"
+        },
+        "options": [
+          {
+            "en": "Feeling a bit thirsty",
+            "ms": "Berasa sedikit dahaga"
+          },
+          {
+            "en": "Confusion or fainting",
+            "ms": "Keliru atau pengsan"
+          },
+          {
+            "en": "A mild headache after sport",
+            "ms": "Sakit kepala ringan selepas bersukan"
+          },
+          {
+            "en": "Feeling tired in the evening",
+            "ms": "Berasa letih pada waktu petang"
+          }
+        ],
+        "answer": 1,
+        "explanation": {
+          "en": "Confusion, fainting or very hot skin can mean heat stroke. Call 999 and start cooling them straight away.",
+          "ms": "Keliru, pengsan atau kulit sangat panas boleh bermaksud strok haba. Hubungi 999 dan mula sejukkan badannya segera."
+        }
+      },
+      {
+        "id": "q5",
+        "prompt": {
+          "en": "What should you wear on a very hot day on campus?",
+          "ms": "Apakah yang patut anda pakai pada hari yang sangat panas di kampus?"
+        },
+        "options": [
+          {
+            "en": "Dark, heavy clothes",
+            "ms": "Pakaian gelap dan tebal"
+          },
+          {
+            "en": "Light-coloured, loose clothing and a hat or umbrella",
+            "ms": "Pakaian berwarna cerah dan longgar, serta topi atau payung"
+          },
+          {
+            "en": "A thick jacket",
+            "ms": "Jaket tebal"
+          },
+          {
+            "en": "Anything, clothes don't matter",
+            "ms": "Apa-apa sahaja, pakaian tidak penting"
+          }
+        ],
+        "answer": 1,
+        "explanation": {
+          "en": "Light, loose clothes let sweat cool you, and shade cuts the sun's heat on your body.",
+          "ms": "Pakaian cerah dan longgar membantu peluh menyejukkan badan, dan teduhan mengurangkan haba matahari."
+        }
+      }
+    ]
+  }
+]

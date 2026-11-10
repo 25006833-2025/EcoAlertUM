@@ -8,6 +8,9 @@
     <string name="tab_assistant">Assistant</string>
     <string name="tab_learn">Learn</string>
 
+    <!-- Top bar -->
+    <string name="nav_back">Back</string>
+
     <!-- Side menu -->
     <string name="menu_open">Open menu</string>
     <string name="menu_close">Close menu</string>
