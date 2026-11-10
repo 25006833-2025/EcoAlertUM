@@ -8,7 +8,7 @@ Status: **draft v0.1**. Data shapes are defined in [data-models.md](data-models.
 |---|---|---|---|
 | A | **Mobile app** | Android, Kotlin + Jetpack Compose | UI for all 6 modules. Reads Firestore (with offline cache), submits reports, uploads photos, receives pushes. Holds **no secrets**. |
 | B | **Auth** | Firebase Authentication (email/password + email verification) | Login for `@siswa.um.edu.my` only. Issues the ID token used by Firestore rules and backend functions. No Google or Microsoft sign-in in v1, because that may need UM approval we won't get in time. |
-| C | **Database** | Cloud Firestore | Stores `hazardReadings`, `sourceStatus`, `forecasts`, `alerts`, `reports`, `users`, `quizResults`, `emergencyContacts`. |
+| C | **Database** | Cloud Firestore | Stores `hazardReadings`, `sourceStatus`, `forecasts`, `alerts`, `reports`, `users`, `quizAttempts`, `emergencyContacts`. |
 | D | **File storage** | Cloud Storage for Firebase | Report photos at `reports/{reportId}/photo.jpg`. |
 | E | **Backend** | Cloud Functions for Firebase (Node.js/TypeScript) | Four functions, listed below. The only component that talks to official APIs or the AI API. |
 | F | **Scheduler** | Cloud Scheduler (via `onSchedule`) | Triggers ingestion every 5 minutes. Each source is fetched only when its own interval is due (see `ingestOfficialData`). |
@@ -102,7 +102,7 @@ Visual tip: draw the **official sources and the AI API reachable only from Cloud
 | `emergencyContacts` | Signed-in | Admins only |
 | `reports` | Signed-in | Create: `reporterUid == auth.uid` and `status == 'unverified'`. Update: moderators may change `status`. Any user may increment `confirmations`, and only by 1. |
 | `users/{uid}` | Owner, plus moderators/admins | Owner, but **not** `role` or `badges` |
-| `quizResults` | Owner, plus admins (for analysis) | Create by owner only. Never updated. |
+| `quizAttempts` | Owner, plus admins (for analysis) | Create by owner only. Never updated. |
 | Storage `reports/**` | Signed-in | Signed-in. Images only, under 5 MB. |
 
 UM-email check, used in every rule:
@@ -136,7 +136,7 @@ The app also checks the domain at sign-up, so users get a clear error message. T
 
 **9. Deterministic reading IDs and latest-only storage.** `{source}_{station}_{type}` means each run overwrites the same doc. Retries are idempotent, the collection never grows, and the app needs no queries, just a fixed list of docs to listen to. History can be added later if we want trend charts.
 
-**10. Top-level `quizResults` with a `phase` field.** Pre/post scores are our evidence for SDG 13.1 (awareness and capacity building). A top-level collection lets us compute average learning gain across all students with a single query.
+**10. Top-level `quizAttempts` with a `phase` field.** Pre/post scores are our evidence for SDG 13.3 (awareness and capacity building). A top-level collection lets us compute average learning gain across all students with a single query.
 
 **11. Login with UM student email and password.** Only verified `@siswa.um.edu.my` accounts can sign in. This keeps reports accountable and limits abuse. The check is enforced in **security rules**, not only in the app UI, because UI checks can be bypassed. We chose email/password with a verification email over Google or Microsoft sign-in. Sign-in through UM's identity provider would likely need approval from UM IT, which we can't get within the semester. Email/password needs nobody's permission and still proves the student owns the inbox.
 
