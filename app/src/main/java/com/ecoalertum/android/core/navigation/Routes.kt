@@ -26,5 +26,9 @@ object Routes {
 
     const val SUBMIT_REPORT = "submit_report"
 
+    // Reached from the Learn tab. Arguments: quiz ID and phase (pre / post / practice).
+    const val QUIZ = "quiz/{quizId}/{phase}"
+    fun quiz(quizId: String, phase: String) = "quiz/$quizId/$phase"
+
     // Add LOGIN = "login" here when the login screen is built.
 }

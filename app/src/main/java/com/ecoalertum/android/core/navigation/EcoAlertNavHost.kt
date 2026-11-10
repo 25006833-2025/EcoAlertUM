@@ -4,8 +4,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.ecoalertum.android.alerts.AlertHistoryScreen
 import com.ecoalertum.android.alerts.AlertPreferencesScreen
@@ -14,6 +16,8 @@ import com.ecoalertum.android.assistant.AssistantScreen
 import com.ecoalertum.android.home.HomeScreen
 import com.ecoalertum.android.learn.LearnScreen
 import com.ecoalertum.android.learn.ProgressScreen
+import com.ecoalertum.android.learn.quiz.QuizScreen
+import com.ecoalertum.android.learn.quiz.QuizViewModel
 import com.ecoalertum.android.map.MapScreen
 import com.ecoalertum.android.map.ModeratorQueueScreen
 import com.ecoalertum.android.map.MyReportsScreen
@@ -57,7 +61,12 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
         composable(Routes.ALERTS) { AlertsScreen() }
         composable(Routes.MAP) { MapScreen() }
         composable(Routes.ASSISTANT) { AssistantScreen() }
-        composable(Routes.LEARN) { LearnScreen() }
+        composable(Routes.LEARN) {
+            LearnScreen(
+                onStartQuiz = { quizId, phase -> navController.navigate(Routes.quiz(quizId, phase.value)) },
+                onOpenProgress = { navController.navigate(Routes.PROGRESS) { launchSingleTop = true } },
+            )
+        }
 
         // Side-menu screens
         composable(Routes.PROGRESS) { ProgressScreen() }
@@ -73,6 +82,17 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
         // Reached from the + button on My Reports
         composable(Routes.SUBMIT_REPORT) {
             SubmitReportScreen(onSubmitted = { navController.popBackStack() })
+        }
+
+        // Reached from the Learn tab (Module 5, FR5.1)
+        composable(
+            route = Routes.QUIZ,
+            arguments = listOf(
+                navArgument(QuizViewModel.ARG_QUIZ_ID) { type = NavType.StringType },
+                navArgument(QuizViewModel.ARG_PHASE) { type = NavType.StringType },
+            ),
+        ) {
+            QuizScreen(onExit = { navController.popBackStack() })
         }
     }
 }

@@ -4,6 +4,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -26,6 +27,7 @@ import androidx.navigation.compose.rememberNavController
 import com.ecoalertum.android.R
 import com.ecoalertum.android.core.navigation.EcoAlertNavHost
 import com.ecoalertum.android.core.navigation.Routes
+import com.ecoalertum.android.core.navigation.TopLevelDestination
 import com.ecoalertum.android.home.HomeTopBarStatus
 import com.ecoalertum.android.ui.theme.EcoAlertUMTheme
 import kotlinx.coroutines.launch
@@ -45,8 +47,19 @@ fun EcoAlertApp() {
         Routes.SUBMIT_REPORT -> R.string.reports_submit_title
         Routes.MAP -> R.string.reports_map_title
         Routes.MY_REPORTS -> R.string.reports_my_reports_title
+        Routes.LEARN -> R.string.tab_learn
+        Routes.PROGRESS -> R.string.menu_progress
+        Routes.ALERT_HISTORY -> R.string.menu_alert_history
+        Routes.ALERT_PREFERENCES -> R.string.menu_alert_preferences
+        Routes.EMERGENCY_CONTACTS -> R.string.menu_emergency_contacts
+        Routes.ABOUT -> R.string.menu_about
+        Routes.MODERATOR_QUEUE -> R.string.menu_moderator_queue
+        Routes.QUIZ -> R.string.quiz_title
         else -> R.string.app_name
     }
+
+    // Bottom-bar tabs show the menu button; every other screen shows a back arrow.
+    val isTopLevel = TopLevelDestination.entries.any { it.route == currentDestination?.route }
 
     // TODO: read the role from users/{uid} once login exists. Hides the moderator queue until then.
     val isModerator = false
@@ -79,8 +92,14 @@ fun EcoAlertApp() {
                     TopAppBar(
                         title = { Text(stringResource(titleRes)) },
                         navigationIcon = {
-                            IconButton(onClick = { scope.launch { drawerState.open() } }) {
-                                Icon(Icons.Filled.Menu, contentDescription = stringResource(R.string.menu_open))
+                            if (isTopLevel) {
+                                IconButton(onClick = { scope.launch { drawerState.open() } }) {
+                                    Icon(Icons.Filled.Menu, contentDescription = stringResource(R.string.menu_open))
+                                }
+                            } else {
+                                IconButton(onClick = { navController.navigateUp() }) {
+                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.nav_back))
+                                }
                             }
                         },
                         actions = {
