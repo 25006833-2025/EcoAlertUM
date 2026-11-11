@@ -3,6 +3,8 @@
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc --watch",
+    "test": "npm run build && node --test \"lib/**/*.test.js\"",
+    "ingest:emulator": "npm run build && node lib/ingest/runOnceOnEmulator.js",
     "serve": "npm run build && firebase emulators:start --only functions",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
