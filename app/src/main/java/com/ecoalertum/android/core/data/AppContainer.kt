@@ -1,9 +1,12 @@
 package com.ecoalertum.android.core.data
 
 import android.content.Context
+import com.ecoalertum.android.BuildConfig
 import com.ecoalertum.android.core.data.fake.FakeAlertRepository
 import com.ecoalertum.android.core.data.fake.FakeHazardRepository
 import com.ecoalertum.android.core.data.fake.MockJsonParser
+import com.ecoalertum.android.core.data.firestore.FirestoreAlertRepository
+import com.ecoalertum.android.core.data.firestore.FirestoreHazardRepository
 import com.ecoalertum.android.core.data.repository.AlertRepository
 import com.ecoalertum.android.core.data.repository.HazardRepository
 import com.ecoalertum.android.learn.quiz.BundledQuizRepository
@@ -22,14 +25,24 @@ class AppContainer(context: Context) {
     private val appContext = context.applicationContext
     private val assets = appContext.assets
 
-    // Part 2: replace with the Firestore implementation.
+    // Live Firestore data needs a signed-in UM user (firestore.rules). Set USE_LIVE_DATA in
+    // app/build.gradle.kts to true once login exists; until then the app shows the mock scenario.
+    private val useLiveData = BuildConfig.USE_LIVE_DATA
+
     val hazardRepository: HazardRepository by lazy {
-        FakeHazardRepository(MockJsonParser.parseReadings(readAsset("mock/hazardReadings.json")))
+        if (useLiveData) {
+            FirestoreHazardRepository()
+        } else {
+            FakeHazardRepository(MockJsonParser.parseReadings(readAsset("mock/hazardReadings.json")))
+        }
     }
 
-    // Part 2: replace with the Firestore implementation.
     val alertRepository: AlertRepository by lazy {
-        FakeAlertRepository(MockJsonParser.parseAlerts(readAsset("mock/alerts.json")))
+        if (useLiveData) {
+            FirestoreAlertRepository()
+        } else {
+            FakeAlertRepository(MockJsonParser.parseAlerts(readAsset("mock/alerts.json")))
+        }
     }
 
     // Module 5: quiz content is bundled in the app for v1 (docs/data-models.md).

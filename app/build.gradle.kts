@@ -16,6 +16,9 @@ android {
         versionCode = 1
         versionName = "1.0"
 
+        // Live Firestore hazard data needs a signed-in UM user. Turn on when login is merged.
+        buildConfigField("boolean", "USE_LIVE_DATA", "false")
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 

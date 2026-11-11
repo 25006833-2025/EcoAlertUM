@@ -1,7 +1,7 @@
 package com.ecoalertum.android.core.data.fake
 
-import com.ecoalertum.android.core.data.freshness.Freshness
 import com.ecoalertum.android.core.data.freshness.FreshnessPolicy
+import com.ecoalertum.android.core.data.freshness.HazardState
 import com.ecoalertum.android.core.data.model.HazardReading
 import com.ecoalertum.android.core.data.model.HazardType
 import com.ecoalertum.android.core.data.model.Source
@@ -60,16 +60,7 @@ class FakeHazardRepository(
 
     private fun State.toDataState(type: HazardType): DataState<List<HazardReading>> {
         val now = nowMillis()
-        val matching = readings.filter { it.type.hazardType == type }
-        val lastUpdatedTimes = matching.map { Freshness.lastUpdatedOf(it, statusOf(it.source, now)) }
-        val lastUpdated = lastUpdatedTimes.filterNotNull().minOrNull()
-
-        errorMessage?.let { return DataState.Error(it, matching.ifEmpty { null }, lastUpdated) }
-
-        val isOutdated = matching.indices.any { i ->
-            freshnessPolicy.isOutdated(matching[i].source, lastUpdatedTimes[i], now)
-        }
-        return DataState.Success(matching, isOutdated, lastUpdated)
+        return HazardState.of(type, readings, { statusOf(it, now) }, freshnessPolicy, now, errorMessage)
     }
 
     private fun State.statusOf(source: Source, now: Long): SourceStatus {
