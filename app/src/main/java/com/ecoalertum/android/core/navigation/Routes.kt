@@ -30,5 +30,9 @@ object Routes {
     const val QUIZ = "quiz/{quizId}/{phase}"
     fun quiz(quizId: String, phase: String) = "quiz/$quizId/$phase"
 
+    // Module 2: one alert. Opened from the Alerts list and from notifications.
+    const val ALERT_DETAIL = "alert/{alertId}"
+    fun alertDetail(alertId: String) = "alert/$alertId"
+
     // Add LOGIN = "login" here when the login screen is built.
 }

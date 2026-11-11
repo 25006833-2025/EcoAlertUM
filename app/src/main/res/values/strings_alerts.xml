@@ -10,4 +10,10 @@
     <string name="alerts_loading">Loading alerts…</string>
     <string name="alerts_error">Can\'t load alerts right now.</string>
     <string name="alerts_empty">No alerts yet. You\'ll see warnings here when they\'re issued for the UM area.</string>
+    <string name="alert_detail_title">Alert</string>
+    <string name="alert_detail_not_found">This alert is no longer available.</string>
+    <string name="alert_detail_issued">Issued %1$s</string>
+    <string name="alert_detail_until">Until %1$s</string>
+    <string name="alert_detail_severity">Severity</string>
+    <string name="alert_detail_what_to_do">What to do now</string>
 </resources>

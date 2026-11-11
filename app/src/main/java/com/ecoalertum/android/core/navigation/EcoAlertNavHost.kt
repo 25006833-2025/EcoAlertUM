@@ -8,7 +8,9 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
+import com.ecoalertum.android.alerts.AlertDetailScreen
 import com.ecoalertum.android.alerts.AlertHistoryScreen
 import com.ecoalertum.android.alerts.AlertPreferencesScreen
 import com.ecoalertum.android.alerts.AlertsScreen
@@ -58,7 +60,9 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
                 onExplain = { navController.navigateToTab(Routes.ASSISTANT) },
             )
         }
-        composable(Routes.ALERTS) { AlertsScreen() }
+        composable(Routes.ALERTS) {
+            AlertsScreen(onAlertClick = { id -> navController.navigate(Routes.alertDetail(id)) })
+        }
         composable(Routes.MAP) { MapScreen() }
         composable(Routes.ASSISTANT) { AssistantScreen() }
         composable(Routes.LEARN) {
@@ -94,6 +98,17 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
         ) {
             QuizScreen(onExit = { navController.popBackStack() })
         }
+
+
+        // Module 2: one alert, from the Alerts list or a notification (FR2.1)
+        composable(
+            route = Routes.ALERT_DETAIL,
+            arguments = listOf(navArgument("alertId") { type = NavType.StringType }),
+            deepLinks = listOf(navDeepLink { uriPattern = "ecoalertum://alert/{alertId}" }),
+        ) {
+            AlertDetailScreen()
+        }
+
     }
 }
 
