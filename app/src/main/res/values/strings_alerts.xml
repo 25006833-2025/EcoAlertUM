@@ -16,4 +16,6 @@
     <string name="alert_detail_until">Until %1$s</string>
     <string name="alert_detail_severity">Severity</string>
     <string name="alert_detail_what_to_do">What to do now</string>
+    <string name="alert_channel_name">Hazard alerts</string>
+    <string name="alert_channel_description">Official weather, flood and air-quality warnings for UM</string>
 </resources>
