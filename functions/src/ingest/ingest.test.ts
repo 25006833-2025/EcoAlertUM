@@ -21,6 +21,8 @@ describe("runIngestion", () => {
 
     assert.equal((summary.met as { ok: boolean }).ok, true);
     assert.equal((summary.infobanjir as { ok: boolean }).ok, true);
+    assert.equal((summary.doe as { ok: boolean }).ok, true);
+    assert.ok(store.reading("doe_CA19B_air_quality"));
     assert.ok(store.reading("infobanjir_0232121WL_flood_level"));
     assert.ok(store.reading("infobanjir_0232131WL_flood_level"));
     assert.ok(store.reading("infobanjir_0232231RF_rainfall"));
@@ -42,6 +44,7 @@ describe("runIngestion", () => {
     );
 
     assert.equal((summary.met as { ok: boolean }).ok, true);
+    assert.equal((summary.doe as { ok: boolean }).ok, true);
     const status = store.status("infobanjir")!;
     assert.equal(status.ok, false);
     assert.match(status.error, /HTTP 503/);

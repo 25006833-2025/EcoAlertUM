@@ -1,5 +1,6 @@
 import { Timestamp } from "firebase-admin/firestore";
 
+import { DOE_INTERVAL_MS, runDoe } from "./doe";
 import { INFOBANJIR_INTERVAL_MS, runInfobanjir } from "./infobanjir";
 import { MET_INTERVAL_MS, runMet } from "./met";
 import { HttpGet, SourceId, SourceRun, httpGet, recordStatus } from "./readings";
@@ -17,6 +18,7 @@ export interface Adapter {
 export const ADAPTERS: Adapter[] = [
   { source: "met", intervalMs: MET_INTERVAL_MS, run: runMet },
   { source: "infobanjir", intervalMs: INFOBANJIR_INTERVAL_MS, run: runInfobanjir },
+  { source: "doe", intervalMs: DOE_INTERVAL_MS, run: runDoe },
 ];
 
 /** The scheduler fires every 5 min, a little after the mark; this keeps a 15-min source on 15 min, not 20. */
