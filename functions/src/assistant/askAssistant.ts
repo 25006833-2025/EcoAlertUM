@@ -62,18 +62,47 @@ export const askAssistant = onCall(
     );
 
     try {
+      const responseText = await generateGeminiText(prompt);
 
-      const explanation = await generateGeminiText(prompt);
+      if (validated.mode === "explain") {
+        const parsed: unknown = JSON.parse(responseText);
 
+        if (
+          typeof parsed !== "object" ||
+          parsed === null ||
+          !("explanation" in parsed) ||
+          typeof parsed.explanation !== "string" ||
+          !parsed.explanation.trim() ||
+          !("steps" in parsed) ||
+          !Array.isArray(parsed.steps) ||
+          parsed.steps.length > 3 ||
+          !parsed.steps.every(
+            (step: unknown) =>
+              typeof step === "string" && step.trim().length > 0
+          )
+        ) {
+          throw new Error("Invalid structured Gemini explanation response.");
+        }
+
+        return {
+          status: "ok",
+          explanation: parsed.explanation.trim(),
+          steps: parsed.steps,
+          sources: ["EcoAlert UM hazard information"],
+          generatedBy: "ai",
+        };
+      }
+
+      // Preserve plain-text responses for FR4.2 chat.
       return {
         status: "ok",
-        explanation,
+        explanation: responseText,
         steps: [],
         sources: ["EcoAlert UM hazard information"],
         generatedBy: "ai",
       };
     } catch (error) {
-      console.error("Gemini request failed:", error);
+      console.error("Gemini request or response parsing failed:", error);
 
       return createFallbackResponse(
         validated.language,

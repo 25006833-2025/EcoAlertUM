@@ -55,13 +55,39 @@ ${hazardContext}
     return `
 ${safetyInstructions}
 
-Explain the current hazard to a student.
-Include:
-- What the hazard means.
-- Why students should be cautious.
-- Practical safety precautions.
+Explain the selected hazard to a Universiti Malaya student.
 
-Do not assume information that is not provided.
+Include:
+1. What the hazard means.
+2. Why students should be cautious.
+3. Practical safety precautions supported by the hazard information.
+
+Important:
+- Do not invent hazard details, locations, severity, or timestamps.
+- Do not present historical or simulated alerts as current conditions.
+- If the alert has expired, clearly state that it is expired.
+- If information is incomplete, acknowledge the limitation.
+- Provide general safety guidance only when appropriate.
+
+Return ONLY a valid JSON object with this exact structure:
+
+{
+  "explanation": "A clear, student-friendly explanation of the hazard.",
+  "steps": [
+    "First practical safety precaution.",
+    "Second practical safety precaution.",
+    "Third practical safety precaution."
+  ]
+}
+
+Rules for the JSON response:
+- Use double quotes for all JSON strings.
+- Do not include Markdown code fences.
+- Do not include text outside the JSON object.
+- Keep the explanation concise and understandable.
+- Provide up to 3 practical safety steps.
+- If no specific safety steps are supported, return an empty array.
+- Write all text in the requested language.
 `;
   }
 

@@ -26,6 +26,7 @@ import com.ecoalertum.android.map.MyReportsScreen
 import com.ecoalertum.android.map.SubmitReportScreen
 import com.ecoalertum.android.settings.AboutScreen
 import com.ecoalertum.android.settings.EmergencyContactsScreen
+import com.ecoalertum.android.assistant.HazardExplainedScreen
 
 /**
  * The app's navigation graph.
@@ -106,9 +107,28 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
             arguments = listOf(navArgument("alertId") { type = NavType.StringType }),
             deepLinks = listOf(navDeepLink { uriPattern = "ecoalertum://alert/{alertId}" }),
         ) {
-            AlertDetailScreen()
+            AlertDetailScreen(
+                onExplainWithAI = { alertId ->
+                    navController.navigate(Routes.hazardExplained(alertId))
+                },
+            )
         }
 
+        // Module 4, FR4.1: AI hazard explanation.
+        composable(
+            route = Routes.HAZARD_EXPLAINED,
+            arguments = listOf(
+                navArgument("alertId") { type = NavType.StringType }
+            ),
+        ) { backStackEntry ->
+            val alertId = backStackEntry.arguments
+                ?.getString("alertId")
+                .orEmpty()
+
+            HazardExplainedScreen(
+                alertId = alertId,
+            )
+        }
     }
 }
 

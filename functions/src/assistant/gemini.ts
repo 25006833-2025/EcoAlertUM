@@ -7,7 +7,7 @@ import { defineSecret } from "firebase-functions/params";
 export const geminiApiKey = defineSecret("GEMINI_API_KEY");
 
 // Gemini model used by EcoAlert UM.
-const GEMINI_MODEL = "gemini-3.8-flash";
+const GEMINI_MODEL = "gemini-3.5-flash-lite";
 
 // Create a Gemini client when needed.
 function getGeminiClient(): GoogleGenAI {

@@ -34,5 +34,9 @@ object Routes {
     const val ALERT_DETAIL = "alert/{alertId}"
     fun alertDetail(alertId: String) = "alert/$alertId"
 
+    // Module 4, FR4.1: AI explanation for a selected alert.
+    const val HAZARD_EXPLAINED = "assistant/explain/{alertId}"
+    fun hazardExplained(alertId: String) = "assistant/explain/$alertId"
+
     // Add LOGIN = "login" here when the login screen is built.
 }

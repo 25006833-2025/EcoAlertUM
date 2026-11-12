@@ -29,11 +29,13 @@ import com.ecoalertum.android.home.LevelBadge
 import com.ecoalertum.android.home.labelRes
 import java.text.DateFormat
 import java.util.Date
+import androidx.compose.material3.Button
 
 /** FR2.1: one alert in full. Opened from the Alerts list or a notification. */
 @Composable
 fun AlertDetailScreen(
     modifier: Modifier = Modifier,
+    onExplainWithAI: (String) -> Unit = {},
     viewModel: AlertDetailViewModel = viewModel(factory = AlertDetailViewModel.Factory),
 ) {
     val state by viewModel.alert.collectAsStateWithLifecycle()
@@ -96,6 +98,14 @@ fun AlertDetailScreen(
         // What to do (the alert's message)
         Text(stringResource(R.string.alert_detail_what_to_do), style = MaterialTheme.typography.titleMedium)
         Text(alert.message.get("en"), style = MaterialTheme.typography.bodyLarge)
+
+        // Module 4, FR4.1: Open AI hazard explanation.
+        Button(
+            onClick = { onExplainWithAI(alert.id) },
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Text("Explain with AI")
+        }
     }
 }
 
