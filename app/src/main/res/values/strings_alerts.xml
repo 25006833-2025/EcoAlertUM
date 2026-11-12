@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Alerts (Module 2) -->
+    <string name="alerts_filter_all">All</string>
+    <string name="alerts_filter_rain">Rain</string>
+    <string name="alerts_filter_flood">Flood</string>
+    <string name="alerts_filter_haze">Haze</string>
+    <string name="alerts_section_now">Right now</string>
+    <string name="alerts_section_past">Past alerts</string>
+    <string name="alerts_loading">Loading alerts…</string>
+    <string name="alerts_error">Can\'t load alerts right now.</string>
+    <string name="alerts_empty">No alerts yet. You\'ll see warnings here when they\'re issued for the UM area.</string>
+    <string name="alert_detail_title">Alert</string>
+    <string name="alert_detail_not_found">This alert is no longer available.</string>
+    <string name="alert_detail_issued">Issued %1$s</string>
+    <string name="alert_detail_until">Until %1$s</string>
+    <string name="alert_detail_severity">Severity</string>
+    <string name="alert_detail_what_to_do">What to do now</string>
+    <string name="alert_channel_name">Hazard alerts</string>
+    <string name="alert_channel_description">Official weather, flood and air-quality warnings for UM</string>
+</resources>
