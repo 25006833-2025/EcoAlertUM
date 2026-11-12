@@ -22,7 +22,9 @@ Shared code lives in `readings.ts` (writer, `sourceStatus`, parsers) and `store.
 
 How it behaves:
 - A reading is written only when it changes. `previousValue` keeps the last stored value.
-- Bad values are rejected: `-9999`, missing, impossible zeros, and readings older than 2x the source's update interval. The last good doc stays, and the station is listed in `sourceStatus/{source}.stationsMissing`.
+- Bad values are rejected: `-9999`, missing, impossible zeros, and stale readings. The last good doc stays, and the station is listed in `sourceStatus/{source}.stationsMissing`.
+  - Stale means older than 45 min for InfoBanjir (the page lags behind its 15-min updates) or 2 h for DOE.
+  - A rain gauge reporting 0 for all 7 days is rejected only if it is on the known-faulty list (`KNOWN_FAULTY_GAUGES` in `infobanjir.ts`, currently Jalan Ang Seng). A dry week elsewhere is accepted.
 - Each source is isolated. If one fails, only its `sourceStatus` shows `ok: false`, and the others still run.
 - Requests use a 10 s timeout and the User-Agent `EcoAlertUM-student-project`.
 

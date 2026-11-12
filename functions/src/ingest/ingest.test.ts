@@ -68,8 +68,8 @@ describe("runIngestion", () => {
     const store = new MemoryStore();
     await runIngestion(store, NOW, sampleGet(), { force: true });
 
-    // 21:20: the 20:30 and 20:45 readings are older than 30 min.
-    await runIngestion(store, new Date("2026-10-23T21:20:00+08:00"), sampleGet(), { force: true });
+    // 21:31: the 20:30 and 20:45 readings are older than 45 min.
+    await runIngestion(store, new Date("2026-10-23T21:31:00+08:00"), sampleGet(), { force: true });
 
     const status = store.status("infobanjir")!;
     assert.equal(status.ok, false);

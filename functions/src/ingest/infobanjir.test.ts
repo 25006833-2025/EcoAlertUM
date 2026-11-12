@@ -83,8 +83,9 @@ describe("InfoBanjir water level", () => {
     for (const waterLevel of [-9999, null, 0]) {
       assert.equal(waterLevelReading({ ...base, waterLevel }, BUKIT_PUTRA, NOW).ok, false, `value ${waterLevel}`);
     }
-    // 20:45 reading at 21:20 is 35 min old, more than 2 x 15 min.
-    const late = waterLevelReading(base, BUKIT_PUTRA, new Date("2026-10-23T21:20:00+08:00"));
+    // A 20:45 reading is still current at 21:30 (45 min) but stale at 21:31.
+    assert.equal(waterLevelReading(base, BUKIT_PUTRA, new Date("2026-10-23T21:30:00+08:00")).ok, true);
+    const late = waterLevelReading(base, BUKIT_PUTRA, new Date("2026-10-23T21:31:00+08:00"));
     assert.deepEqual(late, { ok: false, reason: "stale (23/10/2026 20:45)" });
     const badThresholds = waterLevelReading({ ...base, thresholds: { ...base.thresholds, warning: 20 } }, BUKIT_PUTRA, NOW);
     assert.equal(badThresholds.ok, false);
@@ -131,15 +132,26 @@ describe("InfoBanjir rainfall", () => {
     assert.equal(rainfallLevel(200), "warning");
   });
 
-  it("rejects a gauge that reports zero for 7 days (Jalan Ang Seng in the sample)", () => {
+  it("accepts a dry week at the UM gauge (7 zero days)", () => {
+    const dryWeek: RainfallRow = { ...row(rainRows(), "0232231RF"), daily: [0, 0, 0, 0, 0, 0], sinceMidnight: 0, lastHour: 0 };
+    const parsed = rainfallReading(dryWeek, RAIN_GAUGE, NOW);
+    assert.ok(parsed.ok);
+    assert.equal(parsed.reading.data.value, 0);
+    assert.equal(parsed.reading.data.level, "normal");
+  });
+
+  it("rejects 7 zero days on the known faulty Jalan Ang Seng gauge (real sample)", () => {
     const angSeng: RainfallRow = row(rainRows(), "0232131RF");
-    assert.deepEqual(rainfallReading(angSeng, RAIN_GAUGE, NOW), { ok: false, reason: "all zero for 7 days (likely faulty gauge)" });
+    assert.deepEqual(angSeng.daily, [0, 0, 0, 0, 0, 0]);
+    const config = { ...RAIN_GAUGE, id: "0232131RF" };
+    assert.deepEqual(rainfallReading(angSeng, config, NOW), { ok: false, reason: "all zero for 7 days on a known faulty gauge" });
   });
 
   it("rejects -9999 and stale readings", () => {
     const um = row(rainRows(), "0232231RF");
     assert.equal(rainfallReading({ ...um, lastHour: -9999 }, RAIN_GAUGE, NOW).ok, false);
-    assert.equal(rainfallReading(um, RAIN_GAUGE, new Date("2026-10-23T21:30:00+08:00")).ok, false);
+    assert.equal(rainfallReading(um, RAIN_GAUGE, new Date("2026-10-23T21:30:00+08:00")).ok, true);
+    assert.equal(rainfallReading(um, RAIN_GAUGE, new Date("2026-10-23T21:31:00+08:00")).ok, false);
   });
 
   it("throws when the column count changes", () => {

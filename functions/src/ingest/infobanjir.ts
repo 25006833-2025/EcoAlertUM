@@ -24,9 +24,13 @@ const BASE = "https://publicinfobanjir.water.gov.my";
 export const WATER_LEVEL_URL = `${BASE}/index.php/aras-air/data-paras-air/aras-air-data/?state=WLH&district=Kuala%20Lumpur&station=ALL`;
 export const RAINFALL_URL = `${BASE}/wp-content/themes/shapely/agency/searchresultrainfall.php?state=WLH&district=Kuala%20Lumpur&station=ALL&loginStatus=0&language=1`;
 
-/** InfoBanjir updates every 15 min; readings older than 2x that are rejected. */
+/**
+ * InfoBanjir updates every 15 min, but the page lags: at 21:05 the 23 Oct sample still showed
+ * 20:30 for some stations (35 min old). 45 min (3x) avoids rejecting current readings just before
+ * each update, and matches the app's outdated limit for InfoBanjir.
+ */
 export const INFOBANJIR_INTERVAL_MS = 15 * 60 * 1000;
-export const INFOBANJIR_MAX_AGE_MS = 2 * INFOBANJIR_INTERVAL_MS;
+export const INFOBANJIR_MAX_AGE_MS = 45 * 60 * 1000;
 
 /** Hand-kept station list: the tables have no coordinates (positions from data.gov.my, to confirm). */
 export interface StationConfig {
@@ -41,6 +45,12 @@ export const RIVER_STATIONS: StationConfig[] = [
 ];
 
 export const RAIN_GAUGE: StationConfig = { id: "0232231RF", location: UM_LOCATION, distanceKm: 0 }; // Universiti Malaya (F2)
+
+/**
+ * Gauges known to report 0 when broken. data-sources.md found Jalan Ang Seng (F2) at 0 for 7 days
+ * while its neighbours recorded rain. Other gauges may have a genuinely dry week, so the rule is not general.
+ */
+export const KNOWN_FAULTY_GAUGES: ReadonlySet<string> = new Set(["0232131RF"]);
 
 // --- Parsing ---------------------------------------------------------------------------------
 
@@ -235,15 +245,14 @@ export function waterLevelReading(row: WaterLevelRow, station: StationConfig, no
   };
 }
 
-/**
- * A gauge reporting exactly 0 for every day and hour is treated as faulty, not dry: data-sources.md
- * found one (Jalan Ang Seng) recording nothing for 7 days while its neighbours recorded rain.
- */
+/** A gauge on [KNOWN_FAULTY_GAUGES] reporting exactly 0 for every day and hour is treated as broken, not dry. */
 export function rainfallReading(row: RainfallRow, station: StationConfig, now: Date): Parsed<StoredDoc> {
   const value = row.lastHour;
   if (value == null || isSentinel(value) || value < 0) return { ok: false, reason: `invalid rainfall ${row.lastHour}` };
   const all = [...row.daily, row.sinceMidnight, row.lastHour];
-  if (all.every((v) => v === 0)) return { ok: false, reason: "all zero for 7 days (likely faulty gauge)" };
+  if (KNOWN_FAULTY_GAUGES.has(row.stationId) && all.every((v) => v === 0)) {
+    return { ok: false, reason: "all zero for 7 days on a known faulty gauge" };
+  }
   const observedAt = parseMytDateTime(row.lastUpdated);
   if (!observedAt) return { ok: false, reason: `unreadable time "${row.lastUpdated}"` };
   if (isStale(observedAt, now, INFOBANJIR_MAX_AGE_MS)) return { ok: false, reason: `stale (${row.lastUpdated})` };
