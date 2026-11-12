@@ -1,21 +1,22 @@
 import { GeoPoint, Timestamp } from "firebase-admin/firestore";
 
+import { HttpGet, Level, LocalizedText, SourceRun, UM_LOCATION, writeReadings } from "./readings";
+import { IngestStore } from "./store";
+
 /**
  * MET Malaysia via data.gov.my: weather warnings and the 7-day forecast.
  * Field formats and quirks are documented in docs/data-sources.md section 1.
- * Everything here is pure (no network, no database) so it can be unit tested.
+ * The parsing functions are pure (no network, no database) so they can be unit tested.
  */
 
 export const MET_BASE_URL = "https://api.data.gov.my/weather";
 
-/** JPS "Universiti Malaya" rain gauge position, used as the UM reference point. */
-export const UM_LOCATION = new GeoPoint(3.127447, 101.650307);
-
 /** MET forecast location nearest to UM (Kuala Lumpur town). */
 export const FORECAST_LOCATION_ID = "Tn079";
 
-/** Shared severity scale as stored in Firestore ("alert" is shown as Advisory in the app). */
-export type Level = "normal" | "alert" | "warning" | "danger";
+/** Warnings are fetched every run (5 min); the forecast changes daily, so at most every 6 h. */
+export const MET_INTERVAL_MS = 5 * 60 * 1000;
+export const FORECAST_INTERVAL_MS = 6 * 60 * 60 * 1000;
 
 export interface MetWarning {
   warning_issue?: { issued?: string; title_en?: string; title_bm?: string };
@@ -37,11 +38,6 @@ export interface MetForecastDay {
   summary_when?: string;
   min_temp?: number;
   max_temp?: number;
-}
-
-export interface LocalizedText {
-  en: string;
-  ms: string;
 }
 
 /** One `hazardReadings` document (see docs/data-models.md). */
@@ -242,4 +238,47 @@ export function forecastToDoc(days: MetForecastDay[], locationId: string, now: D
     },
     unknownPhrases: [...unknown],
   };
+}
+
+// --- Adapter ---------------------------------------------------------------------------------
+
+/**
+ * One MET run: warnings every time (the current list is authoritative, so warnings MET no longer
+ * publishes are deleted), and the forecast when the saved one is older than 6 h.
+ */
+export async function runMet(store: IngestStore, now: Date, get: HttpGet): Promise<SourceRun & { forecast: ForecastResult }> {
+  const warnings = JSON.parse(await get(`${MET_BASE_URL}/warning/`));
+  if (!Array.isArray(warnings)) throw new Error("MET warnings: expected a JSON array");
+  const result = await writeReadings(
+    store,
+    { source: "met", type: "weather_warning" },
+    warningsToReadings(warnings as MetWarning[], now),
+    true,
+  );
+  const forecast = await maybeUpdateForecast(store, now, get);
+  return { ok: true, error: null, stationsMissing: [], ...result, forecast };
+}
+
+type ForecastResult = "updated" | "skipped" | "failed";
+
+async function maybeUpdateForecast(store: IngestStore, now: Date, get: HttpGet): Promise<ForecastResult> {
+  const saved = await store.getDoc("forecasts", FORECAST_LOCATION_ID);
+  const fetchedAt = saved?.fetchedAt;
+  if (fetchedAt instanceof Timestamp && now.getTime() - fetchedAt.toMillis() < FORECAST_INTERVAL_MS) {
+    return "skipped";
+  }
+  try {
+    const url = `${MET_BASE_URL}/forecast/?contains=${FORECAST_LOCATION_ID}@location__location_id`;
+    const days = JSON.parse(await get(url));
+    if (!Array.isArray(days)) throw new Error("MET forecast: expected a JSON array");
+    const doc = forecastToDoc(days as MetForecastDay[], FORECAST_LOCATION_ID, now);
+    if (!doc) throw new Error(`MET forecast: no days for ${FORECAST_LOCATION_ID}`);
+    if (doc.unknownPhrases.length > 0) console.warn("MET forecast: unknown phrases", doc.unknownPhrases);
+    await store.setDoc("forecasts", doc.id, doc.data);
+    return "updated";
+  } catch (e) {
+    // The forecast is informational only; a failure must not mark warnings as down.
+    console.error("MET forecast failed", e);
+    return "failed";
+  }
 }
