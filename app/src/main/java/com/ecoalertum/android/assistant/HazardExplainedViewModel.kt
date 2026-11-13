@@ -10,6 +10,8 @@ import kotlinx.coroutines.launch
 import android.util.Log
 import com.ecoalertum.android.BuildConfig
 
+
+
 sealed interface HazardExplanationUiState {
     data object Idle : HazardExplanationUiState
     data object Loading : HazardExplanationUiState
@@ -52,7 +54,7 @@ class HazardExplainedViewModel(
             _uiState.value = HazardExplanationUiState.Loading
 
             try {
-                val response = if (BuildConfig.DEBUG && USE_MOCK_AI) {
+                val response = if (BuildConfig.DEBUG && BuildConfig.USE_MOCK_AI) {
                     mockRepository.explainHazard(
                         alertId = alertId,
                         language = "en"
@@ -84,7 +86,3 @@ class HazardExplainedViewModel(
         }
     }
 }
-
-// Development-only setting.
-// Set to false when testing the Firebase/Gemini integration.
-private const val USE_MOCK_AI = false

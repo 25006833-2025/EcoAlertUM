@@ -1,9 +1,25 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.google.services)
 }
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+
+if (localPropertiesFile.exists()) {
+    FileInputStream(localPropertiesFile).use {
+        localProperties.load(it)
+    }
+}
+
+val useMockAi = localProperties
+    .getProperty("USE_MOCK_AI", "false")
+    .equals("true", ignoreCase = true)
 
 android {
     namespace = "com.ecoalertum.android"
@@ -18,6 +34,9 @@ android {
 
         // Live Firestore hazard data needs a signed-in UM user. Turn on when login is merged.
         buildConfigField("boolean", "USE_LIVE_DATA", "false")
+
+        // Local Mock AI toggle, disabled by default.
+        buildConfigField("boolean", "USE_MOCK_AI", useMockAi.toString())
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
