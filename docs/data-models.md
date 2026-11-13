@@ -96,7 +96,7 @@ A notification the rules engine raised from one or more readings. The backend wr
 | `title` | LocalizedText | Push notification title |
 | `message` | LocalizedText | Body text with the action to take, e.g. "Avoid Jalan Universiti underpass" |
 | `area` | string | Always `whole_campus` in v1, because official data is per district or station, not per building. The field is kept so zone values (e.g. `engineering`) can be added later. |
-| `ruleId` | string | Which rule fired, e.g. `flood_level_alert` |
+| `ruleId` | string | Which rule fired. One rule per hazard type, so it equals `hazardType`, e.g. `flood_level` |
 | `readingIds` | string[] | Readings that triggered it (for traceability) |
 | `status` | enum | `active` · `expired` · `cancelled` |
 | `issuedAt` | Timestamp | |

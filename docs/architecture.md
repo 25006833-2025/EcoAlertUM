@@ -72,7 +72,7 @@ Visual tip: draw the **official sources and the AI API reachable only from Cloud
 **Flow 1: Official data becomes a push alert**
 1. Scheduler fires `ingestOfficialData`.
 2. The function fetches InfoBanjir and finds Sg. Klang di Bukit Putra (F2), `0232121WL`, at 25.12 m. That is at or above the station's Waspada threshold of 24.70 m, so it maps to `level = alert` and upserts the reading.
-3. Rule `flood_level_alert` matches. No active alert has the same `ruleId` and `area`, so the function creates one.
+3. Rule `flood_level` matches. No active alert has the same `ruleId` and `area`, so the function creates one.
 4. FCM sends to topics `alerts_en` and `alerts_ms`, each with text in its own language. The phone shows a notification.
 5. The app's Firestore listener updates the dashboard and alert list.
 
