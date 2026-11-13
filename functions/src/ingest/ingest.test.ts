@@ -78,6 +78,40 @@ describe("runIngestion", () => {
     assert.equal(store.reading("infobanjir_0232131WL_flood_level")?.value, 19.69);
   });
 
+  describe("fetchedAt across runs", () => {
+    const BUKIT_PUTRA = "infobanjir_0232121WL_flood_level";
+    const ANG_SENG = "infobanjir_0232131WL_flood_level";
+    const ANG_SENG_VALUE = "\n        19.69</a>";
+    const waterPage = (edit: (html: string) => string) => () => {
+      const html = sampleText("infobanjir-water-level-kl.html");
+      const edited = edit(html);
+      assert.notEqual(edited, html, "the sample edit must change the page");
+      return edited;
+    };
+    const fetchedAt = (store: MemoryStore, id: string) => (store.reading(id)!.fetchedAt as Timestamp).toMillis();
+
+    const cases: Array<[string, (html: string) => string]> = [
+      ["is rejected (-9999)", (html) => html.replace(ANG_SENG_VALUE, "\n        -9999</a>")],
+      ["is missing from the page", (html) => html.replace(/<tr  class='item'><td data-th='No'>13<\/td>[\s\S]*?<\/tr>/, "")],
+    ];
+    for (const [name, edit] of cases) {
+      it(`keeps the old fetchedAt when a station ${name}, and refreshes the healthy ones`, async () => {
+        const store = new MemoryStore();
+        await runIngestion(store, NOW, sampleGet(), { force: true });
+        const before = { ...store.reading(ANG_SENG)! };
+
+        const later = minutes(15);
+        await runIngestion(store, later, sampleGet({ "aras-air-data": waterPage(edit) }), { force: true });
+
+        assert.deepEqual(store.status("infobanjir")?.stationsMissing, ["0232131WL"]);
+        assert.deepEqual(store.reading(ANG_SENG), before, "rejected or missing station is untouched");
+        assert.equal(fetchedAt(store, ANG_SENG), NOW.getTime());
+        assert.equal(fetchedAt(store, BUKIT_PUTRA), later.getTime(), "healthy unchanged station is confirmed");
+        assert.equal(fetchedAt(store, "infobanjir_0232231RF_rainfall"), later.getTime());
+      });
+    }
+  });
+
   it("fetches InfoBanjir every 15 minutes and MET every 5", async () => {
     const store = new MemoryStore();
     await runIngestion(store, NOW, sampleGet());
@@ -106,14 +140,34 @@ describe("writeReadings", () => {
     },
   });
   const scope = { source: "infobanjir", type: "flood_level" } as const;
+  const ID = "infobanjir_0232121WL_flood_level";
 
-  it("skips unchanged readings even when the observation time moves on", async () => {
+  it("updates only fetchedAt on an unchanged reading", async () => {
     const store = new MemoryStore();
+    await writeReadings(store, scope, [reading(17.5, minutes(-15))], false);
     await writeReadings(store, scope, [reading(18.96, NOW)], false);
+    const before = { ...store.reading(ID)! };
+
+    // Same value, but the source's observation time and our fetch time move on.
     const result = await writeReadings(store, scope, [reading(18.96, minutes(15))], false);
 
     assert.deepEqual(result, { written: 0, deleted: 0, unchanged: 1 });
-    assert.equal(store.commits, 1);
+    const after = store.reading(ID)!;
+    assert.ok((after.fetchedAt as Timestamp).isEqual(Timestamp.fromDate(minutes(15))));
+    const withoutFetchedAt = (d: Record<string, unknown>) => Object.fromEntries(Object.entries(d).filter(([k]) => k !== "fetchedAt"));
+    assert.deepEqual(withoutFetchedAt(after), withoutFetchedAt(before), "observedAt, previousValue and the rest are untouched");
+  });
+
+  it("writes a changed reading in full", async () => {
+    const store = new MemoryStore();
+    await writeReadings(store, scope, [reading(18.96, NOW)], false);
+    const result = await writeReadings(store, scope, [reading(19.4, minutes(15))], false);
+
+    assert.deepEqual(result, { written: 1, deleted: 0, unchanged: 0 });
+    const saved = store.reading(ID)!;
+    assert.equal(saved.value, 19.4);
+    assert.ok((saved.observedAt as Timestamp).isEqual(Timestamp.fromDate(minutes(15))));
+    assert.ok((saved.fetchedAt as Timestamp).isEqual(Timestamp.fromDate(minutes(15))));
   });
 
   it("stores the previous value when the reading changes", async () => {
@@ -121,8 +175,8 @@ describe("writeReadings", () => {
     await writeReadings(store, scope, [reading(18.96, NOW)], false);
     await writeReadings(store, scope, [reading(19.4, minutes(15))], false);
 
-    assert.equal(store.reading("infobanjir_0232121WL_flood_level")?.previousValue, 18.96);
-    assert.equal(store.reading("infobanjir_0232121WL_flood_level")?.value, 19.4);
+    assert.equal(store.reading(ID)?.previousValue, 18.96);
+    assert.equal(store.reading(ID)?.value, 19.4);
   });
 
   it("deletes docs missing from the current list only when asked", async () => {

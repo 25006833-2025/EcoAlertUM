@@ -21,7 +21,8 @@ Backend for EcoAlert UM. See [docs/architecture.md](../docs/architecture.md) for
 Shared code lives in `readings.ts` (writer, `sourceStatus`, parsers) and `store.ts` (database access). `ingest.ts` runs the sources.
 
 How it behaves:
-- A reading is written only when it changes. `previousValue` keeps the last stored value.
+- A reading is written in full only when it changes. `previousValue` keeps the last stored value.
+- An unchanged reading gets a partial update of `fetchedAt` only, so `fetchedAt` means "last time we confirmed this value from the source". A station that is rejected or missing from the page is not touched, so its `fetchedAt` stays old and it goes stale on its own while the other stations stay current.
 - Bad values are rejected: `-9999`, missing, impossible zeros, and stale readings. The last good doc stays, and the station is listed in `sourceStatus/{source}.stationsMissing`.
   - Stale means older than 45 min for InfoBanjir (the page lags behind its 15-min updates) or 2 h for DOE.
   - A rain gauge reporting 0 for all 7 days is rejected only if it is on the known-faulty list (`KNOWN_FAULTY_GAUGES` in `infobanjir.ts`, currently Jalan Ang Seng). A dry week elsewhere is accepted.

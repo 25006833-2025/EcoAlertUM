@@ -67,9 +67,10 @@ export interface WriteResult {
 const VOLATILE_FIELDS = new Set(["fetchedAt", "observedAt", "previousValue"]);
 
 /**
- * Writes readings for one source and type: new or changed docs are written, unchanged ones are
- * left alone (fewer writes and listener updates, architecture.md decision 2). `previousValue`
- * comes from the stored doc. With [deleteMissing], docs of this source and type that are not in
+ * Writes readings for one source and type. New or changed docs are written in full, with
+ * `previousValue` from the stored doc. Unchanged ones get a partial update of `fetchedAt` only,
+ * so it means "last time we confirmed this value from the source". Stations the adapter rejected
+ * or did not find are not in [readings], so their docs are not touched and go stale on their own. With [deleteMissing], docs of this source and type that are not in
  * [readings] are deleted (used when the source's current list is authoritative, e.g. MET warnings).
  */
 export async function writeReadings(
@@ -82,19 +83,19 @@ export async function writeReadings(
   const ids = new Set(readings.map((r) => r.id));
 
   const sets: StoredDoc[] = [];
-  let unchanged = 0;
+  const touches: StoredDoc[] = [];
   for (const reading of readings) {
     const old = existing.get(reading.id);
     if (old && sameContent(old, reading.data)) {
-      unchanged++;
+      touches.push({ id: reading.id, data: { fetchedAt: reading.data.fetchedAt } });
     } else {
       sets.push({ id: reading.id, data: { ...reading.data, previousValue: previousValueFor(old, reading.data) } });
     }
   }
   const deletes = deleteMissing ? [...existing.keys()].filter((id) => !ids.has(id)) : [];
 
-  if (sets.length + deletes.length > 0) await store.commitReadings(sets, deletes);
-  return { written: sets.length, deleted: deletes.length, unchanged };
+  if (sets.length + deletes.length + touches.length > 0) await store.commitReadings(sets, deletes, touches);
+  return { written: sets.length, deleted: deletes.length, unchanged: touches.length };
 }
 
 /** Same reading apart from the fields that change on every fetch. */
