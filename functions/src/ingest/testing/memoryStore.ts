@@ -26,9 +26,19 @@ export class MemoryStore implements IngestStore {
     return found;
   }
 
-  async commitReadings(sets: { id: string; data: DocumentData }[], deletes: string[]): Promise<void> {
+  async commitReadings(
+    sets: { id: string; data: DocumentData }[],
+    deletes: string[],
+    touches: { id: string; data: DocumentData }[] = [],
+  ): Promise<void> {
     this.commits++;
     for (const { id, data } of sets) this.docs.set(`${READINGS}/${id}`, { ...data });
+    for (const { id, data } of touches) {
+      // Like Firestore's update(): fails on a missing doc and only changes the given fields.
+      const key = `${READINGS}/${id}`;
+      if (!this.docs.has(key)) throw new Error(`update on missing doc ${id}`);
+      this.docs.set(key, { ...this.docs.get(key), ...data });
+    }
     for (const id of deletes) this.docs.delete(`${READINGS}/${id}`);
   }
 

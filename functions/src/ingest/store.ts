@@ -14,8 +14,11 @@ export interface IngestStore {
   setDoc(collection: string, id: string, data: DocumentData, merge?: boolean): Promise<void>;
   /** Existing `hazardReadings` for one source and type, by document ID. */
   findReadings(source: string, type: string): Promise<Map<string, DocumentData>>;
-  /** Writes and deletes `hazardReadings` in one batch. */
-  commitReadings(sets: StoredDoc[], deletes: string[]): Promise<void>;
+  /**
+   * Writes, deletes and touches `hazardReadings` in one batch. A touch updates only the given
+   * fields of an existing doc (used to refresh `fetchedAt` on unchanged readings).
+   */
+  commitReadings(sets: StoredDoc[], deletes: string[], touches?: StoredDoc[]): Promise<void>;
 }
 
 export const READINGS = "hazardReadings";
@@ -33,9 +36,10 @@ export function firestoreStore(db: Firestore): IngestStore {
       const snapshot = await db.collection(READINGS).where("source", "==", source).where("type", "==", type).get();
       return new Map(snapshot.docs.map((doc) => [doc.id, doc.data()]));
     },
-    async commitReadings(sets, deletes) {
+    async commitReadings(sets, deletes, touches = []) {
       const batch = db.batch();
       for (const { id, data } of sets) batch.set(db.collection(READINGS).doc(id), data);
+      for (const { id, data } of touches) batch.update(db.collection(READINGS).doc(id), data);
       for (const id of deletes) batch.delete(db.collection(READINGS).doc(id));
       await batch.commit();
     },
