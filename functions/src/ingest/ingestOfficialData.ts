@@ -18,17 +18,17 @@ export const ingestOfficialData = onSchedule(
     timeoutSeconds: 120,
     retryCount: 0, // the next run is 5 minutes away anyway
   },
-    async () => {
-      const db = getFirestore();
-      const summary = await runIngestion(firestoreStore(db));
-      logger.info("ingestOfficialData", summary);
+  async () => {
+    const db = getFirestore();
+    const summary = await runIngestion(firestoreStore(db));
+    logger.info("ingestOfficialData", summary);
 
-      // Then run the alert rules on the readings just saved (FR2.1)
-      try {
-        const alerts = await runAlertRules(db, new Date());
-        logger.info("alertRules", { alerts });
-      } catch (e) {
-        logger.error("alertRules failed", e);
-      }
-    },
+    // Then run the alert rules on the readings just saved (FR2.1)
+    try {
+      const alerts = await runAlertRules(db, new Date());
+      logger.info("alertRules", { alerts });
+    } catch (e) {
+      logger.error("alertRules failed", e);
+    }
+  },
 );

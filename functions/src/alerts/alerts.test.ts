@@ -5,6 +5,7 @@ import { DocumentData, Timestamp } from "firebase-admin/firestore";
 
 import { expireOldAlerts } from "./expireAlerts";
 import { HOLD_MS, Reading, evaluateRules } from "./rules";
+import { SavedReading, usableReadings } from "./runAlertRules";
 import { AlertStore, syncAlerts } from "./syncAlerts";
 
 const NOW = new Date("2026-11-13T15:00:00+08:00");
@@ -129,5 +130,42 @@ describe("expireOldAlerts", () => {
     await expireOldAlerts(store, new Date(NOW.getTime() + HOLD_MS + 1));
     const again = await syncAlerts(store, candidates, new Date(NOW.getTime() + HOLD_MS + 2));
     assert.equal(again[0].change, "new");
+  });
+});
+
+
+describe("usableReadings", () => {
+  const MIN = 60 * 1000;
+  const ago = (ms: number) => new Date(NOW.getTime() - ms);
+
+  /** A saved reading from [source], last written [fetchedAgo] ms before NOW. */
+  function saved(id: string, source: string, fetchedAgo: number, extra: Partial<SavedReading> = {}): SavedReading {
+    return { ...reading(id, "flood_level", "warning"), source, fetchedAt: ago(fetchedAgo), ...extra };
+  }
+
+  it("skips MET warnings that have already ended", () => {
+    const ended = saved("w1", "met", 1 * MIN, {
+      type: "weather_warning",
+      validTo: Timestamp.fromDate(ago(1 * MIN)),
+    });
+    assert.deepEqual(usableReadings([ended], new Map(), NOW), []);
+  });
+
+  it("ignores a stale reading when its source is down, so the alert can expire", () => {
+    const old = saved("r1", "infobanjir", 2 * 60 * MIN);
+    const lastSuccess = new Map([["infobanjir", ago(2 * 60 * MIN)]]);
+    assert.deepEqual(usableReadings([old], lastSuccess, NOW), []);
+  });
+
+  it("keeps an unchanged reading when the source was checked recently", () => {
+    const unchanged = saved("r1", "infobanjir", 3 * 60 * MIN);
+    const lastSuccess = new Map([["infobanjir", ago(5 * MIN)]]);
+    assert.deepEqual(usableReadings([unchanged], lastSuccess, NOW).map((r) => r.id), ["r1"]);
+  });
+
+  it("uses each source's own limit (MET 15 min, InfoBanjir and DOE 45 min)", () => {
+    const met = saved("m1", "met", 20 * MIN, { type: "weather_warning" });
+    const doe = saved("d1", "doe", 20 * MIN, { type: "air_quality" });
+    assert.deepEqual(usableReadings([met, doe], new Map(), NOW).map((r) => r.id), ["d1"]);
   });
 });

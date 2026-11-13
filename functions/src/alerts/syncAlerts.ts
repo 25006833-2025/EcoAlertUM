@@ -25,9 +25,9 @@ export interface AlertStore {
   create(data: DocumentData): Promise<string>;
   update(id: string, data: DocumentData): Promise<void>;
 
-    /** Every active alert with its end time. The collection is small, so no index is needed. */
-    listActive(): Promise<{ id: string; expiresAt: Date }[]>;
-    markExpired(ids: string[]): Promise<void>;
+  /** Every active alert with its end time. The collection is small, so no index is needed. */
+  listActive(): Promise<{ id: string; expiresAt: Date }[]>;
+  markExpired(ids: string[]): Promise<void>;
 }
 
 export function firestoreAlertStore(db: Firestore): AlertStore {
