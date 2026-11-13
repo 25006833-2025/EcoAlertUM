@@ -54,7 +54,7 @@ The latest official reading for one station and one hazard type. Only the backen
 | `validFrom` | Timestamp? | `weather_warning` only: MET's `valid_from`. `null` for other types |
 | `validTo` | Timestamp? | `weather_warning` only: MET's `valid_to`. Alerts raised from this warning expire at this time. `null` for other types |
 | `observedAt` | Timestamp | When the source measured or issued it |
-| `fetchedAt` | Timestamp | When our backend stored it. The app shows "updated X min ago" and a stale banner if this is too old |
+| `fetchedAt` | Timestamp | Last time we confirmed this value from the source. Refreshed on every successful fetch, even when the value is unchanged. Not refreshed when the station is rejected or missing, so its reading goes stale on its own. The app shows "updated X min ago" and a stale banner if this is too old, and the alert rules ignore readings that are too old |
 
 > Supporting doc (not one of the six models): `sourceStatus/{source}` with `{ ok: bool, lastSuccessAt, lastAttemptAt, error?, stationsMissing: string[] }`. The app uses it to show a "source unavailable — showing cached data" banner. `stationsMissing` lists station IDs whose latest reading was rejected or `null` (e.g. DOE `CA16W` Cheras), so the app can explain why it shows a farther station.
 
