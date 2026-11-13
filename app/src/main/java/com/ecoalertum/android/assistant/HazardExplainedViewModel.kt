@@ -9,7 +9,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import android.util.Log
 import com.ecoalertum.android.BuildConfig
-
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import com.ecoalertum.android.R
 
 
 sealed interface HazardExplanationUiState {
@@ -26,9 +28,10 @@ sealed interface HazardExplanationUiState {
 }
 
 class HazardExplainedViewModel(
+    application: Application,
     private val repository: AssistantRepository = AssistantRepository(),
     private val mockRepository: MockAssistantRepository = MockAssistantRepository(),
-) : ViewModel() {
+) : AndroidViewModel(application) {
 
     private val _uiState =
         MutableStateFlow<HazardExplanationUiState>(
@@ -41,7 +44,7 @@ class HazardExplainedViewModel(
     fun explainHazard(alertId: String) {
         if (alertId.isBlank()) {
             _uiState.value = HazardExplanationUiState.Error(
-                "No alert was selected."
+                getApplication<Application>().getString(R.string.assistant_error_no_alert)
             )
             return
         }
@@ -79,8 +82,7 @@ class HazardExplainedViewModel(
                 )
 
                 _uiState.value = HazardExplanationUiState.Error(
-                    "Unable to retrieve the hazard explanation. " +
-                            "Please try again later."
+                    getApplication<Application>().getString(R.string.assistant_error_retrieve)
                 )
             }
         }

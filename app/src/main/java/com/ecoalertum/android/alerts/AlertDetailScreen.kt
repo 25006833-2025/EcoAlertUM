@@ -104,7 +104,7 @@ fun AlertDetailScreen(
             onClick = { onExplainWithAI(alert.id) },
             modifier = Modifier.fillMaxWidth(),
         ) {
-            Text("Explain with AI")
+            Text(stringResource(R.string.assistant_explain_button))
         }
     }
 }

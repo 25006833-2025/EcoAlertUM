@@ -27,4 +27,8 @@
 
     <string name="assistant_declined_title">Can\'t answer this request</string>
     <string name="assistant_declined_message">The AI assistant cannot provide an answer to this request. Please refer to official university announcements and safety guidance.</string>
+
+    <string name="assistant_explain_button">Explain with AI</string>
+    <string name="assistant_error_no_alert">No alert was selected.</string>
+    <string name="assistant_error_retrieve">Unable to retrieve the hazard explanation. Please try again later.</string>
 </resources>

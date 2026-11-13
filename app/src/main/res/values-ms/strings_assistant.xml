@@ -27,4 +27,8 @@
 
     <string name="assistant_declined_title">Tidak dapat menjawab permintaan ini</string>
     <string name="assistant_declined_message">Pembantu AI tidak dapat memberikan jawapan untuk permintaan ini. Sila rujuk pengumuman rasmi universiti dan panduan keselamatan.</string>
+
+    <string name="assistant_explain_button">Terangkan dengan AI</string>
+    <string name="assistant_error_no_alert">Tiada amaran dipilih.</string>
+    <string name="assistant_error_retrieve">Tidak dapat mendapatkan penjelasan bahaya. Sila cuba lagi kemudian.</string>
 </resources>

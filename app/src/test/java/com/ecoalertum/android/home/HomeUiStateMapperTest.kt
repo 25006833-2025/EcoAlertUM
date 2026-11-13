@@ -277,4 +277,53 @@ class HomeUiStateMapperTest {
         assertTrue(state is HomeUiState.Content)
         assertEquals(CardState.Loading, (state as HomeUiState.Content).weather)
     }
+
+    @Test
+    fun activeAlertPassesItsIdToHero() {
+        val hero = HomeUiStateMapper.hero(
+            listOf(alert("alert-123", Level.ADVISORY, NOW)),
+            emptyList(),
+            NOW,
+            "en"
+        )
+
+        assertEquals(HeroUiModel.Kind.ALERT, hero.kind)
+        assertEquals("alert-123", hero.alertId)
+    }
+
+    @Test
+    fun metWarningHasNoAlertId() {
+        val hero = HomeUiStateMapper.hero(
+            emptyList(),
+            listOf(
+                warning(
+                    Level.WARNING,
+                    validFrom = NOW - 10 * MINUTE,
+                    validTo = NOW + 30 * MINUTE
+                )
+            ),
+            NOW,
+            "en"
+        )
+
+        assertEquals(HeroUiModel.Kind.WEATHER_WARNING, hero.kind)
+        assertNull(hero.alertId)
+    }
+
+    @Test
+    fun mostSevereAlertPassesCorrectId() {
+        val hero = HomeUiStateMapper.hero(
+            listOf(
+                alert("advisory", Level.ADVISORY, NOW),
+                alert("danger", Level.DANGER, NOW - 30 * MINUTE)
+            ),
+            emptyList(),
+            NOW,
+            "en"
+        )
+
+        assertEquals(Level.DANGER, hero.level)
+        assertEquals("danger", hero.alertId)
+    }
+
 }

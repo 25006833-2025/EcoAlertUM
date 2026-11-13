@@ -30,6 +30,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
+import com.ecoalertum.android.home.labelRes
 
 @Composable
 fun HazardExplainedScreen(
@@ -88,7 +89,7 @@ fun HazardExplainedScreen(
                         Text(
                             text = stringResource(
                                 R.string.assistant_severity,
-                                selectedAlert.level.value.uppercase()
+                                stringResource(selectedAlert.level.labelRes)
                             )
                         )
 
