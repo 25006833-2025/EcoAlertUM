@@ -4,6 +4,7 @@ import { onSchedule } from "firebase-functions/v2/scheduler";
 
 import { runIngestion } from "./ingest";
 import { firestoreStore } from "./store";
+import { runAlertRules } from "../alerts/runAlertRules";
 
 /**
  * Wakes every 5 minutes and fetches each source that is due (architecture.md, function E):
@@ -18,7 +19,16 @@ export const ingestOfficialData = onSchedule(
     retryCount: 0, // the next run is 5 minutes away anyway
   },
   async () => {
-    const summary = await runIngestion(firestoreStore(getFirestore()));
+    const db = getFirestore();
+    const summary = await runIngestion(firestoreStore(db));
     logger.info("ingestOfficialData", summary);
+
+    // Then run the alert rules on the readings just saved (FR2.1)
+    try {
+      const alerts = await runAlertRules(db, new Date());
+      logger.info("alertRules", { alerts });
+    } catch (e) {
+      logger.error("alertRules failed", e);
+    }
   },
 );

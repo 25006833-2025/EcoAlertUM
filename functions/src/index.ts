@@ -4,9 +4,10 @@ import { setGlobalOptions } from "firebase-functions";
 import { askAssistant } from "./assistant/askAssistant";
 import { onReportCreated } from "./reports/onReportCreated";
 import { ingestOfficialData } from "./ingest/ingestOfficialData";
+import { expireAlerts } from "./alerts/expireAlerts";
 
 initializeApp();
 
 setGlobalOptions({ maxInstances: 10 });
 
-export { askAssistant, onReportCreated, ingestOfficialData };
+export { askAssistant, onReportCreated, ingestOfficialData, expireAlerts };
