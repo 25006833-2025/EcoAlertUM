@@ -7,7 +7,7 @@ import { defineSecret } from "firebase-functions/params";
 export const geminiApiKey = defineSecret("GEMINI_API_KEY");
 
 // Gemini model used by EcoAlert UM.
-const GEMINI_MODEL = "gemini-3.8-flash";
+const GEMINI_MODEL = "gemini-3.5-flash-lite";
 
 // Create a Gemini client when needed.
 function getGeminiClient(): GoogleGenAI {
@@ -20,9 +20,10 @@ function getGeminiClient(): GoogleGenAI {
   return new GoogleGenAI({ apiKey });
 }
 
-// Send a prompt to Gemini and return its text response.
+// Generate text, optionally enforcing JSON output.
 export async function generateGeminiText(
-  prompt: string
+  prompt: string,
+  jsonMode: boolean = false
 ): Promise<string> {
   if (!prompt.trim()) {
     throw new Error("Prompt cannot be empty.");
@@ -30,13 +31,17 @@ export async function generateGeminiText(
 
   const ai = getGeminiClient();
 
-  const interaction = await ai.interactions.create({
+  const response = await ai.models.generateContent({
     model: GEMINI_MODEL,
-    input: prompt,
-    store: false,
+    contents: prompt,
+    config: jsonMode
+      ? {
+          responseMimeType: "application/json",
+        }
+      : undefined,
   });
 
-  const responseText = interaction.output_text?.trim();
+  const responseText = response.text?.trim();
 
   if (!responseText) {
     throw new Error("Gemini returned an empty response.");

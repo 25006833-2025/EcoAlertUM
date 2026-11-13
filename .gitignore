@@ -42,12 +42,14 @@ local.properties
 *.so
 *.dylib
 
-# Environment variables and secrets
+# IDE module files
+*.iml
+
+# Firebase Emulator data
+/emulator-data/
+
+# Local environment variables and Firebase secrets
 .env
 .env.*
 !.env.example
-
-.secret.local
-
-# IDE module files
-*.iml
+**/.secret.local
