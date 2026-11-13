@@ -19,9 +19,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.ecoalertum.android.R
 import com.ecoalertum.android.alerts.AlertDetailViewModel
 import com.ecoalertum.android.core.data.repository.DataState
 import java.text.SimpleDateFormat
@@ -57,7 +59,7 @@ fun HazardExplainedScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Text(
-                text = "Hazard explained",
+                text = stringResource(R.string.assistant_hazard_explained),
                 style = MaterialTheme.typography.headlineSmall,
             )
 
@@ -67,7 +69,7 @@ fun HazardExplainedScreen(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     Text(
-                        text = "Selected hazard",
+                        text = stringResource(R.string.assistant_selected_hazard),
                         style = MaterialTheme.typography.titleMedium,
                     )
 
@@ -84,16 +86,31 @@ fun HazardExplainedScreen(
                         )
 
                         Text(
-                            "Severity: ${selectedAlert.level.value.uppercase()}"
-                        )
-                        Text("Area: ${selectedAlert.area}")
-
-                        Text(
-                            "Issued: ${formatAlertTime(selectedAlert.issuedAt)}"
+                            text = stringResource(
+                                R.string.assistant_severity,
+                                selectedAlert.level.value.uppercase()
+                            )
                         )
 
                         Text(
-                            "Expires: ${formatAlertTime(selectedAlert.expiresAt)}"
+                            text = stringResource(
+                                R.string.assistant_area,
+                                selectedAlert.area
+                            )
+                        )
+
+                        Text(
+                            text = stringResource(
+                                R.string.assistant_issued,
+                                formatAlertTime(selectedAlert.issuedAt)
+                            )
+                        )
+
+                        Text(
+                            text = stringResource(
+                                R.string.assistant_expires,
+                                formatAlertTime(selectedAlert.expiresAt)
+                            )
                         )
 
                         Text(
@@ -104,12 +121,26 @@ fun HazardExplainedScreen(
                         when (alertState) {
                             DataState.Loading -> {
                                 CircularProgressIndicator()
-                                Text("Loading alert information...")
+                                Text(
+                                    stringResource(
+                                        R.string.assistant_loading_alert
+                                    )
+                                )
                             }
 
                             else -> {
-                                Text("Alert information unavailable.")
-                                Text("Alert ID: $alertId")
+                                Text(
+                                    stringResource(
+                                        R.string.assistant_alert_unavailable
+                                    )
+                                )
+
+                                Text(
+                                    stringResource(
+                                        R.string.assistant_alert_id,
+                                        alertId
+                                    )
+                                )
                             }
                         }
                     }
@@ -117,55 +148,103 @@ fun HazardExplainedScreen(
             }
 
             Text(
-                text = "In plain language (AI)",
+                text = stringResource(R.string.assistant_plain_language),
                 style = MaterialTheme.typography.titleMedium,
             )
 
             when (val state = uiState) {
                 HazardExplanationUiState.Idle -> {
-                    Text("Preparing hazard explanation...")
+                    Text(
+                        stringResource(R.string.assistant_preparing)
+                    )
                 }
 
                 HazardExplanationUiState.Loading -> {
                     CircularProgressIndicator()
-                    Text("Generating hazard explanation...")
+
+                    Text(
+                        stringResource(R.string.assistant_generating)
+                    )
                 }
 
                 is HazardExplanationUiState.Success -> {
                     val response = state.response
 
-                    if (response.status == "fallback") {
-                        Text(
-                            text = "AI is temporarily unavailable. " +
-                                    "Showing predefined safety guidance.",
-                            color = MaterialTheme.colorScheme.error,
-                        )
-                    }
+                    when (response.status) {
+                        "declined" -> {
+                            Text(
+                                text = stringResource(
+                                    R.string.assistant_declined_title
+                                ),
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.error,
+                            )
 
-                    Text(
-                        text = response.explanation,
-                        style = MaterialTheme.typography.bodyLarge,
-                    )
-
-                    if (response.steps.isNotEmpty()) {
-                        Text(
-                            text = "What to do now",
-                            style = MaterialTheme.typography.titleMedium,
-                        )
-
-                        response.steps.forEachIndexed { index, step ->
-                            Text("${index + 1}. $step")
+                            Text(
+                                text = stringResource(
+                                    R.string.assistant_declined_message
+                                ),
+                                style = MaterialTheme.typography.bodyLarge,
+                            )
                         }
-                    }
 
-                    if (response.sources.isNotEmpty()) {
-                        Text(
-                            text = "Sources",
-                            style = MaterialTheme.typography.titleMedium,
-                        )
+                        "ok", "fallback" -> {
+                            if (response.status == "fallback") {
+                                Text(
+                                    text = stringResource(
+                                        R.string.assistant_fallback
+                                    ),
+                                    color = MaterialTheme.colorScheme.error,
+                                )
+                            }
 
-                        response.sources.forEach { source ->
-                            Text(source)
+                            Text(
+                                text = response.explanation,
+                                style = MaterialTheme.typography.bodyLarge,
+                            )
+
+                            // Display safety steps once
+                            if (response.steps.isNotEmpty()) {
+                                Text(
+                                    text = stringResource(
+                                        R.string.assistant_what_to_do
+                                    ),
+                                    style = MaterialTheme.typography.titleMedium,
+                                )
+
+                                response.steps.forEachIndexed { index, step ->
+                                    Text(
+                                        text = stringResource(
+                                            R.string.assistant_step_number,
+                                            index + 1,
+                                            step
+                                        )
+                                    )
+                                }
+                            }
+
+                            // Display sources once
+                            if (response.sources.isNotEmpty()) {
+                                Text(
+                                    text = stringResource(
+                                        R.string.assistant_sources
+                                    ),
+                                    style = MaterialTheme.typography.titleMedium,
+                                )
+
+                                response.sources.forEach { source ->
+                                    Text(source)
+                                }
+                            }
+                        }
+
+                        else -> {
+                            Text(
+                                text = stringResource(
+                                    R.string.assistant_error
+                                ),
+                                color = MaterialTheme.colorScheme.error,
+                            )
                         }
                     }
                 }
@@ -181,13 +260,15 @@ fun HazardExplainedScreen(
                             viewModel.explainHazard(alertId)
                         },
                     ) {
-                        Text("Try again")
+                        Text(
+                            stringResource(R.string.assistant_try_again)
+                        )
                     }
                 }
             }
         }
 
-        // Fixed action buttons above the existing bottom navigation
+        // Fixed action buttons above existing bottom navigation
         HorizontalDivider()
 
         Row(
@@ -201,7 +282,9 @@ fun HazardExplainedScreen(
                 enabled = false,
                 modifier = Modifier.weight(1f),
             ) {
-                Text("Ask a follow-up")
+                Text(
+                    stringResource(R.string.assistant_follow_up)
+                )
             }
 
             OutlinedButton(
@@ -209,7 +292,9 @@ fun HazardExplainedScreen(
                 enabled = false,
                 modifier = Modifier.weight(1f),
             ) {
-                Text("Related lesson")
+                Text(
+                    stringResource(R.string.assistant_related_lesson)
+                )
             }
         }
     }

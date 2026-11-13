@@ -48,7 +48,20 @@ object HomeUiStateMapper {
     fun hero(alerts: List<Alert>, rainReadings: List<HazardReading>, nowMillis: Long, language: String): HeroUiModel {
         val alertCandidates = alerts
             .filter { it.status == AlertStatus.ACTIVE }
-            .map { Candidate(it.level, it.issuedAt, HeroUiModel(it.level, HeroUiModel.Kind.ALERT, it.title.get(language), it.expiresAt.takeIf { t -> t > 0 })) }
+            .map {
+                Candidate(
+                    it.level,
+                    it.issuedAt,
+                    HeroUiModel(
+                        level = it.level,
+                        kind = HeroUiModel.Kind.ALERT,
+                        title = it.title.get(language),
+                        untilMillis = it.expiresAt.takeIf { t -> t > 0 },
+                        alertId = it.id
+                    )
+                )
+            }
+
         val warningCandidates = currentWarnings(rainReadings, nowMillis)
             .map { Candidate(it.level, it.issuedAt(), HeroUiModel(it.level, HeroUiModel.Kind.WEATHER_WARNING, it.stationName, it.validTo)) }
 

@@ -87,4 +87,4 @@ class HazardExplainedViewModel(
 
 // Development-only setting.
 // Set to false when testing the Firebase/Gemini integration.
-private const val USE_MOCK_AI = true
+private const val USE_MOCK_AI = false

@@ -62,7 +62,10 @@ export const askAssistant = onCall(
     );
 
     try {
-      const responseText = await generateGeminiText(prompt);
+      const responseText = await generateGeminiText(
+        prompt,
+        validated.mode === "explain"
+      );
 
       if (validated.mode === "explain") {
         const parsed: unknown = JSON.parse(responseText);

@@ -57,8 +57,12 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
         // Bottom-bar tabs
         composable(Routes.HOME) {
             HomeScreen(
-                onWhatToDo = { navController.navigateToTab(Routes.ALERTS) },
-                onExplain = { navController.navigateToTab(Routes.ASSISTANT) },
+                onWhatToDo = {
+                    navController.navigateToTab(Routes.ALERTS)
+                },
+                onExplain = { alertId ->
+                    navController.navigate(Routes.hazardExplained(alertId))
+                },
             )
         }
         composable(Routes.ALERTS) {

@@ -47,9 +47,12 @@ data class HeroUiModel(
     val title: String?,
     /** When the alert or warning ends, if known. */
     val untilMillis: Long?,
+    /** Firestore alert document ID; null for MET warnings or no hazard. */
+    val alertId: String? = null,
 ) {
     enum class Kind { ALERT, WEATHER_WARNING, NONE }
 }
+
 
 /** MET Malaysia. [title] and [detail] are null when no warning is in effect. */
 data class WeatherCard(

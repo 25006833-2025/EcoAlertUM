@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="assistant_hazard_explained">Penjelasan bahaya</string>
+    <string name="assistant_selected_hazard">Bahaya yang dipilih</string>
+    <string name="assistant_severity">Tahap bahaya: %1$s</string>
+    <string name="assistant_area">Kawasan: %1$s</string>
+    <string name="assistant_issued">Dikeluarkan: %1$s</string>
+    <string name="assistant_expires">Tamat tempoh: %1$s</string>
+
+    <string name="assistant_plain_language">Penjelasan mudah (AI)</string>
+    <string name="assistant_what_to_do">Langkah yang perlu diambil</string>
+    <string name="assistant_sources">Sumber</string>
+
+    <string name="assistant_follow_up">Tanya soalan susulan</string>
+    <string name="assistant_related_lesson">Pembelajaran berkaitan</string>
+
+    <string name="assistant_preparing">Menyediakan penjelasan bahaya...</string>
+    <string name="assistant_generating">Menjana penjelasan bahaya...</string>
+    <string name="assistant_loading_alert">Memuatkan maklumat amaran...</string>
+    <string name="assistant_alert_unavailable">Maklumat amaran tidak tersedia.</string>
+    <string name="assistant_alert_id">ID amaran: %1$s</string>
+
+    <string name="assistant_fallback">AI tidak tersedia buat sementara waktu. Panduan keselamatan yang telah ditetapkan dipaparkan.</string>
+    <string name="assistant_try_again">Cuba lagi</string>
+    <string name="assistant_error">Tidak dapat mendapatkan penjelasan bahaya. Sila cuba lagi kemudian.</string>
+    <string name="assistant_step_number">%1$d. %2$s</string>
+
+    <string name="assistant_declined_title">Tidak dapat menjawab permintaan ini</string>
+    <string name="assistant_declined_message">Pembantu AI tidak dapat memberikan jawapan untuk permintaan ini. Sila rujuk pengumuman rasmi universiti dan panduan keselamatan.</string>
+</resources>
