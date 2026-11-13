@@ -24,6 +24,10 @@ export interface AlertStore {
   findActive(ruleId: string, area: string): Promise<ActiveAlert | undefined>;
   create(data: DocumentData): Promise<string>;
   update(id: string, data: DocumentData): Promise<void>;
+
+    /** Every active alert with its end time. The collection is small, so no index is needed. */
+    listActive(): Promise<{ id: string; expiresAt: Date }[]>;
+    markExpired(ids: string[]): Promise<void>;
 }
 
 export function firestoreAlertStore(db: Firestore): AlertStore {
@@ -44,6 +48,16 @@ export function firestoreAlertStore(db: Firestore): AlertStore {
     },
     async update(id, data) {
       await db.collection(ALERTS).doc(id).update(data);
+    },
+    async listActive() {
+      const snapshot = await db.collection(ALERTS).where("status", "==", "active").get();
+      return snapshot.docs.map((doc) => ({ id: doc.id, expiresAt: (doc.get("expiresAt") as Timestamp).toDate() }));
+    },
+    async markExpired(ids) {
+      if (ids.length === 0) return;
+      const batch = db.batch();
+      for (const id of ids) batch.update(db.collection(ALERTS).doc(id), { status: "expired" });
+      await batch.commit();
     },
   };
 }
