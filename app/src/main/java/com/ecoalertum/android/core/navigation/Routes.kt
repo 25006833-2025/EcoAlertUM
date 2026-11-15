@@ -34,5 +34,9 @@ object Routes {
     const val ALERT_DETAIL = "alert/{alertId}"
     fun alertDetail(alertId: String) = "alert/$alertId"
 
-    // Add LOGIN = "login" here when the login screen is built.
+    // Module 6 (FR6.1, FR6.3): these sit outside MAIN_GRAPH, so they get the full screen.
+    const val LOGIN = "login"
+    const val REGISTER = "register"
+    const val VERIFY_EMAIL = "verify_email"
+    const val FORGOT_PASSWORD = "forgot_password"
 }
