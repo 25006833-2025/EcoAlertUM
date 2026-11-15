@@ -3,17 +3,25 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     function signedIn() { return request.auth != null; }
+
+    // FR6.1: only verified @siswa.um.edu.my accounts.
     function isUM() {
-      return signedIn() && request.auth.token.email.matches('.*@(siswa\\.)?um\\.edu\\.my');
+      return signedIn()
+        && request.auth.token.email_verified == true
+        && request.auth.token.email.matches('.*@siswa\\.um\\.edu\\.my');
+    }
+
+    function userRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
     }
     function isModerator() {
-      return signedIn() &&
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'moderator';
+      return isUM() && userRole() in ['moderator', 'admin'];
     }
 
     match /users/{uid} {
       allow read: if signedIn() && request.auth.uid == uid;
-      allow create: if isUM() && request.auth.uid == uid && request.resource.data.role == 'student';
+      allow create: if isUM() && request.auth.uid == uid
+                    && request.resource.data.role == 'student';
       allow update: if signedIn() && request.auth.uid == uid
                     && request.resource.data.role == resource.data.role;
     }
@@ -23,12 +31,14 @@ service cloud.firestore {
       allow create: if isUM()
                     && request.resource.data.reporterUid == request.auth.uid
                     && request.resource.data.status == 'unverified'
-                    && request.resource.data.verifiedBy == null;
+                    && request.resource.data.get('verifiedBy', null) == null
+                    && request.resource.data.get('confirmations', 0) == 0;
       allow update, delete: if isModerator();
     }
 
     match /quizAttempts/{id} {
-      allow read, create: if isUM() && request.resource.data.uid == request.auth.uid;
+      allow create: if isUM() && request.resource.data.uid == request.auth.uid;
+      allow read: if isUM() && resource.data.uid == request.auth.uid;
     }
 
     match /{coll}/{id} {

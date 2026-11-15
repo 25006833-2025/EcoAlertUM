@@ -31,11 +31,14 @@ import com.ecoalertum.android.core.navigation.DrawerDestination
 fun EcoAlertDrawer(
     currentRoute: String?,
     isModerator: Boolean,
+    displayName: String?,
+    email: String?,
     onDestinationSelected: (DrawerDestination) -> Unit,
+    onLogOut: () -> Unit,
     onClose: () -> Unit,
 ) {
     ModalDrawerSheet {
-        DrawerHeader(onClose = onClose)
+        DrawerHeader(displayName = displayName, email = email, onClose = onClose)
         HorizontalDivider()
 
         Column(
@@ -72,26 +75,25 @@ fun EcoAlertDrawer(
             label = { Text(stringResource(R.string.menu_log_out)) },
             icon = { Icon(Icons.AutoMirrored.Filled.ExitToApp, contentDescription = null) },
             selected = false,
-            onClick = { /* TODO (Module 6): sign out and return to login. */ },
+            onClick = onLogOut,
             modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
         )
     }
 }
 
 @Composable
-private fun DrawerHeader(onClose: () -> Unit) {
+private fun DrawerHeader(displayName: String?, email: String?, onClose: () -> Unit) {
     Row(
         modifier = Modifier.padding(start = 28.dp, end = 12.dp, top = 16.dp, bottom = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        // Placeholder until login provides the signed-in student's details.
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = stringResource(R.string.menu_placeholder_name),
+                text = displayName ?: stringResource(R.string.menu_placeholder_name),
                 style = MaterialTheme.typography.titleMedium,
             )
             Text(
-                text = stringResource(R.string.menu_placeholder_email),
+                text = email ?: stringResource(R.string.menu_placeholder_email),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )

@@ -16,15 +16,21 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ecoalertum.android.R
+import com.ecoalertum.android.auth.AuthEvent
+import com.ecoalertum.android.auth.AuthViewModel
 import com.ecoalertum.android.core.navigation.EcoAlertNavHost
 import com.ecoalertum.android.core.navigation.Routes
 import com.ecoalertum.android.core.navigation.TopLevelDestination
@@ -37,6 +43,26 @@ import kotlinx.coroutines.launch
 @Composable
 fun EcoAlertApp() {
     val navController = rememberNavController()
+
+    // Module 6: one login session for the whole app. It decides where the app opens and
+    // moves between the login screens and the main screens.
+    val authViewModel: AuthViewModel = viewModel(factory = AuthViewModel.Factory)
+    val startRoute = remember { authViewModel.startRoute }
+    val session by authViewModel.session.collectAsStateWithLifecycle()
+    LaunchedEffect(navController, authViewModel) {
+        authViewModel.authEvents.collect { event ->
+            val target = when (event) {
+                AuthEvent.LoggedIn -> Routes.MAIN_GRAPH
+                AuthEvent.NeedsVerification -> Routes.VERIFY_EMAIL
+                AuthEvent.LoggedOut -> Routes.LOGIN
+            }
+            // Clear the back stack so Back never returns to a screen from the other side of login.
+            navController.navigate(target) {
+                popUpTo(navController.graph.id) { inclusive = true }
+                launchSingleTop = true
+            }
+        }
+    }
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = backStackEntry?.destination
     // Top bar, side menu and bottom bar only appear on the main screens (not on login, later).
@@ -61,8 +87,8 @@ fun EcoAlertApp() {
     // Bottom-bar tabs show the menu button; every other screen shows a back arrow.
     val isTopLevel = TopLevelDestination.entries.any { it.route == currentDestination?.route }
 
-    // TODO: read the role from users/{uid} once login exists. Hides the moderator queue until then.
-    val isModerator = false
+    // The role comes from users/{uid}, read at login. Only moderators see the moderator queue.
+    val isModerator = session?.isModerator == true
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -77,9 +103,15 @@ fun EcoAlertApp() {
             EcoAlertDrawer(
                 currentRoute = currentDestination?.route,
                 isModerator = isModerator,
+                displayName = session?.displayName,
+                email = session?.email,
                 onDestinationSelected = { destination ->
                     navController.navigate(destination.route) { launchSingleTop = true }
                     closeDrawer()
+                },
+                onLogOut = {
+                    closeDrawer()
+                    authViewModel.signOut()
                 },
                 onClose = closeDrawer,
             )
@@ -130,6 +162,8 @@ fun EcoAlertApp() {
         ) { innerPadding ->
             EcoAlertNavHost(
                 navController = navController,
+                authViewModel = authViewModel,
+                startDestination = startRoute,
                 modifier = Modifier.padding(innerPadding),
             )
         }
