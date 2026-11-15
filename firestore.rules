@@ -3,8 +3,12 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     function signedIn() { return request.auth != null; }
+    // FR6.1: only verified @siswa.um.edu.my accounts (docs/architecture.md, decision 11).
+    // email_verified is true only after the student opens the link sent to their UM inbox.
     function isUM() {
-      return signedIn() && request.auth.token.email.matches('.*@(siswa\\.)?um\\.edu\\.my');
+      return signedIn()
+        && request.auth.token.email_verified == true
+        && request.auth.token.email.matches('.*@siswa\\.um\\.edu\\.my');
     }
     function isModerator() {
       return signedIn() &&
