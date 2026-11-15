@@ -15,6 +15,11 @@ import com.ecoalertum.android.alerts.AlertHistoryScreen
 import com.ecoalertum.android.alerts.AlertPreferencesScreen
 import com.ecoalertum.android.alerts.AlertsScreen
 import com.ecoalertum.android.assistant.AssistantScreen
+import com.ecoalertum.android.auth.AuthViewModel
+import com.ecoalertum.android.auth.ForgotPasswordScreen
+import com.ecoalertum.android.auth.LoginScreen
+import com.ecoalertum.android.auth.RegisterScreen
+import com.ecoalertum.android.auth.VerifyEmailScreen
 import com.ecoalertum.android.home.HomeScreen
 import com.ecoalertum.android.learn.LearnScreen
 import com.ecoalertum.android.learn.ProgressScreen
@@ -31,23 +36,45 @@ import com.ecoalertum.android.assistant.HazardExplainedScreen
 /**
  * The app's navigation graph.
  *
- * Login goes in front of the main screens later:
- * 1. add `composable(Routes.LOGIN) { LoginScreen(...) }` here,
- * 2. set `startDestination = Routes.LOGIN`,
- * 3. on success call `navController.navigate(Routes.MAIN_GRAPH) { popUpTo(Routes.LOGIN) { inclusive = true } }`.
- * The top bar, side menu and bottom bar only show inside [Routes.MAIN_GRAPH], so login gets a full screen.
+ * Login sits in front of [Routes.MAIN_GRAPH]. [startDestination] comes from [AuthViewModel.startRoute]
+ * (login, verify email, or straight into the app). Moving between login and the app is done by
+ * EcoAlertApp, which listens to the auth events. The top bar, side menu and bottom bar only show
+ * inside [Routes.MAIN_GRAPH], so the login screens get a full screen.
  */
 @Composable
 fun EcoAlertNavHost(
     navController: NavHostController,
+    authViewModel: AuthViewModel,
+    startDestination: String,
     modifier: Modifier = Modifier,
 ) {
     NavHost(
         navController = navController,
-        startDestination = Routes.MAIN_GRAPH,
+        startDestination = startDestination,
         modifier = modifier,
     ) {
+        authGraph(navController, authViewModel)
         mainGraph(navController)
+    }
+}
+
+/** Module 6: the screens a student sees before they are logged in. */
+private fun NavGraphBuilder.authGraph(navController: NavHostController, authViewModel: AuthViewModel) {
+    composable(Routes.LOGIN) {
+        LoginScreen(
+            viewModel = authViewModel,
+            onRegister = { navController.navigate(Routes.REGISTER) { launchSingleTop = true } },
+            onForgotPassword = { navController.navigate(Routes.FORGOT_PASSWORD) { launchSingleTop = true } },
+        )
+    }
+    composable(Routes.REGISTER) {
+        RegisterScreen(viewModel = authViewModel, onBackToLogin = { navController.popBackStack() })
+    }
+    composable(Routes.FORGOT_PASSWORD) {
+        ForgotPasswordScreen(viewModel = authViewModel, onBackToLogin = { navController.popBackStack() })
+    }
+    composable(Routes.VERIFY_EMAIL) {
+        VerifyEmailScreen(viewModel = authViewModel)
     }
 }
 

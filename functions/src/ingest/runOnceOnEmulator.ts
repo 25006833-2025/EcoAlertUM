@@ -2,6 +2,7 @@ import { initializeApp } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 
 import { runIngestion } from "./ingest";
+import { firestoreStore } from "./store";
 
 /**
  * Runs one ingestion against the local Firestore emulator (the functions emulator does not
@@ -14,7 +15,7 @@ async function main(): Promise<void> {
     throw new Error("FIRESTORE_EMULATOR_HOST is not set. This script only runs against the emulator.");
   }
   initializeApp({ projectId: process.env.GCLOUD_PROJECT ?? "demo-ecoalert" });
-  const summary = await runIngestion(getFirestore());
+  const summary = await runIngestion(firestoreStore(getFirestore()), new Date(), undefined, { force: true });
   console.log(JSON.stringify(summary, null, 2));
 }
 

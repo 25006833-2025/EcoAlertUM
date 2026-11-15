@@ -2,6 +2,8 @@ package com.ecoalertum.android.core.data
 
 import android.content.Context
 import com.ecoalertum.android.BuildConfig
+import com.ecoalertum.android.auth.AuthRepository
+import com.ecoalertum.android.auth.FirebaseAuthRepository
 import com.ecoalertum.android.core.data.fake.FakeAlertRepository
 import com.ecoalertum.android.core.data.fake.FakeHazardRepository
 import com.ecoalertum.android.core.data.fake.MockJsonParser
@@ -44,6 +46,9 @@ class AppContainer(context: Context) {
             FakeAlertRepository(MockJsonParser.parseAlerts(readAsset("mock/alerts.json")))
         }
     }
+
+    // Module 6: login. Created on first use, after MainActivity has pointed Firebase at the emulator (debug builds).
+    val authRepository: AuthRepository by lazy { FirebaseAuthRepository() }
 
     // Module 5: quiz content is bundled in the app for v1 (docs/data-models.md).
     val quizRepository: QuizRepository by lazy { BundledQuizRepository { readAsset("quizzes/quizzes.json") } }

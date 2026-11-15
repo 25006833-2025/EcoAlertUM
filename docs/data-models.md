@@ -54,7 +54,7 @@ The latest official reading for one station and one hazard type. Only the backen
 | `validFrom` | Timestamp? | `weather_warning` only: MET's `valid_from`. `null` for other types |
 | `validTo` | Timestamp? | `weather_warning` only: MET's `valid_to`. Alerts raised from this warning expire at this time. `null` for other types |
 | `observedAt` | Timestamp | When the source measured or issued it |
-| `fetchedAt` | Timestamp | When our backend stored it. The app shows "updated X min ago" and a stale banner if this is too old |
+| `fetchedAt` | Timestamp | Last time we confirmed this value from the source. Refreshed on every successful fetch, even when the value is unchanged. Not refreshed when the station is rejected or missing, so its reading goes stale on its own. The app shows "updated X min ago" and a stale banner if this is too old, and the alert rules ignore readings that are too old |
 
 > Supporting doc (not one of the six models): `sourceStatus/{source}` with `{ ok: bool, lastSuccessAt, lastAttemptAt, error?, stationsMissing: string[] }`. The app uses it to show a "source unavailable — showing cached data" banner. `stationsMissing` lists station IDs whose latest reading was rejected or `null` (e.g. DOE `CA16W` Cheras), so the app can explain why it shows a farther station.
 
@@ -96,7 +96,7 @@ A notification the rules engine raised from one or more readings. The backend wr
 | `title` | LocalizedText | Push notification title |
 | `message` | LocalizedText | Body text with the action to take, e.g. "Avoid Jalan Universiti underpass" |
 | `area` | string | Always `whole_campus` in v1, because official data is per district or station, not per building. The field is kept so zone values (e.g. `engineering`) can be added later. |
-| `ruleId` | string | Which rule fired, e.g. `flood_level_alert` |
+| `ruleId` | string | Which rule fired. One rule per hazard type, so it equals `hazardType`, e.g. `flood_level` |
 | `readingIds` | string[] | Readings that triggered it (for traceability) |
 | `status` | enum | `active` · `expired` · `cancelled` |
 | `issuedAt` | Timestamp | |

@@ -1,0 +1,54 @@
+<resources>
+    <!-- Accounts (Module 6: FR6.1 login, FR6.3 password reset) -->
+
+    <!-- Shared -->
+    <string name="auth_email_label">UM student email</string>
+    <string name="auth_email_hint" translatable="false">matric@siswa.um.edu.my</string>
+    <string name="auth_password_label">Password</string>
+    <string name="auth_show">Show</string>
+    <string name="auth_hide">Hide</string>
+    <string name="auth_back_to_login">Back to log in</string>
+
+    <!-- Login -->
+    <string name="auth_login_title">Log in</string>
+    <string name="auth_login_subtitle">Use your UM student email to see warnings and report hazards.</string>
+    <string name="auth_login_button">Log in</string>
+    <string name="auth_forgot_password">Forgot password?</string>
+    <string name="auth_go_to_register">New here? Create an account</string>
+
+    <!-- Sign up -->
+    <string name="auth_register_title">Create account</string>
+    <string name="auth_register_subtitle">Only UM student emails (@siswa.um.edu.my) can sign up. We will send a link to confirm it is yours.</string>
+    <string name="auth_name_label">Full name</string>
+    <string name="auth_confirm_password_label">Confirm password</string>
+    <string name="auth_password_supporting">At least 8 characters</string>
+    <string name="auth_register_button">Create account</string>
+
+    <!-- Verify email -->
+    <string name="auth_verify_title">Check your inbox</string>
+    <string name="auth_verify_subtitle">We sent a link to %1$s. Open it, then come back and tap the button below. Check your spam folder if it does not arrive.</string>
+    <string name="auth_verify_done_button">I have verified my email</string>
+    <string name="auth_verify_still_unverified">We cannot see the confirmation yet. Open the link in the email first, then try again.</string>
+    <string name="auth_verify_resend">Resend email</string>
+    <string name="auth_verify_resend_wait">Resend in %1$d s</string>
+    <string name="auth_verify_resent">Verification email sent.</string>
+    <string name="auth_verify_other_account">Use a different account</string>
+
+    <!-- Forgot password (FR6.3) -->
+    <string name="auth_reset_title">Reset password</string>
+    <string name="auth_reset_subtitle">Enter your UM student email and we will send you a link to choose a new password.</string>
+    <string name="auth_reset_button">Send reset link</string>
+    <string name="auth_reset_sent">If an account exists for that email, a reset link is on its way. Check your UM inbox and spam folder.</string>
+
+    <!-- Errors -->
+    <string name="auth_error_domain">Use your UM student email, ending in @siswa.um.edu.my.</string>
+    <string name="auth_error_name_required">Enter your name.</string>
+    <string name="auth_error_password_required">Enter your password.</string>
+    <string name="auth_error_weak_password">Your password must be at least 8 characters.</string>
+    <string name="auth_error_password_mismatch">The two passwords do not match.</string>
+    <string name="auth_error_email_in_use">An account with this email already exists. Try logging in.</string>
+    <string name="auth_error_wrong_credentials">The email or password is not correct.</string>
+    <string name="auth_error_too_many_requests">Too many attempts. Wait a few minutes and try again.</string>
+    <string name="auth_error_network">No internet connection. Check your network and try again.</string>
+    <string name="auth_error_unknown">Something went wrong. Please try again.</string>
+</resources>
