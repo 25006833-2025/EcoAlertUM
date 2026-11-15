@@ -96,7 +96,11 @@ fun HazardExplainedScreen(
                         Text(
                             text = stringResource(
                                 R.string.assistant_area,
-                                selectedAlert.area
+                                if (selectedAlert.area == "whole_campus") {
+                                    stringResource(R.string.assistant_area_whole_campus)
+                                } else {
+                                    selectedAlert.area
+                                }
                             )
                         )
 

@@ -31,4 +31,6 @@
     <string name="assistant_explain_button">Explain with AI</string>
     <string name="assistant_error_no_alert">No alert was selected.</string>
     <string name="assistant_error_retrieve">Unable to retrieve the hazard explanation. Please try again later.</string>
+
+    <string name="assistant_area_whole_campus">Whole campus</string>
 </resources>

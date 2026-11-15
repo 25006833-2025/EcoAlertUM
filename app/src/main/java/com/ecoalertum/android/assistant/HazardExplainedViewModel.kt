@@ -27,7 +27,7 @@ sealed interface HazardExplanationUiState {
     ) : HazardExplanationUiState
 }
 
-class HazardExplainedViewModel(
+class HazardExplainedViewModel @JvmOverloads constructor(
     application: Application,
     private val repository: AssistantRepository = AssistantRepository(),
     private val mockRepository: MockAssistantRepository = MockAssistantRepository(),

@@ -31,4 +31,6 @@
     <string name="assistant_explain_button">Terangkan dengan AI</string>
     <string name="assistant_error_no_alert">Tiada amaran dipilih.</string>
     <string name="assistant_error_retrieve">Tidak dapat mendapatkan penjelasan bahaya. Sila cuba lagi kemudian.</string>
+
+    <string name="assistant_area_whole_campus">Seluruh kampus</string>
 </resources>
