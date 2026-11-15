@@ -5,6 +5,7 @@ import { geminiApiKey, generateGeminiText } from "./gemini";
 import { buildAssistantPrompt } from "./prompts";
 import { validateAssistantRequest } from "./validation";
 import { createFallbackResponse } from "../shared/fallback";
+import { parseExplanationResponse } from "./parseExplanation";
 
 export const askAssistant = onCall(
   {
@@ -62,18 +63,25 @@ export const askAssistant = onCall(
     );
 
     try {
+      const responseText = await generateGeminiText(
+        prompt,
+        validated.mode === "explain"
+      );
 
-      const explanation = await generateGeminiText(prompt);
+      if (validated.mode === "explain") {
+        return parseExplanationResponse(responseText);
+      }
 
+      // Preserve plain-text responses for FR4.2 chat.
       return {
         status: "ok",
-        explanation,
+        explanation: responseText,
         steps: [],
         sources: ["EcoAlert UM hazard information"],
         generatedBy: "ai",
       };
     } catch (error) {
-      console.error("Gemini request failed:", error);
+      console.error("Gemini request or response parsing failed:", error);
 
       return createFallbackResponse(
         validated.language,

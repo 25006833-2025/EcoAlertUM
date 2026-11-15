@@ -34,6 +34,10 @@ object Routes {
     const val ALERT_DETAIL = "alert/{alertId}"
     fun alertDetail(alertId: String) = "alert/$alertId"
 
+    // Module 4, FR4.1: AI explanation for a selected alert.
+    const val HAZARD_EXPLAINED = "assistant/explain/{alertId}"
+    fun hazardExplained(alertId: String) = "assistant/explain/$alertId"
+
     // Module 6 (FR6.1, FR6.3): these sit outside MAIN_GRAPH, so they get the full screen.
     const val LOGIN = "login"
     const val REGISTER = "register"

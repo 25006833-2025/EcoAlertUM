@@ -48,7 +48,7 @@ import java.util.Locale
 fun HomeScreen(
     modifier: Modifier = Modifier,
     onWhatToDo: () -> Unit = {},
-    onExplain: () -> Unit = {},
+    onExplain: (String) -> Unit = {},
     viewModel: HomeViewModel = viewModel(factory = HomeViewModel.Factory),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -66,7 +66,7 @@ fun HomeContent(
     state: HomeUiState,
     onRetry: () -> Unit,
     onWhatToDo: () -> Unit,
-    onExplain: () -> Unit,
+    onExplain: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     when (state) {
@@ -95,7 +95,7 @@ private fun Dashboard(
     state: HomeUiState.Content,
     onRetry: () -> Unit,
     onWhatToDo: () -> Unit,
-    onExplain: () -> Unit,
+    onExplain: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val formatTime = rememberTimeFormatter()
@@ -136,7 +136,13 @@ private fun Dashboard(
             )
         }
 
-        OutlinedButton(onClick = onExplain, modifier = Modifier.fillMaxWidth()) {
+        val alertId = state.hero.alertId?.takeIf { it.isNotBlank() }
+
+        OutlinedButton(
+            onClick = { alertId?.let(onExplain) },
+            enabled = alertId != null,
+            modifier = Modifier.fillMaxWidth()
+        ) {
             Text(stringResource(R.string.home_explain))
         }
     }

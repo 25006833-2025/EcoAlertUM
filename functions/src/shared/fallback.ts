@@ -1,3 +1,4 @@
+
 import {
   AssistantResponse,
   SupportedLanguage,
@@ -5,15 +6,16 @@ import {
 
 export function createFallbackResponse(
   language: SupportedLanguage,
-  hazardDescription: string
+  _hazardDescription: string
 ): AssistantResponse {
   const isMalay = language === "ms";
 
   return {
     status: "fallback",
+
     explanation: isMalay
-      ? `Maklumat bahaya yang tersedia: ${hazardDescription}. Pembantu AI tidak dapat memberikan penjelasan lanjut buat masa ini.`
-      : `Available hazard information: ${hazardDescription}. The AI assistant is temporarily unable to provide further explanation.`,
+      ? "Pembantu AI tidak tersedia buat masa ini. Sila rujuk maklumat amaran yang dipaparkan dan ikuti pengumuman keselamatan rasmi universiti."
+      : "The AI assistant is currently unavailable. Please refer to the selected hazard information above and follow official university safety announcements.",
 
     steps: isMalay
       ? [
