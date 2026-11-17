@@ -190,6 +190,9 @@ That’s the project ID from our google-services.json.
 firebase emulators:start 
 ```
 
+9.IMPORTANT TO KEEP FIREBASE EMULATOR ON AND DO NOT CLOSE IT OR ELSE IT WONT WORK 
+<img width="1291" height="512" alt="image" src="https://github.com/user-attachments/assets/f6eace8c-900f-4056-9f08-0944a852fe7d" />
+
 
 
 #### Week 4 Testing Results
