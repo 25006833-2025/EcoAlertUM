@@ -193,6 +193,17 @@ firebase emulators:start
 9.IMPORTANT TO KEEP FIREBASE EMULATOR ON AND DO NOT CLOSE IT OR ELSE IT WONT WORK 
 <img width="1291" height="512" alt="image" src="https://github.com/user-attachments/assets/f6eace8c-900f-4056-9f08-0944a852fe7d" />
 
+10.go to this link http://127.0.0.1:4000/auth , it will bring you to the firebase emulator suite
+<img width="1917" height="912" alt="Screenshot 2026-11-17 211330" src="https://github.com/user-attachments/assets/61f02b35-cf10-4d24-978d-df4b03746f1b" />
+
+click add user
+
+11.fill in as shown
+
+<img width="500" height="600" alt="Screenshot 2026-11-17 211341" src="https://github.com/user-attachments/assets/9643ca66-95fc-4641-9b43-28b16545fd73" />
+<img width="500" height="600" alt="Screenshot 2026-11-17 211346" src="https://github.com/user-attachments/assets/3d8c77fc-b32f-4e1a-91ae-b1841a17abc6" />
+
+
 
 
 #### Week 4 Testing Results
