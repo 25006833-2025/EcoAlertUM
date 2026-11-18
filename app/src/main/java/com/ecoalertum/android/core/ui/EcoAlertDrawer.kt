@@ -65,9 +65,7 @@ fun EcoAlertDrawer(
             SectionTitle(R.string.menu_section_help)
             DrawerItem(DrawerDestination.EMERGENCY_CONTACTS, currentRoute, onDestinationSelected)
             DrawerItem(DrawerDestination.ABOUT, currentRoute, onDestinationSelected)
-            if (isModerator) {
-                DrawerItem(DrawerDestination.MODERATOR_QUEUE, currentRoute, onDestinationSelected)
-            }
+            DrawerItem(DrawerDestination.MODERATOR_QUEUE, currentRoute, onDestinationSelected)
         }
 
         HorizontalDivider()
