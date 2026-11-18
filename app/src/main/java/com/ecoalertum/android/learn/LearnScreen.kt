@@ -1,6 +1,5 @@
 package com.ecoalertum.android.learn
 
-import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -60,6 +59,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ecoalertum.android.R
 import com.ecoalertum.android.core.data.model.LocalizedText
+import com.ecoalertum.android.learn.lesson.Lesson
 import com.ecoalertum.android.learn.quiz.Quiz
 import com.ecoalertum.android.learn.quiz.QuizPhase
 import com.ecoalertum.android.learn.quiz.QuizQuestion
@@ -78,18 +78,17 @@ import kotlinx.coroutines.launch
 @Composable
 fun LearnScreen(
     onStartQuiz: (quizId: String, phase: QuizPhase) -> Unit,
+    onStartLesson: (topic: String) -> Unit,
     onOpenProgress: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: LearnViewModel = viewModel(factory = LearnViewModel.Factory),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    val context = LocalContext.current
-    val soonText = stringResource(R.string.learn_lessons_soon)
     LearnContent(
         state = state,
         onStartQuiz = onStartQuiz,
         onOpenProgress = onOpenProgress,
-        onStartLesson = { Toast.makeText(context, soonText, Toast.LENGTH_SHORT).show() },
+        onStartLesson = { quiz -> onStartLesson(quiz.topic) },
         modifier = modifier,
     )
 }
@@ -151,6 +150,8 @@ internal fun LearnContent(
             val quiz = quizzes[page]
             LessonHeroCard(
                 quiz = quiz,
+                lesson = state.lessons[quiz.topic],
+                done = state.isLessonDone(quiz.topic),
                 lang = lang,
                 rightNowLabel = state.activeLabel?.takeIf { quiz.topic == state.activeTopic },
                 onStartLesson = { onStartLesson(quiz) },
@@ -184,7 +185,14 @@ internal fun LearnContent(
         quizzes.sortedBy { LearnTopic.from(it.topic).ordinal }.chunked(2).forEach { row ->
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 row.forEach { quiz ->
-                    TopicTile(quiz, lang, onClick = { sheetQuizId = quiz.id }, modifier = Modifier.weight(1f))
+                    TopicTile(
+                        quiz = quiz,
+                        lesson = state.lessons[quiz.topic],
+                        done = state.isLessonDone(quiz.topic),
+                        lang = lang,
+                        onClick = { sheetQuizId = quiz.id },
+                        modifier = Modifier.weight(1f),
+                    )
                 }
                 if (row.size == 1) Spacer(Modifier.weight(1f))
             }
@@ -197,10 +205,11 @@ internal fun LearnContent(
     if (sheetQuiz != null) {
         val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
         val scope = rememberCoroutineScope()
-        val start: (QuizPhase) -> Unit = { phase ->
+        // Close the sheet first, then open the chosen screen
+        fun closeThen(action: () -> Unit) {
             scope.launch { sheetState.hide() }.invokeOnCompletion {
                 sheetQuizId = null
-                onStartQuiz(sheetQuiz.id, phase)
+                action()
             }
         }
         ModalBottomSheet(
@@ -208,13 +217,26 @@ internal fun LearnContent(
             sheetState = sheetState,
             containerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
         ) {
-            TopicSheet(sheetQuiz, lang, onStart = start)
+            TopicSheet(
+                quiz = sheetQuiz,
+                hasLesson = state.lessons[sheetQuiz.topic] != null,
+                lang = lang,
+                onStartQuiz = { phase -> closeThen { onStartQuiz(sheetQuiz.id, phase) } },
+                onStartLesson = { closeThen { onStartLesson(sheetQuiz) } },
+            )
         }
     }
 }
 
 @Composable
-private fun LessonHeroCard(quiz: Quiz, lang: String, rightNowLabel: String?, onStartLesson: () -> Unit) {
+private fun LessonHeroCard(
+    quiz: Quiz,
+    lesson: Lesson?,
+    done: Boolean,
+    lang: String,
+    rightNowLabel: String?,
+    onStartLesson: () -> Unit,
+) {
     val topic = LearnTopic.from(quiz.topic)
     Surface(
         shape = RoundedCornerShape(20.dp),
@@ -260,18 +282,24 @@ private fun LessonHeroCard(quiz: Quiz, lang: String, rightNowLabel: String?, onS
                     }
                 }
                 Text(
-                    stringResource(topic.lessonTitle),
+                    lesson?.title?.get(lang) ?: stringResource(topic.lessonTitle),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.ExtraBold,
                     modifier = Modifier.padding(end = 40.dp),
                 )
                 Text(
-                    stringResource(R.string.learn_lesson_meta, quiz.questions.size),
+                    stringResource(
+                        R.string.learn_lesson_meta,
+                        lesson?.cards?.size ?: 0,
+                        lesson?.minutes ?: 0,
+                        quiz.questions.size,
+                    ) + if (done) " · ✓ " + stringResource(R.string.learn_lesson_done) else "",
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.White.copy(alpha = 0.85f),
                 )
                 Button(
                     onClick = onStartLesson,
+                    enabled = lesson != null,
                     shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = AlertAmber, contentColor = Ink),
                     modifier = Modifier.heightIn(min = 48.dp),
@@ -347,7 +375,14 @@ private fun ShortcutRow(
 }
 
 @Composable
-private fun TopicTile(quiz: Quiz, lang: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
+private fun TopicTile(
+    quiz: Quiz,
+    lesson: Lesson?,
+    done: Boolean,
+    lang: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val topic = LearnTopic.from(quiz.topic)
     Surface(
         onClick = onClick,
@@ -362,13 +397,30 @@ private fun TopicTile(quiz: Quiz, lang: String, onClick: () -> Unit, modifier: M
                 contentAlignment = Alignment.Center,
             ) { Icon(topic.icon, contentDescription = null, modifier = Modifier.size(22.dp)) }
             Text(quiz.title.get(lang), style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.ExtraBold)
+            if (lesson != null) {
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                    if (done) Icon(Icons.Filled.CheckCircle, contentDescription = null, modifier = Modifier.size(14.dp))
+                    Text(
+                        if (done) stringResource(R.string.learn_lesson_done)
+                        else stringResource(R.string.learn_lesson_pages, lesson.cards.size, lesson.minutes),
+                        style = MaterialTheme.typography.bodySmall,
+                        fontWeight = if (done) FontWeight.Bold else FontWeight.Medium,
+                    )
+                }
+            }
             Text(stringResource(R.string.learn_question_count, quiz.questions.size), style = MaterialTheme.typography.bodySmall)
         }
     }
 }
 
 @Composable
-private fun TopicSheet(quiz: Quiz, lang: String, onStart: (QuizPhase) -> Unit) {
+private fun TopicSheet(
+    quiz: Quiz,
+    hasLesson: Boolean,
+    lang: String,
+    onStartQuiz: (QuizPhase) -> Unit,
+    onStartLesson: () -> Unit,
+) {
     val topic = LearnTopic.from(quiz.topic)
     Column(
         Modifier
@@ -391,18 +443,26 @@ private fun TopicSheet(quiz: Quiz, lang: String, onStart: (QuizPhase) -> Unit) {
             }
         }
         Text(stringResource(R.string.learn_topic_intro), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        Button(
-            onClick = { onStart(QuizPhase.PRE) },
-            shape = RoundedCornerShape(14.dp),
-            modifier = Modifier.fillMaxWidth().height(52.dp),
-        ) { Text(stringResource(R.string.learn_take_pre_quiz), fontWeight = FontWeight.Bold) }
+        // Order follows the learning flow: pre-quiz → lesson → post-quiz
         OutlinedButton(
-            onClick = { onStart(QuizPhase.POST) },
+            onClick = { onStartQuiz(QuizPhase.PRE) },
             shape = RoundedCornerShape(14.dp),
             border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary),
             modifier = Modifier.fillMaxWidth().height(52.dp),
-        ) { Text(stringResource(R.string.learn_take_post_quiz), fontWeight = FontWeight.Bold) }
-        TextButton(onClick = { onStart(QuizPhase.PRACTICE) }, modifier = Modifier.fillMaxWidth()) {
+        ) { Text("1. " + stringResource(R.string.learn_take_pre_quiz), fontWeight = FontWeight.Bold) }
+        Button(
+            onClick = onStartLesson,
+            enabled = hasLesson,
+            shape = RoundedCornerShape(14.dp),
+            modifier = Modifier.fillMaxWidth().height(52.dp),
+        ) { Text("2. " + stringResource(R.string.learn_start_lesson), fontWeight = FontWeight.Bold) }
+        OutlinedButton(
+            onClick = { onStartQuiz(QuizPhase.POST) },
+            shape = RoundedCornerShape(14.dp),
+            border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary),
+            modifier = Modifier.fillMaxWidth().height(52.dp),
+        ) { Text("3. " + stringResource(R.string.learn_take_post_quiz), fontWeight = FontWeight.Bold) }
+        TextButton(onClick = { onStartQuiz(QuizPhase.PRACTICE) }, modifier = Modifier.fillMaxWidth()) {
             Text(stringResource(R.string.learn_practice))
         }
     }

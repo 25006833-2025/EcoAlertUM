@@ -5,9 +5,8 @@
     <string name="learn_subtitle">Climate learning</string>
     <string name="learn_badges">%1$d badges</string>
     <string name="learn_right_now">RIGHT NOW · %1$s</string>
-    <string name="learn_lesson_meta">4 short pages · 3 min · then a %1$d-question quiz</string>
+    <string name="learn_lesson_meta">%1$d short cards · %2$d min · then a %3$d-question quiz</string>
     <string name="learn_start_lesson">Start lesson</string>
-    <string name="learn_lessons_soon">Lessons are coming soon. Try the quiz for now!</string>
     <string name="learn_pager_position">Lesson %1$d of %2$d. Swipe for more.</string>
     <string name="learn_pre_quiz_title">Take the pre-quiz first</string>
     <string name="learn_pre_quiz_body">So we can measure what you learn</string>
@@ -25,10 +24,25 @@
     <string name="learn_lesson_heat">Keeping cool in hot weather</string>
 
     <!-- Topic sheet -->
-    <string name="learn_topic_intro">Take the pre-quiz before the lessons and the post-quiz after, so you can see how much you learned.</string>
+    <string name="learn_topic_intro">Take the pre-quiz first, then the lesson, then the post-quiz, so you can see how much you learned.</string>
     <string name="learn_take_pre_quiz">Pre-quiz</string>
     <string name="learn_take_post_quiz">Post-quiz</string>
     <string name="learn_practice">Practice</string>
+
+    <!-- Lesson screen (FR5.2) -->
+    <string name="lesson_title">Lesson</string>
+    <string name="lesson_card_of">Card %1$d of %2$d</string>
+    <string name="lesson_minutes">%1$d min</string>
+    <string name="lesson_good_to_know">GOOD TO KNOW</string>
+    <string name="lesson_back">Back</string>
+    <string name="lesson_close">Close</string>
+    <string name="lesson_next">Next card</string>
+    <string name="lesson_take_post_quiz">Take the post-quiz</string>
+    <string name="lesson_done">Done</string>
+    <string name="lesson_not_found">This lesson could not be found.</string>
+    <string name="learn_start_lesson_short">Lesson</string>
+    <string name="learn_lesson_done">Lesson done</string>
+    <string name="learn_lesson_pages">%1$d-card lesson · %2$d min</string>
 
     <!-- Quiz screen (FR5.1) -->
     <string name="quiz_title">Quiz</string>

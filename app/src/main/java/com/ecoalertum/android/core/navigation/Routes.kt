@@ -30,6 +30,10 @@ object Routes {
     const val QUIZ = "quiz/{quizId}/{phase}"
     fun quiz(quizId: String, phase: String) = "quiz/$quizId/$phase"
 
+    // Module 5, FR5.2: short lesson for a hazard topic (floods / haze / storms / heat).
+    const val LESSON = "lesson/{topic}"
+    fun lesson(topic: String) = "lesson/$topic"
+
     // Module 2: one alert. Opened from the Alerts list and from notifications.
     const val ALERT_DETAIL = "alert/{alertId}"
     fun alertDetail(alertId: String) = "alert/$alertId"

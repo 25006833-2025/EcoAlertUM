@@ -81,6 +81,7 @@ fun EcoAlertApp() {
         Routes.ABOUT -> R.string.menu_about
         Routes.MODERATOR_QUEUE -> R.string.menu_moderator_queue
         Routes.QUIZ -> R.string.quiz_title
+        Routes.LESSON -> R.string.lesson_title
         else -> R.string.app_name
     }
 
