@@ -1,0 +1,94 @@
+<resources>
+    <!-- Pembelajaran dan kuiz (Modul 5). Bahasa Melayu untuk values/strings_learn.xml -->
+
+    <!-- Tab Belajar (laman utama) -->
+    <string name="learn_subtitle">Pembelajaran iklim</string>
+    <string name="learn_badges">%1$d lencana</string>
+    <string name="learn_right_now">SEKARANG · %1$s</string>
+    <string name="learn_lesson_meta">%1$d kad ringkas · %2$d min · kemudian kuiz %3$d soalan</string>
+    <string name="learn_start_lesson">Mula pelajaran</string>
+    <string name="learn_pager_position">Pelajaran %1$d daripada %2$d. Leret untuk lagi.</string>
+    <string name="learn_pre_quiz_title">Jawab pra-kuiz dahulu</string>
+    <string name="learn_pre_quiz_body">Supaya kami dapat mengukur apa yang anda pelajari</string>
+    <string name="learn_start">Mula</string>
+    <string name="learn_my_progress">Kemajuan saya</string>
+    <string name="learn_view">Lihat</string>
+    <string name="learn_topics">Topik</string>
+    <string name="learn_question_count">Kuiz %1$d soalan</string>
+    <string name="learn_no_quizzes">Belum ada kuiz lagi.</string>
+
+    <!-- Tajuk pelajaran utama, satu bagi setiap topik -->
+    <string name="learn_lesson_floods">Bergerak di kampus semasa hujan lebat &amp; banjir</string>
+    <string name="learn_lesson_haze">Bernafas dengan selamat semasa jerebu</string>
+    <string name="learn_lesson_storms">Kekal selamat semasa ribut petir</string>
+    <string name="learn_lesson_heat">Kekal sejuk dalam cuaca panas</string>
+
+    <!-- Helaian topik -->
+    <string name="learn_topic_intro">Jawab pra-kuiz dahulu, kemudian pelajaran, kemudian pasca-kuiz, supaya anda nampak berapa banyak yang anda pelajari.</string>
+    <string name="learn_take_pre_quiz">Pra-kuiz</string>
+    <string name="learn_take_post_quiz">Pasca-kuiz</string>
+    <string name="learn_practice">Latihan</string>
+
+    <!-- Skrin pelajaran (FR5.2) -->
+    <string name="lesson_title">Pelajaran</string>
+    <string name="lesson_card_of">Kad %1$d daripada %2$d</string>
+    <string name="lesson_minutes">%1$d min</string>
+    <string name="lesson_good_to_know">PERLU TAHU</string>
+    <string name="lesson_back">Kembali</string>
+    <string name="lesson_close">Tutup</string>
+    <string name="lesson_next">Kad seterusnya</string>
+    <string name="lesson_take_post_quiz">Jawab pasca-kuiz</string>
+    <string name="lesson_done">Selesai</string>
+    <string name="lesson_not_found">Pelajaran ini tidak dijumpai.</string>
+    <string name="learn_start_lesson_short">Pelajaran</string>
+    <string name="learn_lesson_done">Pelajaran selesai</string>
+    <string name="learn_lesson_pages">Pelajaran %1$d kad · %2$d min</string>
+
+    <!-- Skrin kuiz (FR5.1) -->
+    <string name="quiz_title">Kuiz</string>
+    <string name="quiz_phase_pre">PRA-KUIZ</string>
+    <string name="quiz_phase_post">PASCA-KUIZ</string>
+    <string name="quiz_phase_practice">LATIHAN</string>
+    <string name="quiz_question_of">Soalan %1$d daripada %2$d</string>
+    <string name="quiz_close">Keluar kuiz</string>
+    <string name="quiz_correct_count">%1$d betul</string>
+    <string name="quiz_wrong_count">%1$d salah</string>
+    <string name="quiz_check">Semak jawapan</string>
+    <string name="quiz_next">Soalan seterusnya</string>
+    <string name="quiz_see_results">Lihat keputusan</string>
+    <string name="quiz_feedback_correct">Betul!</string>
+    <string name="quiz_feedback_wrong">Hampir: jawapannya %1$s</string>
+    <string name="quiz_not_found">Kuiz ini tidak dijumpai.</string>
+    <string name="quiz_back_to_learn">Kembali ke Belajar</string>
+
+    <!-- Keputusan -->
+    <string name="quiz_result_score">%1$d/%2$d</string>
+    <string name="quiz_result_correct">betul</string>
+    <string name="quiz_result_great">Syabas!</string>
+    <string name="quiz_result_good">Usaha yang baik!</string>
+    <string name="quiz_result_keep_going">Teruskan belajar, anda pasti boleh</string>
+    <string name="quiz_result_review">Semak jawapan</string>
+    <string name="quiz_result_your_answer">Jawapan anda: %1$s</string>
+    <string name="quiz_result_right_answer">Jawapan betul: %1$s</string>
+    <string name="quiz_retry">Cuba lagi</string>
+    <string name="quiz_saving">Menyimpan markah anda…</string>
+    <string name="quiz_saved">Markah disimpan</string>
+    <string name="quiz_not_signed_in">Markah tidak disimpan: log masuk untuk menyimpan kemajuan anda</string>
+    <string name="quiz_save_failed">Markah tidak dapat disimpan</string>
+    <string name="quiz_save_retry">Cuba lagi</string>
+
+    <!-- Sebelum vs selepas -->
+    <string name="quiz_before_after">Sebelum vs selepas pelajaran</string>
+    <string name="quiz_pre_label">Pra-kuiz</string>
+    <string name="quiz_post_label">Pasca-kuiz</string>
+    <string name="quiz_gain_up">+%1$d lagi betul selepas pelajaran. Syabas!</string>
+    <string name="quiz_gain_same">Markah sama seperti sebelum pelajaran.</string>
+    <string name="quiz_gain_down">Sedikit rendah daripada sebelum ini. Ulang kaji pelajaran dan cuba lagi.</string>
+    <string name="quiz_need_pre">Jawab pra-kuiz juga supaya anda boleh membandingkan.</string>
+    <string name="quiz_need_post">Ikuti pelajaran, kemudian jawab pasca-kuiz untuk melihat berapa banyak yang anda pelajari.</string>
+    <string name="quiz_practice_note">Markah latihan tidak mengubah nombor ini.</string>
+
+    <!-- Kongsi -->
+    <string name="quiz_share">Kongsi keputusan</string>
+    <string name="quiz_share_text">Saya dapat %1$d/%2$d dalam kuiz \"%3$s\" EcoAlert UM! Belajar cara kekal selamat di kampus semasa banjir, jerebu dan ribut.</string>
+</resources>
