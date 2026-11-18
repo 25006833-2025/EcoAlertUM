@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -24,6 +25,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -39,8 +41,10 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,10 +55,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 // Design System Tokens
 private val PrimaryTeal = Color(0xFF0F4C47)
@@ -73,6 +81,15 @@ private enum class QueueFilter(val label: String) {
     ALL("All Reports")
 }
 
+/** A Resolve or Reject action waiting for the moderator to confirm. */
+private data class PendingAction(
+    val report: HazardReport,
+    val newStatus: String,
+    val title: String,
+    val message: String,
+    val successToast: String,
+)
+
 @Composable
 fun ModeratorQueueScreen(
     modifier: Modifier = Modifier,
@@ -83,6 +100,7 @@ fun ModeratorQueueScreen(
     var errorMessage by remember { mutableStateOf<String?>(null) }
     var selectedFilter by remember { mutableStateOf(QueueFilter.PENDING) }
     var updatingReportId by remember { mutableStateOf<String?>(null) }
+    var pendingAction by remember { mutableStateOf<PendingAction?>(null) }
 
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
@@ -131,9 +149,30 @@ fun ModeratorQueueScreen(
         }
     }
 
+    // Confirmation box for Resolve and Reject
+    pendingAction?.let { action ->
+        AlertDialog(
+            onDismissRequest = { pendingAction = null },
+            title = { Text(action.title) },
+            text = { Text(action.message) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        pendingAction = null
+                        handleStatusChange(action.report, action.newStatus, action.successToast)
+                    }
+                ) { Text("Confirm") }
+            },
+            dismissButton = {
+                TextButton(onClick = { pendingAction = null }) { Text("Cancel") }
+            },
+        )
+    }
+
     Scaffold(
         modifier = modifier.fillMaxSize(),
         containerColor = ScreenBg,
+        contentWindowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { innerPadding ->
         Column(
@@ -218,10 +257,22 @@ fun ModeratorQueueScreen(
                                     handleStatusChange(report, "verified", "Report verified & published to map")
                                 },
                                 onResolve = {
-                                    handleStatusChange(report, "resolved", "Hazard marked as resolved")
+                                    pendingAction = PendingAction(
+                                        report = report,
+                                        newStatus = "resolved",
+                                        title = "Mark as resolved?",
+                                        message = "This hazard will be marked as resolved.",
+                                        successToast = "Hazard marked as resolved",
+                                    )
                                 },
                                 onReject = {
-                                    handleStatusChange(report, "rejected", "Report rejected")
+                                    pendingAction = PendingAction(
+                                        report = report,
+                                        newStatus = "rejected",
+                                        title = "Reject this report?",
+                                        message = "The report will be rejected and will not be shown on the map.",
+                                        successToast = "Report rejected",
+                                    )
                                 }
                             )
                         }
@@ -240,6 +291,11 @@ private fun ModeratorReportCard(
     onResolve: () -> Unit,
     onReject: () -> Unit
 ) {
+    val categoryLabel = ReportCategory.entries
+        .firstOrNull { it.key == report.category }
+        ?.let { stringResource(it.labelRes) }
+        ?: report.category.ifBlank { "General Hazard" }
+
     val statusLower = report.status.lowercase()
     val (badgeBg, badgeText, statusLabel) = when (statusLower) {
         "verified" -> Triple(LeafGreen.copy(alpha = 0.14f), LeafGreen, "Verified")
@@ -249,9 +305,15 @@ private fun ModeratorReportCard(
     }
 
     val timeAgo = remember(report.createdAt) {
-        report.createdAt?.toDate()?.time?.let { millis ->
+        val millis = when (val timestamp = report.createdAt) {
+            is com.google.firebase.Timestamp -> timestamp.toDate().time
+            is Number -> timestamp.toLong()
+            else -> null
+        }
+
+        millis?.let {
             DateUtils.getRelativeTimeSpanString(
-                millis,
+                it,
                 System.currentTimeMillis(),
                 DateUtils.MINUTE_IN_MILLIS
             ).toString()
@@ -272,7 +334,7 @@ private fun ModeratorReportCard(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = report.category.ifBlank { "General Hazard" },
+                    text = categoryLabel,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = InkDark,
@@ -331,22 +393,13 @@ private fun ModeratorReportCard(
                     color = InkDark
                 )
             }
-/*
-            // Evidence Photo (if available)
-            if (!report.photoPath.isNullOrBlank()) {
+
+            // Evidence photo (loaded from Firebase Storage)
+            report.photoPath?.takeIf { it.isNotBlank() }?.let { path ->
                 Spacer(modifier = Modifier.height(10.dp))
-                AsyncImage(
-                    model = report.photoPath,
-                    contentDescription = "Hazard evidence photo",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(160.dp)
-                        .clip(RoundedCornerShape(10.dp))
-                        .background(ScreenBg)
-                )
+                ReportEvidencePhoto(path = path)
             }
-*/
+
             Spacer(modifier = Modifier.height(14.dp))
 
             // Moderator Action Buttons (48dp touch targets)
@@ -409,6 +462,51 @@ private fun ModeratorReportCard(
                     }
                 }
             }
+        }
+    }
+}
+
+/** Loads the photo for a report: turns the Storage path into a download link, then shows it. */
+@Composable
+private fun ReportEvidencePhoto(path: String) {
+    var url by remember(path) { mutableStateOf<String?>(null) }
+    var failed by remember(path) { mutableStateOf(false) }
+
+    LaunchedEffect(path) {
+        try {
+            url = FirebaseStorage.getInstance().reference.child(path).downloadUrl.await().toString()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            failed = true
+        }
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(160.dp)
+            .clip(RoundedCornerShape(10.dp))
+            .background(ScreenBg),
+        contentAlignment = Alignment.Center
+    ) {
+        when {
+            failed -> Text(
+                text = "Photo unavailable",
+                color = MutedText,
+                style = MaterialTheme.typography.bodySmall
+            )
+            url == null -> CircularProgressIndicator(
+                modifier = Modifier.size(24.dp),
+                strokeWidth = 2.dp,
+                color = PrimaryTeal
+            )
+            else -> AsyncImage(
+                model = url,
+                contentDescription = "Hazard evidence photo",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
+            )
         }
     }
 }

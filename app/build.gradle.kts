@@ -32,6 +32,9 @@ android {
         versionCode = 1
         versionName = "1.0"
 
+        // Diambil secara automatik dari local.properties untuk Google Maps
+        manifestPlaceholders["MAPS_API_KEY"] = localProperties.getProperty("MAPS_API_KEY", "")
+
         // Live Firestore hazard data needs a signed-in UM user. Turn on when login is merged.
         buildConfigField("boolean", "USE_LIVE_DATA", "false")
 
@@ -96,5 +99,7 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.play.services.location)
     implementation(libs.coil.compose)
+    implementation("com.google.maps.android:maps-compose:4.4.1")
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
 
 }

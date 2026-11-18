@@ -1,9 +1,5 @@
 package com.ecoalertum.android.map
 
-import android.text.format.DateUtils
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,15 +10,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -30,7 +20,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -46,17 +35,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.ecoalertum.android.R
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapUiSettings
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.rememberCameraPositionState
 
 // Official Design System Tokens (from EcoAlert UM design system)
 private val PrimaryTeal = Color(0xFF0F4C47)
 private val TealTint = Color(0xFFE3F0EC)
 private val LeafGreen = Color(0xFF1F7A4A)
 private val AlertAmber = Color(0xFFF2A23A)
-private val WarningOrange = Color(0xFFC2410C)
 private val DangerRed = Color(0xFF9F1D14)
 private val InkDark = Color(0xFF10201E)
 private val MutedText = Color(0xFF4A5B58)
-private val BorderLine = Color(0xFFDDE5E2)
 private val ScreenBg = Color(0xFFF4F7F5)
 
 @Composable
@@ -70,6 +66,12 @@ fun MapScreen(
     var errorMessage by remember { mutableStateOf<String?>(null) }
     var selectedFilter by remember { mutableStateOf("All") }
     var selectedReport by remember { mutableStateOf<HazardReport?>(null) }
+
+    // Pusat Universiti Malaya sebagai default camera position
+    val umCampus = LatLng(3.1236, 101.6547)
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(umCampus, 15f)
+    }
 
     DisposableEffect(repository) {
         val registration = repository.getReportsStream(
@@ -105,13 +107,44 @@ fun MapScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            // Simulated Campus Map Canvas Background
+            // Real Google Maps View
+            GoogleMap(
+                modifier = Modifier.fillMaxSize(),
+                cameraPositionState = cameraPositionState,
+                uiSettings = MapUiSettings(zoomControlsEnabled = true)
+            ) {
+                displayedReports.forEach { report ->
+                    // Ambil koordinat tepat dari Firebase GeoPoint model
+                    report.location?.let { geoPoint ->
+                        val position = LatLng(geoPoint.latitude, geoPoint.longitude)
+
+                        Marker(
+                            state = MarkerState(position = position),
+                            title = report.category.ifBlank { "Campus Incident" },
+                            snippet = report.locationLabel,
+                            // Guna warna standard mengikut status supaya peta stabil & tak crash
+                            icon = BitmapDescriptorFactory.defaultMarker(
+                                when (report.status.lowercase()) {
+                                    "verified" -> BitmapDescriptorFactory.HUE_RED
+                                    "resolved" -> BitmapDescriptorFactory.HUE_GREEN
+                                    else -> BitmapDescriptorFactory.HUE_ORANGE
+                                }
+                            ),
+                            onClick = {
+                                selectedReport = report
+                                false
+                            }
+                        )
+                    }
+                }
+            }
+
+            // Top Filter Chips Overlay
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxWidth()
                     .padding(16.dp)
             ) {
-                // Top Filter Chips (Matching Wireframe 3.1)
                 LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier.fillMaxWidth()
@@ -132,77 +165,17 @@ fun MapScreen(
                         )
                     }
                 }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Map Canvas Area with Hazard Pins
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxWidth()
-                ) {
-                    when {
-                        isLoading -> {
-                            CircularProgressIndicator(
-                                color = PrimaryTeal,
-                                modifier = Modifier.align(Alignment.Center)
-                            )
-                        }
-                        errorMessage != null -> {
-                            Text(
-                                text = errorMessage ?: "",
-                                color = DangerRed,
-                                modifier = Modifier.align(Alignment.Center)
-                            )
-                        }
-                        displayedReports.isEmpty() -> {
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                modifier = Modifier.align(Alignment.Center)
-                            ) {
-                                Icon(Icons.Filled.Info, contentDescription = null, tint = MutedText, modifier = Modifier.size(48.dp))
-                                Spacer(modifier = Modifier.height(8.dp))
-                                Text("No hazards found on campus map.", color = MutedText, fontWeight = FontWeight.Medium)
-                            }
-                        }
-                        else -> {
-                            Box(modifier = Modifier.fillMaxSize()) {
-                                displayedReports.forEachIndexed { index, report ->
-                                    val xOffset = (index * 85 + 40) % 280
-                                    val yOffset = (index * 110 + 60) % 400
-
-                                    val pinColor = when (report.status.lowercase()) {
-                                        "verified" -> DangerRed
-                                        "resolved" -> LeafGreen
-                                        else -> AlertAmber
-                                    }
-
-                                    Surface(
-                                        shape = CircleShape,
-                                        color = pinColor,
-                                        modifier = Modifier
-                                            .padding(start = xOffset.dp, top = yOffset.dp)
-                                            .size(38.dp)
-                                            .border(2.dp, Color.White, CircleShape)
-                                            .clickable { selectedReport = report }
-                                    ) {
-                                        Box(contentAlignment = Alignment.Center) {
-                                            Icon(
-                                                imageVector = Icons.Filled.Warning,
-                                                contentDescription = null,
-                                                tint = Color.White,
-                                                modifier = Modifier.size(20.dp)
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
             }
 
-            // Floating Hazard Details Popup Card at bottom (Matching Wireframe 3.1)
+            // Loading / Error States overlay
+            if (isLoading) {
+                CircularProgressIndicator(
+                    color = PrimaryTeal,
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            }
+
+            // Floating Hazard Details Popup Card at bottom
             selectedReport?.let { report ->
                 Card(
                     shape = RoundedCornerShape(16.dp),
@@ -257,7 +230,6 @@ fun MapScreen(
 
                         Spacer(modifier = Modifier.height(12.dp))
 
-                        // "Explain with Assistant" Button matching wireframe 3.1
                         Button(
                             onClick = { onNavigateToAssistant(report.description) },
                             shape = RoundedCornerShape(14.dp),

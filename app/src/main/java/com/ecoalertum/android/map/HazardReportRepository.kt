@@ -25,7 +25,7 @@ data class HazardReport(
     val confirmations: Int = 0,
     val verifiedBy: String? = null,
     val verifiedAt: Timestamp? = null,
-    @get:ServerTimestamp val createdAt: Timestamp? = null
+    @ServerTimestamp val createdAt: Timestamp? = null
 )
 
 class HazardReportRepository(
@@ -43,12 +43,14 @@ class HazardReportRepository(
         }
     }
 
+    /** Newest 200 reports, live. Call remove() on the result when the screen closes. */
     fun getReportsStream(
         onSuccess: (List<HazardReport>) -> Unit,
         onError: (Exception) -> Unit
     ): ListenerRegistration =
         reportsCollection
             .orderBy("createdAt", Query.Direction.DESCENDING)
+            .limit(200)
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
                     onError(error)
