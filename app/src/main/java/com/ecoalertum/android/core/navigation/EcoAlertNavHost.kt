@@ -23,6 +23,8 @@ import com.ecoalertum.android.auth.VerifyEmailScreen
 import com.ecoalertum.android.home.HomeScreen
 import com.ecoalertum.android.learn.LearnScreen
 import com.ecoalertum.android.learn.ProgressScreen
+import com.ecoalertum.android.learn.lesson.LessonScreen
+import com.ecoalertum.android.learn.lesson.LessonViewModel
 import com.ecoalertum.android.learn.quiz.QuizScreen
 import com.ecoalertum.android.learn.quiz.QuizViewModel
 import com.ecoalertum.android.map.MapScreen
@@ -100,6 +102,7 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
         composable(Routes.LEARN) {
             LearnScreen(
                 onStartQuiz = { quizId, phase -> navController.navigate(Routes.quiz(quizId, phase.value)) },
+                onStartLesson = { topic -> navController.navigate(Routes.lesson(topic)) },
                 onOpenProgress = { navController.navigate(Routes.PROGRESS) { launchSingleTop = true } },
             )
         }
@@ -129,6 +132,21 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
             ),
         ) {
             QuizScreen(onExit = { navController.popBackStack() })
+        }
+
+        // Reached from the Learn tab (Module 5, FR5.2). Finishing it opens the topic's post-quiz.
+        composable(
+            route = Routes.LESSON,
+            arguments = listOf(navArgument(LessonViewModel.ARG_TOPIC) { type = NavType.StringType }),
+        ) {
+            LessonScreen(
+                onExit = { navController.popBackStack() },
+                onStartPostQuiz = { quizId ->
+                    navController.navigate(Routes.quiz(quizId, "post")) {
+                        popUpTo(Routes.LESSON) { inclusive = true }
+                    }
+                },
+            )
         }
 
 

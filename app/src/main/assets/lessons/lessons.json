@@ -1,0 +1,430 @@
+[
+  {
+    "id": "flood_lesson_01",
+    "topic": "floods",
+    "minutes": 3,
+    "title": {
+      "en": "Moving around campus in heavy rain & flood",
+      "ms": "Bergerak di kampus semasa hujan lebat & banjir"
+    },
+    "cards": [
+      {
+        "title": {
+          "en": "Check before you go",
+          "ms": "Semak sebelum keluar"
+        },
+        "points": [
+          {
+            "en": "Look at official warnings and verified reports in the app",
+            "ms": "Lihat amaran rasmi dan laporan yang disahkan dalam aplikasi"
+          },
+          {
+            "en": "Plan a higher, covered route between buildings",
+            "ms": "Rancang laluan yang lebih tinggi dan berbumbung antara bangunan"
+          },
+          {
+            "en": "If you don't need to move, wait until the rain eases",
+            "ms": "Jika tidak perlu bergerak, tunggu sehingga hujan reda"
+          }
+        ],
+        "tip": {
+          "en": "Flash floods can rise within minutes after very heavy rain.",
+          "ms": "Banjir kilat boleh naik dalam beberapa minit selepas hujan yang sangat lebat."
+        }
+      },
+      {
+        "title": {
+          "en": "Never walk through flowing water",
+          "ms": "Jangan redah air yang mengalir"
+        },
+        "points": [
+          {
+            "en": "Moving water can knock you over, even when it looks shallow",
+            "ms": "Air yang mengalir boleh menjatuhkan anda, walaupun nampak cetek"
+          },
+          {
+            "en": "Flood water can hide open drains and broken paths",
+            "ms": "Air banjir boleh menyembunyikan longkang terbuka dan laluan yang rosak"
+          },
+          {
+            "en": "Wait in a building or take another route",
+            "ms": "Tunggu di dalam bangunan atau guna laluan lain"
+          }
+        ],
+        "tip": {
+          "en": "Drain covers can be washed away in heavy rain, leaving a deep hole under murky water.",
+          "ms": "Penutup longkang boleh dihanyutkan semasa hujan lebat, meninggalkan lubang dalam di bawah air keruh."
+        }
+      },
+      {
+        "title": {
+          "en": "Stay away from electricity",
+          "ms": "Jauhi elektrik"
+        },
+        "points": [
+          {
+            "en": "Keep well away from fallen or sparking cables",
+            "ms": "Jauhkan diri daripada kabel yang jatuh atau berpercikan api"
+          },
+          {
+            "en": "Don't touch switches or plugs with wet hands",
+            "ms": "Jangan sentuh suis atau palam dengan tangan basah"
+          },
+          {
+            "en": "Report electrical hazards to campus security",
+            "ms": "Laporkan bahaya elektrik kepada keselamatan kampus"
+          }
+        ],
+        "tip": {
+          "en": "Water carries electricity, so a puddle near a cable is dangerous too.",
+          "ms": "Air boleh mengalirkan elektrik, jadi lopak berhampiran kabel juga berbahaya."
+        }
+      },
+      {
+        "title": {
+          "en": "Help safely and report",
+          "ms": "Bantu dengan selamat dan laporkan"
+        },
+        "points": [
+          {
+            "en": "Report flooded spots in the app with a photo and location",
+            "ms": "Laporkan kawasan banjir dalam aplikasi dengan gambar dan lokasi"
+          },
+          {
+            "en": "If someone is in danger, call 999. Don't go into the water yourself",
+            "ms": "Jika seseorang dalam bahaya, hubungi 999. Jangan masuk ke dalam air sendiri"
+          },
+          {
+            "en": "Tell friends which routes to avoid",
+            "ms": "Beritahu rakan laluan mana yang perlu dielak"
+          }
+        ],
+        "tip": {
+          "en": "Each verified report helps other students choose a safer route.",
+          "ms": "Setiap laporan yang disahkan membantu pelajar lain memilih laluan yang lebih selamat."
+        }
+      }
+    ]
+  },
+  {
+    "id": "haze_lesson_01",
+    "topic": "haze",
+    "minutes": 3,
+    "title": {
+      "en": "Breathing safely during haze",
+      "ms": "Bernafas dengan selamat semasa jerebu"
+    },
+    "cards": [
+      {
+        "title": {
+          "en": "Know the API",
+          "ms": "Kenali IPU"
+        },
+        "points": [
+          {
+            "en": "The Air Pollutant Index (API) shows how polluted the air is",
+            "ms": "Indeks Pencemar Udara (IPU) menunjukkan tahap pencemaran udara"
+          },
+          {
+            "en": "0–50 Good · 51–100 Moderate · 101–200 Unhealthy",
+            "ms": "0–50 Baik · 51–100 Sederhana · 101–200 Tidak sihat"
+          },
+          {
+            "en": "201–300 Very unhealthy · above 300 Hazardous",
+            "ms": "201–300 Sangat tidak sihat · melebihi 300 Berbahaya"
+          }
+        ],
+        "tip": {
+          "en": "Check the reading before you plan outdoor activities.",
+          "ms": "Semak bacaan sebelum merancang aktiviti luar."
+        }
+      },
+      {
+        "title": {
+          "en": "Limit time outdoors",
+          "ms": "Kurangkan masa di luar"
+        },
+        "points": [
+          {
+            "en": "Stay indoors where you can when the API is Unhealthy",
+            "ms": "Kekal di dalam bangunan jika boleh apabila IPU Tidak sihat"
+          },
+          {
+            "en": "Avoid hard exercise outside",
+            "ms": "Elakkan senaman berat di luar"
+          },
+          {
+            "en": "Keep windows and doors closed",
+            "ms": "Tutup tingkap dan pintu"
+          }
+        ],
+        "tip": {
+          "en": "Hard exercise makes you breathe in more smoke, so move workouts indoors.",
+          "ms": "Senaman berat menyebabkan anda menyedut lebih banyak asap, jadi bersenam di dalam bangunan."
+        }
+      },
+      {
+        "title": {
+          "en": "Wear the right mask",
+          "ms": "Pakai pelitup yang betul"
+        },
+        "points": [
+          {
+            "en": "An N95 mask filters the fine particles in haze",
+            "ms": "Pelitup N95 menapis zarah halus dalam jerebu"
+          },
+          {
+            "en": "It must fit closely around your nose and mouth",
+            "ms": "Ia mesti rapat di sekeliling hidung dan mulut"
+          },
+          {
+            "en": "Cloth masks and scarves give much less protection",
+            "ms": "Pelitup kain dan skarf memberi perlindungan yang jauh lebih rendah"
+          }
+        ],
+        "tip": {
+          "en": "Gaps around the edges let smoky air in, so press the nose clip into shape.",
+          "ms": "Celah di tepi membenarkan udara berasap masuk, jadi tekan klip hidung supaya rapat."
+        }
+      },
+      {
+        "title": {
+          "en": "Look after yourself and others",
+          "ms": "Jaga diri dan orang lain"
+        },
+        "points": [
+          {
+            "en": "Drink plenty of water",
+            "ms": "Minum banyak air"
+          },
+          {
+            "en": "People with asthma or heart conditions are more at risk",
+            "ms": "Penghidap asma atau penyakit jantung lebih berisiko"
+          },
+          {
+            "en": "Get medical help if breathing is hard or the chest hurts",
+            "ms": "Dapatkan bantuan perubatan jika sukar bernafas atau sakit dada"
+          }
+        ],
+        "tip": {
+          "en": "Friends with asthma should keep their prescribed inhaler close.",
+          "ms": "Rakan yang menghidap asma patut sentiasa membawa inhaler yang dipreskripsi."
+        }
+      }
+    ]
+  },
+  {
+    "id": "storm_lesson_01",
+    "topic": "storms",
+    "minutes": 3,
+    "title": {
+      "en": "Staying safe in thunderstorms",
+      "ms": "Kekal selamat semasa ribut petir"
+    },
+    "cards": [
+      {
+        "title": {
+          "en": "Hear thunder? Go indoors",
+          "ms": "Dengar guruh? Masuk ke dalam"
+        },
+        "points": [
+          {
+            "en": "If you can hear thunder, lightning is close enough to strike",
+            "ms": "Jika anda boleh dengar guruh, kilat cukup dekat untuk menyambar"
+          },
+          {
+            "en": "Go inside a proper building",
+            "ms": "Masuk ke dalam bangunan"
+          },
+          {
+            "en": "Stay off open fields and away from tall poles",
+            "ms": "Jauhi padang terbuka dan tiang tinggi"
+          }
+        ],
+        "tip": {
+          "en": "Open bus stops and small shelters don't protect you from lightning.",
+          "ms": "Perhentian bas terbuka dan pondok kecil tidak melindungi anda daripada kilat."
+        }
+      },
+      {
+        "title": {
+          "en": "Keep away from trees",
+          "ms": "Jauhi pokok"
+        },
+        "points": [
+          {
+            "en": "Strong wind can snap branches",
+            "ms": "Angin kuat boleh mematahkan dahan"
+          },
+          {
+            "en": "Tall trees are common lightning targets",
+            "ms": "Pokok tinggi selalu disambar kilat"
+          },
+          {
+            "en": "Don't shelter or park under trees in a storm",
+            "ms": "Jangan berlindung atau meletak kenderaan di bawah pokok semasa ribut"
+          }
+        ],
+        "tip": {
+          "en": "After a storm, branches can still fall, so look up as you walk.",
+          "ms": "Selepas ribut, dahan masih boleh jatuh, jadi perhatikan ke atas semasa berjalan."
+        }
+      },
+      {
+        "title": {
+          "en": "Report fallen trees",
+          "ms": "Laporkan pokok tumbang"
+        },
+        "points": [
+          {
+            "en": "Keep clear: a fallen tree can bring down cables",
+            "ms": "Jauhkan diri: pokok tumbang boleh menjatuhkan kabel"
+          },
+          {
+            "en": "Report it in the app with a photo and location",
+            "ms": "Laporkan dalam aplikasi dengan gambar dan lokasi"
+          },
+          {
+            "en": "Take another route",
+            "ms": "Guna laluan lain"
+          }
+        ],
+        "tip": {
+          "en": "Don't try to move a fallen tree yourself.",
+          "ms": "Jangan cuba alihkan pokok tumbang sendiri."
+        }
+      },
+      {
+        "title": {
+          "en": "Wait before going out",
+          "ms": "Tunggu sebelum keluar"
+        },
+        "points": [
+          {
+            "en": "Wait about 30 minutes after the last thunder",
+            "ms": "Tunggu kira-kira 30 minit selepas guruh terakhir"
+          },
+          {
+            "en": "Indoors, avoid showers and corded appliances",
+            "ms": "Di dalam bangunan, elak mandi dan peralatan berwayar"
+          },
+          {
+            "en": "A phone on battery is fine to use",
+            "ms": "Telefon yang menggunakan bateri selamat digunakan"
+          }
+        ],
+        "tip": {
+          "en": "Lightning can still strike after the rain has eased.",
+          "ms": "Kilat masih boleh menyambar selepas hujan reda."
+        }
+      }
+    ]
+  },
+  {
+    "id": "heat_lesson_01",
+    "topic": "heat",
+    "minutes": 3,
+    "title": {
+      "en": "Keeping cool in hot weather",
+      "ms": "Kekal sejuk dalam cuaca panas"
+    },
+    "cards": [
+      {
+        "title": {
+          "en": "Drink water often",
+          "ms": "Minum air dengan kerap"
+        },
+        "points": [
+          {
+            "en": "Sip water through the day, even before you feel thirsty",
+            "ms": "Minum air sepanjang hari, walaupun sebelum berasa dahaga"
+          },
+          {
+            "en": "Carry a water bottle to class",
+            "ms": "Bawa botol air ke kelas"
+          },
+          {
+            "en": "Cut down on sugary and fizzy drinks",
+            "ms": "Kurangkan minuman bergula dan bergas"
+          }
+        ],
+        "tip": {
+          "en": "Thirst comes late. By the time you feel it, your body is already short of water.",
+          "ms": "Rasa dahaga datang lewat. Apabila anda berasa dahaga, badan sudah kekurangan air."
+        }
+      },
+      {
+        "title": {
+          "en": "Plan around the midday sun",
+          "ms": "Rancang mengikut matahari tengah hari"
+        },
+        "points": [
+          {
+            "en": "The sun is strongest from midday to mid-afternoon",
+            "ms": "Matahari paling terik dari tengah hari hingga petang"
+          },
+          {
+            "en": "Use shaded paths and covered walkways",
+            "ms": "Guna laluan teduh dan berbumbung"
+          },
+          {
+            "en": "Wear light, loose clothes and a hat or umbrella",
+            "ms": "Pakai pakaian cerah dan longgar, serta topi atau payung"
+          }
+        ],
+        "tip": {
+          "en": "Plan sport and long walks for the morning or evening.",
+          "ms": "Rancang sukan dan perjalanan jauh pada waktu pagi atau petang."
+        }
+      },
+      {
+        "title": {
+          "en": "Spot heat exhaustion",
+          "ms": "Kenali keletihan haba"
+        },
+        "points": [
+          {
+            "en": "Signs: dizziness, heavy sweating, headache, feeling sick",
+            "ms": "Tanda: pening, berpeluh banyak, sakit kepala, loya"
+          },
+          {
+            "en": "Move to a cool, shaded place and loosen tight clothing",
+            "ms": "Pergi ke tempat sejuk dan teduh, dan longgarkan pakaian ketat"
+          },
+          {
+            "en": "Sip water and cool the skin with a wet cloth",
+            "ms": "Minum air sedikit demi sedikit dan sejukkan kulit dengan kain basah"
+          }
+        ],
+        "tip": {
+          "en": "If they don't feel better within 30 minutes, get medical help.",
+          "ms": "Jika tidak bertambah baik dalam 30 minit, dapatkan bantuan perubatan."
+        }
+      },
+      {
+        "title": {
+          "en": "Heat stroke is an emergency",
+          "ms": "Strok haba ialah kecemasan"
+        },
+        "points": [
+          {
+            "en": "Signs: confusion, fainting, very hot skin",
+            "ms": "Tanda: keliru, pengsan, kulit sangat panas"
+          },
+          {
+            "en": "Call 999 straight away",
+            "ms": "Hubungi 999 dengan segera"
+          },
+          {
+            "en": "Keep cooling them with water and shade while you wait",
+            "ms": "Terus sejukkan mereka dengan air dan teduhan sementara menunggu"
+          }
+        ],
+        "tip": {
+          "en": "Don't give drinks to someone who is confused or fainting.",
+          "ms": "Jangan beri minuman kepada orang yang keliru atau pengsan."
+        }
+      }
+    ]
+  }
+]

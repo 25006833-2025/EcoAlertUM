@@ -199,6 +199,28 @@ The intended mobile architecture is:
 | 27 October 2026 | Completed and evaluated seven scenarios covering FR4.1, FR4.2, and FR4.3; refined uncertainty and report-classification prompts. |
 | 5 November 2026 | Tested Firebase emulator startup, Android test-account sign-in, callable `askAssistant`, Firestore alert lookup, and rule-based fallback. Documented Gemini 503, quota/rate-limit limitation, and ~60-second function timeout. |
 
+## 12. Module 5 — Learning Content (Arisha)
+
+AI here was a writing and coding aid for the developer, not a feature of the app. Students see fixed, reviewed text; nothing is generated at run time.
+
+- **Tool:** Claude (Anthropic), used as a coding and drafting assistant.
+- **AI-drafted:** first drafts of the lesson cards (`app/src/main/assets/lessons/lessons.json`), quiz questions (`app/src/main/assets/quizzes/quizzes.json`), the Malay strings (`values-ms/strings_learn.xml`), and parts of the FR5.1/FR5.2 Kotlin code and tests.
+- **Human review:** Arisha edited and tested the screens on the emulator. Safety facts were checked in PR review (API bands, 999, N95, 30-minute thunder rule). Malay text still needs a native-speaker check.
+
+**Sources for the safety content**
+
+| Topic | Source |
+|---|---|
+| Floods | NADMA (Agensi Pengurusan Bencana Negara) flood safety advice; JPS public flood information (publicinfobanjir.water.gov.my) |
+| Haze | DOE (Jabatan Alam Sekitar) Air Pollutant Index bands and health advice |
+| Storms | MET Malaysia thunderstorm warnings and safety advice; 30-minute rule from Red Cross lightning safety guidance |
+| Heat | MET Malaysia hot-weather advisories; Red Cross first aid for heat exhaustion |
+| Emergency number | 999 (Malaysia emergency line, MERS 999) |
+
+| Date | Change |
+|---|---|
+| 18 November 2026 | FR5.2 lessons added; AI-drafted content and sources recorded here. |
+
 ---
 
 **Record-keeping reminder:** Update this log when prompts, models, safety guidance, inputs, integrations, or evaluation results change. Record only observed behaviour; do not mark unverified tests as passed.

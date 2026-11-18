@@ -11,6 +11,10 @@ import com.ecoalertum.android.core.data.firestore.FirestoreAlertRepository
 import com.ecoalertum.android.core.data.firestore.FirestoreHazardRepository
 import com.ecoalertum.android.core.data.repository.AlertRepository
 import com.ecoalertum.android.core.data.repository.HazardRepository
+import com.ecoalertum.android.learn.lesson.BundledLessonRepository
+import com.ecoalertum.android.learn.lesson.LessonProgressStore
+import com.ecoalertum.android.learn.lesson.LessonRepository
+import com.ecoalertum.android.learn.lesson.SharedPrefsLessonProgressStore
 import com.ecoalertum.android.learn.quiz.BundledQuizRepository
 import com.ecoalertum.android.learn.quiz.FirestoreQuizAttemptRepository
 import com.ecoalertum.android.learn.quiz.QuizAttemptRepository
@@ -58,6 +62,10 @@ class AppContainer(context: Context) {
 
     // Module 5: latest pre/post scores on the phone, for the "before vs after" card.
     val quizScoreStore: QuizScoreStore by lazy { SharedPrefsQuizScoreStore(appContext) }
+
+    // Module 5 (FR5.2): short lessons, bundled like the quizzes, and which ones are finished.
+    val lessonRepository: LessonRepository by lazy { BundledLessonRepository { readAsset("lessons/lessons.json") } }
+    val lessonProgressStore: LessonProgressStore by lazy { SharedPrefsLessonProgressStore(appContext) }
 
     private fun readAsset(path: String): String = assets.open(path).bufferedReader().use { it.readText() }
 }
