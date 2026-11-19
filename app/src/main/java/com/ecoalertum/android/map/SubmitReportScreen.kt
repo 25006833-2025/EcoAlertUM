@@ -10,22 +10,27 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Place
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
@@ -34,6 +39,8 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuAnchorType
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -48,8 +55,13 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -58,8 +70,14 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.ecoalertum.android.R
 import com.ecoalertum.android.ui.theme.EcoAlertUMTheme
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.GeoPoint
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.rememberCameraPositionState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -68,7 +86,7 @@ private const val MAX_DESCRIPTION = 500
 private const val PREVIEW_MAX_SIDE = 800
 
 /** Design system: corner radius 14, spacing on an 8 dp grid, touch targets at least 48 dp. */
-private val CornerRadius = 14.dp
+private val FieldCornerRadius = 14.dp
 
 private val LOCATION_PERMISSIONS = arrayOf(
     Manifest.permission.ACCESS_FINE_LOCATION,
@@ -87,6 +105,11 @@ private fun hasLocationPermission(context: Context): Boolean =
 fun currentUid(): String =
     FirebaseAuth.getInstance().currentUser?.uid ?: "test-user"
 
+private fun resolveSubmittedCategoryValue(selected: ReportCategory, customText: String): String {
+    if (!selected.isCustom) return selected.key
+    return customText.trim().ifBlank { "Other" }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SubmitReportScreen(
@@ -94,10 +117,13 @@ fun SubmitReportScreen(
     onSubmitted: () -> Unit = {},
 ) {
     var category by rememberSaveable { mutableStateOf<ReportCategory?>(null) }
+    var customCategory by rememberSaveable { mutableStateOf("") }
     var description by rememberSaveable { mutableStateOf("") }
     var photoUri by rememberSaveable { mutableStateOf<Uri?>(null) }
     var placeName by rememberSaveable { mutableStateOf("") }
     var menuOpen by remember { mutableStateOf(false) }
+    var showPinDialog by remember { mutableStateOf(false) }
+    var isManualLocation by rememberSaveable { mutableStateOf(false) }
     var isSaving by remember { mutableStateOf(false) }
     var saveFailed by remember { mutableStateOf(false) }
     var preview by remember { mutableStateOf<ImageBitmap?>(null) }
@@ -109,6 +135,7 @@ fun SubmitReportScreen(
 
     fun findLocation() {
         scope.launch {
+            isManualLocation = false
             locationStatus = LocationStatus.Loading
             val found = readCurrentLocation(context)
             if (found == null) {
@@ -156,7 +183,11 @@ fun SubmitReportScreen(
         }
     }
 
-    val canSubmit = category != null &&
+    val selectedCategory = category
+    val hasValidCategory = selectedCategory != null &&
+            (!selectedCategory.isCustom || customCategory.isNotBlank())
+
+    val canSubmit = hasValidCategory &&
             description.isNotBlank() &&
             geoPoint != null &&
             !isSaving
@@ -179,7 +210,7 @@ fun SubmitReportScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(160.dp),
-            shape = RoundedCornerShape(CornerRadius),
+            shape = RoundedCornerShape(FieldCornerRadius),
             color = MaterialTheme.colorScheme.surfaceVariant,
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
         ) {
@@ -197,9 +228,7 @@ fun SubmitReportScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center,
                 ) {
-                    Icon(
-                        imageVector = Icons.Filled.AddCircle,
-                        contentDescription = null,
+                    CameraOutlineIcon(
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(48.dp),
                     )
@@ -225,15 +254,22 @@ fun SubmitReportScreen(
             expanded = menuOpen,
             onExpandedChange = { menuOpen = it },
         ) {
+            val categoryDisplayText = when {
+                selectedCategory == null -> ""
+                selectedCategory.isCustom -> "Other"
+                selectedCategory.labelRes != null -> stringResource(selectedCategory.labelRes)
+                else -> selectedCategory.key
+            }
+
             OutlinedTextField(
-                value = category?.let { stringResource(it.labelRes) } ?: "",
+                value = categoryDisplayText,
                 onValueChange = {},
                 readOnly = true,
                 placeholder = { Text(stringResource(R.string.reports_category_hint)) },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = menuOpen) },
-                shape = RoundedCornerShape(CornerRadius),
+                shape = RoundedCornerShape(FieldCornerRadius),
                 modifier = Modifier
-                    .menuAnchor()
+                    .menuAnchor(MenuAnchorType.PrimaryNotEditable)
                     .fillMaxWidth(),
             )
             ExposedDropdownMenu(
@@ -241,8 +277,14 @@ fun SubmitReportScreen(
                 onDismissRequest = { menuOpen = false },
             ) {
                 ReportCategory.entries.forEach { option ->
+                    val optionText = if (option.isCustom) {
+                        "Other"
+                    } else {
+                        stringResource(option.labelRes!!)
+                    }
+
                     DropdownMenuItem(
-                        text = { Text(stringResource(option.labelRes)) },
+                        text = { Text(optionText) },
                         onClick = {
                             category = option
                             menuOpen = false
@@ -252,11 +294,62 @@ fun SubmitReportScreen(
             }
         }
 
-        // Location: GPS position, plus an optional place name
-        SectionLabel(R.string.reports_location)
+        if (selectedCategory?.isCustom == true) {
+            OutlinedTextField(
+                value = customCategory,
+                onValueChange = { customCategory = it },
+                label = { Text("Custom hazard type") },
+                placeholder = { Text("e.g., Traffic jammed") },
+                singleLine = true,
+                shape = RoundedCornerShape(FieldCornerRadius),
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
+
+        // Location: GPS position or manual map pin, plus an optional place name
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            SectionLabel(R.string.reports_location)
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                OutlinedButton(
+                    onClick = {
+                        if (hasLocationPermission(context)) {
+                            findLocation()
+                        } else {
+                            permissionLauncher.launch(LOCATION_PERMISSIONS)
+                        }
+                    },
+                    shape = RoundedCornerShape(10.dp),
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Place,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp),
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text("GPS", style = MaterialTheme.typography.labelLarge)
+                }
+                OutlinedButton(
+                    onClick = { showPinDialog = true },
+                    shape = RoundedCornerShape(10.dp),
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.LocationOn,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp),
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text("Pin on Map", style = MaterialTheme.typography.labelLarge)
+                }
+            }
+        }
+
         Surface(
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(CornerRadius),
+            shape = RoundedCornerShape(FieldCornerRadius),
             color = MaterialTheme.colorScheme.surfaceVariant,
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
         ) {
@@ -289,11 +382,15 @@ fun SubmitReportScreen(
                                 stringResource(R.string.reports_location_loading)
                             LocationStatus.Found ->
                                 if (point != null) {
-                                    stringResource(
-                                        R.string.reports_location_found,
-                                        point.latitude,
-                                        point.longitude,
-                                    )
+                                    if (isManualLocation) {
+                                        "Pinned: ${"%.5f".format(point.latitude)}, ${"%.5f".format(point.longitude)}"
+                                    } else {
+                                        stringResource(
+                                            R.string.reports_location_found,
+                                            point.latitude,
+                                            point.longitude,
+                                        )
+                                    }
                                 } else {
                                     ""
                                 }
@@ -305,8 +402,9 @@ fun SubmitReportScreen(
                         style = MaterialTheme.typography.bodyLarge,
                     )
                 }
-                if (locationStatus == LocationStatus.Unavailable ||
-                    locationStatus == LocationStatus.Denied
+                if (!isManualLocation &&
+                    (locationStatus == LocationStatus.Unavailable ||
+                            locationStatus == LocationStatus.Denied)
                 ) {
                     TextButton(
                         onClick = {
@@ -323,13 +421,14 @@ fun SubmitReportScreen(
                 }
             }
         }
+
         OutlinedTextField(
             value = placeName,
             onValueChange = { placeName = it },
             label = { Text(stringResource(R.string.reports_place_name)) },
             placeholder = { Text(stringResource(R.string.reports_place_name_hint)) },
             singleLine = true,
-            shape = RoundedCornerShape(CornerRadius),
+            shape = RoundedCornerShape(FieldCornerRadius),
             modifier = Modifier.fillMaxWidth(),
         )
 
@@ -340,7 +439,7 @@ fun SubmitReportScreen(
             onValueChange = { if (it.length <= MAX_DESCRIPTION) description = it },
             minLines = 4,
             maxLines = 8,
-            shape = RoundedCornerShape(CornerRadius),
+            shape = RoundedCornerShape(FieldCornerRadius),
             supportingText = { Text("${description.length}/$MAX_DESCRIPTION") },
             modifier = Modifier.fillMaxWidth(),
         )
@@ -348,49 +447,48 @@ fun SubmitReportScreen(
         // Submit: uploads the photo (if any), saves the report, then goes back
         Button(
             onClick = {
-                category?.let { selected ->
-                    scope.launch {
-                        isSaving = true
-                        saveFailed = false
-                        val uid = currentUid()
+                val chosenCategory = category ?: return@Button
+                scope.launch {
+                    isSaving = true
+                    saveFailed = false
+                    val uid = currentUid()
 
-                        var photoPath: String? = null
-                        val uri = photoUri
-                        if (uri != null) {
-                            val upload = uploadReportPhoto(context, uri, uid)
-                            if (upload.isFailure) {
-                                saveFailed = true
-                                isSaving = false
-                                return@launch
-                            }
-                            photoPath = upload.getOrNull()
+                    var photoPath: String? = null
+                    val uri = photoUri
+                    if (uri != null) {
+                        val upload = uploadReportPhoto(context, uri, uid)
+                        if (upload.isFailure) {
+                            saveFailed = true
+                            isSaving = false
+                            return@launch
                         }
-
-                        val report = HazardReport(
-                            reporterUid = uid,
-                            category = selected.key,
-                            description = description.trim(),
-                            photoPath = photoPath,
-                            location = geoPoint,
-                            locationLabel = placeName.trim(),
-                            status = "unverified",
-                        )
-                        HazardReportRepository().submitReport(report)
-                            .onSuccess {
-                                Toast.makeText(
-                                    context,
-                                    context.getString(R.string.reports_saved),
-                                    Toast.LENGTH_SHORT,
-                                ).show()
-                                onSubmitted()
-                            }
-                            .onFailure { saveFailed = true }
-                        isSaving = false
+                        photoPath = upload.getOrNull()
                     }
+
+                    val report = HazardReport(
+                        reporterUid = uid,
+                        category = resolveSubmittedCategoryValue(chosenCategory, customCategory),
+                        description = description.trim(),
+                        photoPath = photoPath,
+                        location = geoPoint,
+                        locationLabel = placeName.trim(),
+                        status = "unverified",
+                    )
+                    HazardReportRepository().submitReport(report)
+                        .onSuccess {
+                            Toast.makeText(
+                                context,
+                                context.getString(R.string.reports_saved),
+                                Toast.LENGTH_SHORT,
+                            ).show()
+                            onSubmitted()
+                        }
+                        .onFailure { saveFailed = true }
+                    isSaving = false
                 }
             },
             enabled = canSubmit,
-            shape = RoundedCornerShape(CornerRadius),
+            shape = RoundedCornerShape(FieldCornerRadius),
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(min = 48.dp),
@@ -414,6 +512,141 @@ fun SubmitReportScreen(
             )
         }
     }
+
+    if (showPinDialog) {
+        ManualPinLocationDialog(
+            initialGeoPoint = geoPoint ?: GeoPoint(3.1209, 101.6538),
+            onDismiss = { showPinDialog = false },
+            onConfirmLocation = { picked ->
+                geoPoint = picked
+                isManualLocation = true
+                locationStatus = LocationStatus.Found
+                showPinDialog = false
+                if (placeName.isBlank()) {
+                    scope.launch {
+                        val resolved = lookUpPlaceName(context, picked.latitude, picked.longitude)
+                        if (resolved.isNotBlank() && placeName.isBlank()) {
+                            placeName = resolved
+                        }
+                    }
+                }
+            },
+        )
+    }
+}
+
+@Composable
+private fun CameraOutlineIcon(
+    tint: Color,
+    modifier: Modifier = Modifier,
+) {
+    Canvas(modifier = modifier) {
+        val strokeWidth = size.minDimension * 0.07f
+        val bodyTop = size.height * 0.26f
+        val bodyHeight = size.height * 0.54f
+        val bodyWidth = size.width * 0.84f
+        val bodyLeft = (size.width - bodyWidth) / 2f
+
+        drawRoundRect(
+            color = tint,
+            topLeft = Offset(bodyLeft, bodyTop),
+            size = Size(bodyWidth, bodyHeight),
+            cornerRadius = CornerRadius(
+                size.minDimension * 0.12f,
+                size.minDimension * 0.12f,
+            ),
+            style = Stroke(width = strokeWidth),
+        )
+
+        val bumpWidth = bodyWidth * 0.30f
+        val bumpHeight = size.height * 0.10f
+        val bumpLeft = bodyLeft + bodyWidth * 0.22f
+        val bumpTop = bodyTop - bumpHeight + (strokeWidth * 0.4f)
+        drawRoundRect(
+            color = tint,
+            topLeft = Offset(bumpLeft, bumpTop),
+            size = Size(bumpWidth, bumpHeight),
+            cornerRadius = CornerRadius(
+                size.minDimension * 0.06f,
+                size.minDimension * 0.06f,
+            ),
+            style = Stroke(width = strokeWidth),
+        )
+
+        drawCircle(
+            color = tint,
+            radius = size.minDimension * 0.15f,
+            center = Offset(
+                x = size.width / 2f,
+                y = bodyTop + bodyHeight / 2f,
+            ),
+            style = Stroke(width = strokeWidth),
+        )
+    }
+}
+
+@Composable
+private fun ManualPinLocationDialog(
+    initialGeoPoint: GeoPoint,
+    onDismiss: () -> Unit,
+    onConfirmLocation: (GeoPoint) -> Unit,
+) {
+    var selectedLatLng by remember {
+        mutableStateOf(LatLng(initialGeoPoint.latitude, initialGeoPoint.longitude))
+    }
+    val markerState = remember(selectedLatLng) {
+        MarkerState(position = selectedLatLng)
+    }
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(selectedLatLng, 16f)
+    }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Pin Hazard Location") },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(
+                    text = "Tap on the map to choose where the hazard is located.",
+                    style = MaterialTheme.typography.bodySmall,
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(280.dp),
+                ) {
+                    GoogleMap(
+                        modifier = Modifier.fillMaxSize(),
+                        cameraPositionState = cameraPositionState,
+                        onMapClick = { latLng -> selectedLatLng = latLng },
+                    ) {
+                        Marker(
+                            state = markerState,
+                            title = "Selected Location",
+                        )
+                    }
+                }
+                Text(
+                    text = "Pinned: ${"%.5f".format(selectedLatLng.latitude)}, ${"%.5f".format(selectedLatLng.longitude)}",
+                    style = MaterialTheme.typography.labelMedium,
+                )
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = {
+                    onConfirmLocation(GeoPoint(selectedLatLng.latitude, selectedLatLng.longitude))
+                },
+            ) {
+                Text("Confirm Pin")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancel")
+            }
+        },
+    )
 }
 
 @Composable
