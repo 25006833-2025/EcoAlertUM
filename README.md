@@ -217,3 +217,15 @@ For detailed test results and safety constraints, refer to `docs/AI_USAGE_LOG.md
 - One branch per task, named `feature/<name>` (for example `feature/alerts-list`). Branch from an up-to-date `main`.
 - Open a pull request into `main` when the task is done. At least one teammate reviews and approves it before merging.
 - Make sure the app builds (`assembleDebug`) before asking for a review.
+
+### Google Maps API Key Setup
+
+To display the interactive campus map (otherwise the **Map** screen will appear blank), add the shared Google Maps API key to your local `local.properties` file:
+
+1. Get the shared `MAPS_API_KEY` privately from the team chat (do **not** commit or paste the key into `README.md` or GitHub).
+2. Open (or create) `local.properties` in the root folder of `EcoAlertUM` (`local.properties` is ignored by Git).
+3. Add this line:
+   ```properties
+   MAPS_API_KEY=your_google_maps_api_key_here
+   ```
+4. In Android Studio, click **File > Sync Project with Gradle Files**, then build and run the app.
