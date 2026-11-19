@@ -292,8 +292,9 @@ private fun ModeratorReportCard(
     onReject: () -> Unit
 ) {
     val categoryLabel = ReportCategory.entries
-        .firstOrNull { it.key == report.category }
-        ?.let { stringResource(it.labelRes) }
+        .firstOrNull { !it.isCustom && it.key == report.category }
+        ?.labelRes
+        ?.let { stringResource(it) }
         ?: report.category.ifBlank { "General Hazard" }
 
     val statusLower = report.status.lowercase()
