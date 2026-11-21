@@ -10,11 +10,9 @@ import com.ecoalertum.android.core.data.fake.MockJsonParser
 import com.ecoalertum.android.core.data.firestore.FirestoreAlertRepository
 import com.ecoalertum.android.core.data.firestore.FirestoreHazardRepository
 import com.ecoalertum.android.core.data.repository.AlertRepository
+import com.ecoalertum.android.core.data.repository.BundledEmergencyContactRepository
+import com.ecoalertum.android.core.data.repository.EmergencyContactRepository
 import com.ecoalertum.android.core.data.repository.HazardRepository
-import com.ecoalertum.android.learn.lesson.BundledLessonRepository
-import com.ecoalertum.android.learn.lesson.LessonProgressStore
-import com.ecoalertum.android.learn.lesson.LessonRepository
-import com.ecoalertum.android.learn.lesson.SharedPrefsLessonProgressStore
 import com.ecoalertum.android.learn.quiz.BundledQuizRepository
 import com.ecoalertum.android.learn.quiz.FirestoreQuizAttemptRepository
 import com.ecoalertum.android.learn.quiz.QuizAttemptRepository
@@ -54,6 +52,11 @@ class AppContainer(context: Context) {
     // Module 6: login. Created on first use, after MainActivity has pointed Firebase at the emulator (debug builds).
     val authRepository: AuthRepository by lazy { FirebaseAuthRepository() }
 
+    // Module 6 (FR6.2): emergency contacts are bundled in the app so they open with no signal.
+    val emergencyContactRepository: EmergencyContactRepository by lazy {
+        BundledEmergencyContactRepository { readAsset("mock/emergencyContacts.json") }
+    }
+
     // Module 5: quiz content is bundled in the app for v1 (docs/data-models.md).
     val quizRepository: QuizRepository by lazy { BundledQuizRepository { readAsset("quizzes/quizzes.json") } }
 
@@ -62,10 +65,6 @@ class AppContainer(context: Context) {
 
     // Module 5: latest pre/post scores on the phone, for the "before vs after" card.
     val quizScoreStore: QuizScoreStore by lazy { SharedPrefsQuizScoreStore(appContext) }
-
-    // Module 5 (FR5.2): short lessons, bundled like the quizzes, and which ones are finished.
-    val lessonRepository: LessonRepository by lazy { BundledLessonRepository { readAsset("lessons/lessons.json") } }
-    val lessonProgressStore: LessonProgressStore by lazy { SharedPrefsLessonProgressStore(appContext) }
 
     private fun readAsset(path: String): String = assets.open(path).bufferedReader().use { it.readText() }
 }

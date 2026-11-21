@@ -19,7 +19,7 @@ class MockJsonParserTest {
 
     @Test
     fun assetCopiesMatchMockFolder() {
-        for (name in listOf("hazardReadings.json", "alerts.json")) {
+        for (name in listOf("hazardReadings.json", "alerts.json", "emergencyContacts.json")) {
             assertArrayEquals(
                 "app/src/main/assets/mock/$name differs from mock/$name",
                 File("../mock/$name").readBytes(),
