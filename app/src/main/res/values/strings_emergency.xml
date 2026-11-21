@@ -1,0 +1,17 @@
+<resources>
+    <!-- Emergency contacts (Module 6: FR6.2) -->
+    <string name="emergency_intro">Tap a number to open your phone\'s dialler. The call only starts when you press the call button there.</string>
+    <string name="emergency_empty">No emergency contacts are available.</string>
+    <string name="emergency_call">Call %1$s</string>
+    <string name="emergency_call_description">Call %1$s on %2$s</string>
+    <string name="emergency_open_24h">Open 24 hours</string>
+    <string name="emergency_hours">Hours: %1$s</string>
+    <string name="emergency_no_dialer">No phone app found on this device.</string>
+
+    <string name="emergency_category_campus_security">CAMPUS SECURITY</string>
+    <string name="emergency_category_medical">MEDICAL</string>
+    <string name="emergency_category_fire_rescue">FIRE AND RESCUE</string>
+    <string name="emergency_category_police">POLICE AND AMBULANCE</string>
+    <string name="emergency_category_civil_defence">CIVIL DEFENCE</string>
+    <string name="emergency_category_facilities">FACILITIES</string>
+</resources>
