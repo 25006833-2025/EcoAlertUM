@@ -50,49 +50,49 @@
   {
     "id": "um_security",
     "name": {
-      "en": "UM Security Office (PLACEHOLDER NUMBER)",
-      "ms": "Bahagian Keselamatan UM (NOMBOR CONTOH)"
+      "en": "UM Security Office",
+      "ms": "Bahagian Keselamatan UM"
     },
     "category": "campus_security",
-    "phone": "+60300000001",
-    "altPhone": null,
+    "phone": "+60379677070",
+    "altPhone": "+60379673470",
     "available24h": true,
     "hours": null,
     "location": "Bahagian Keselamatan, Universiti Malaya",
     "sortOrder": 4,
-    "sourceUrl": null,
-    "sourceCheckedAt": null
+    "sourceUrl": "https://registrar.um.edu.my/contact-us",
+    "sourceCheckedAt": "2026-11-22T16:30:00+08:00"
   },
   {
     "id": "um_health_centre",
     "name": {
-      "en": "UM Student Health Clinic (PLACEHOLDER NUMBER)",
-      "ms": "Klinik Kesihatan Pelajar UM (NOMBOR CONTOH)"
+      "en": "UM Student Health Clinic",
+      "ms": "Klinik Kesihatan Pelajar UM"
     },
     "category": "medical",
-    "phone": "+60300000002",
+    "phone": "+60379676445",
     "altPhone": null,
     "available24h": false,
-    "hours": "Mon–Fri 08:00–17:00",
-    "location": "Universiti Malaya",
+    "hours": "Mon–Thu 8:00 am–5:00 pm; Fri 8:00 am–1:15 pm, 2:45 pm–5:00 pm. Closed Sat, Sun and public holidays",
+    "location": "Ground floor, Siswarama Building, Faculty of Arts and Social Sciences, Universiti Malaya",
     "sortOrder": 5,
-    "sourceUrl": null,
-    "sourceCheckedAt": null
+    "sourceUrl": "https://um.edu.my/student-health-clinic",
+    "sourceCheckedAt": "2026-11-22T16:30:00+08:00"
   },
   {
     "id": "um_facilities",
     "name": {
-      "en": "UM Facilities / Maintenance (PLACEHOLDER NUMBER)",
-      "ms": "Fasiliti / Penyelenggaraan UM (NOMBOR CONTOH)"
+      "en": "UM Facilities / Maintenance",
+      "ms": "Fasiliti / Penyelenggaraan UM"
     },
     "category": "facilities",
-    "phone": "+60300000003",
+    "phone": "+60379673999",
     "altPhone": null,
     "available24h": false,
-    "hours": "Mon–Fri 08:00–17:00",
-    "location": "Universiti Malaya",
+    "hours": "8:00 am–5:00 pm",
+    "location": "Office of the Chief Facility Officer, Universiti Malaya",
     "sortOrder": 6,
-    "sourceUrl": null,
-    "sourceCheckedAt": null
+    "sourceUrl": "https://jpphb.um.edu.my/about-us",
+    "sourceCheckedAt": "2026-11-22T16:30:00+08:00"
   }
 ]
