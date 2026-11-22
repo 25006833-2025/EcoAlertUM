@@ -47,7 +47,21 @@ class EmergencyContactParserTest {
 
         val clinic = contacts.getValue("um_health_centre")
         assertFalse(clinic.available24h)
-        assertEquals("Mon\u2013Fri 08:00\u201317:00", clinic.hours)
+        assertEquals("+60379676445", clinic.phone)
+        assertTrue(clinic.hours.orEmpty().startsWith("Mon\u2013Thu"))
+    }
+
+    @Test
+    fun noPlaceholderNumbersLeft() {
+        val contacts = MockJsonParser.parseEmergencyContacts(bundled)
+        for (c in contacts) {
+            assertFalse("${c.id} still has a placeholder name", c.name.en.contains("PLACEHOLDER", ignoreCase = true))
+            assertFalse("${c.id} still has a placeholder number", c.phone.startsWith("+6030000000"))
+        }
+        // UM numbers must cite the official page they came from (docs/data-models.md).
+        for (id in listOf("um_security", "um_health_centre", "um_facilities")) {
+            assertTrue("$id needs a sourceUrl", contacts.first { it.id == id }.sourceUrl != null)
+        }
     }
 
     @Test
