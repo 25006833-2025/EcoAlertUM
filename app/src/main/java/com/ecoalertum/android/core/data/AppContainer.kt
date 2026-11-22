@@ -10,6 +10,8 @@ import com.ecoalertum.android.core.data.fake.MockJsonParser
 import com.ecoalertum.android.core.data.firestore.FirestoreAlertRepository
 import com.ecoalertum.android.core.data.firestore.FirestoreHazardRepository
 import com.ecoalertum.android.core.data.repository.AlertRepository
+import com.ecoalertum.android.core.data.repository.BundledEmergencyContactRepository
+import com.ecoalertum.android.core.data.repository.EmergencyContactRepository
 import com.ecoalertum.android.core.data.repository.HazardRepository
 import com.ecoalertum.android.learn.lesson.BundledLessonRepository
 import com.ecoalertum.android.learn.lesson.LessonProgressStore
@@ -53,6 +55,11 @@ class AppContainer(context: Context) {
 
     // Module 6: login. Created on first use, after MainActivity has pointed Firebase at the emulator (debug builds).
     val authRepository: AuthRepository by lazy { FirebaseAuthRepository() }
+
+    // Module 6 (FR6.2): emergency contacts are bundled in the app so they open with no signal.
+    val emergencyContactRepository: EmergencyContactRepository by lazy {
+        BundledEmergencyContactRepository { readAsset("mock/emergencyContacts.json") }
+    }
 
     // Module 5: quiz content is bundled in the app for v1 (docs/data-models.md).
     val quizRepository: QuizRepository by lazy { BundledQuizRepository { readAsset("quizzes/quizzes.json") } }

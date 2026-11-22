@@ -1,0 +1,98 @@
+[
+  {
+    "id": "national_emergency",
+    "name": {
+      "en": "Emergency (Police / Ambulance)",
+      "ms": "Kecemasan (Polis / Ambulans)"
+    },
+    "category": "police",
+    "phone": "999",
+    "altPhone": "112",
+    "available24h": true,
+    "hours": null,
+    "location": null,
+    "sortOrder": 1,
+    "sourceUrl": null,
+    "sourceCheckedAt": null
+  },
+  {
+    "id": "bomba",
+    "name": {
+      "en": "Fire and Rescue (Bomba)",
+      "ms": "Bomba dan Penyelamat"
+    },
+    "category": "fire_rescue",
+    "phone": "994",
+    "altPhone": null,
+    "available24h": true,
+    "hours": null,
+    "location": null,
+    "sortOrder": 2,
+    "sourceUrl": null,
+    "sourceCheckedAt": null
+  },
+  {
+    "id": "civil_defence",
+    "name": {
+      "en": "Civil Defence (APM)",
+      "ms": "Angkatan Pertahanan Awam (APM)"
+    },
+    "category": "civil_defence",
+    "phone": "991",
+    "altPhone": null,
+    "available24h": true,
+    "hours": null,
+    "location": null,
+    "sortOrder": 3,
+    "sourceUrl": null,
+    "sourceCheckedAt": null
+  },
+  {
+    "id": "um_security",
+    "name": {
+      "en": "UM Security Office",
+      "ms": "Bahagian Keselamatan UM"
+    },
+    "category": "campus_security",
+    "phone": "+60379677070",
+    "altPhone": "+60379673470",
+    "available24h": true,
+    "hours": null,
+    "location": "Bahagian Keselamatan, Universiti Malaya",
+    "sortOrder": 4,
+    "sourceUrl": "https://registrar.um.edu.my/contact-us",
+    "sourceCheckedAt": "2026-11-22T16:30:00+08:00"
+  },
+  {
+    "id": "um_health_centre",
+    "name": {
+      "en": "UM Student Health Clinic",
+      "ms": "Klinik Kesihatan Pelajar UM"
+    },
+    "category": "medical",
+    "phone": "+60379676445",
+    "altPhone": null,
+    "available24h": false,
+    "hours": "Mon–Thu 8:00 am–5:00 pm; Fri 8:00 am–1:15 pm, 2:45 pm–5:00 pm. Closed Sat, Sun and public holidays",
+    "location": "Ground floor, Siswarama Building, Faculty of Arts and Social Sciences, Universiti Malaya",
+    "sortOrder": 5,
+    "sourceUrl": "https://um.edu.my/student-health-clinic",
+    "sourceCheckedAt": "2026-11-22T16:30:00+08:00"
+  },
+  {
+    "id": "um_facilities",
+    "name": {
+      "en": "UM Facilities / Maintenance",
+      "ms": "Fasiliti / Penyelenggaraan UM"
+    },
+    "category": "facilities",
+    "phone": "+60379673999",
+    "altPhone": null,
+    "available24h": false,
+    "hours": "8:00 am–5:00 pm",
+    "location": "Office of the Chief Facility Officer, Universiti Malaya",
+    "sortOrder": 6,
+    "sourceUrl": "https://jpphb.um.edu.my/about-us",
+    "sourceCheckedAt": "2026-11-22T16:30:00+08:00"
+  }
+]
